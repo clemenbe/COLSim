@@ -1,42 +1,97 @@
-from roblib import *
+from calcul_tools import *
+from draw import *
 
-def f(x,u):
-    x,u  = x.flatten(), u.flatten()
-    v,θ = x[2],x[3]
-    return array([[v*cos(θ)],[v*sin(θ)],[u[0]],[u[1]]])
+import matplotlib.pyplot as plt
+from numpy import mean, pi, cos, sin, sinc, sqrt, tan, arctan, arctan2, tanh, arcsin, arccos, \
+    exp, dot, array, log, inf, eye, zeros, ones, inf, size, \
+    arange, reshape, vstack, hstack, diag, median, \
+    sign, sum, meshgrid, cross, linspace, append, round, trace, rint
+from matplotlib.pyplot import *
+from matplotlib.cbook import flatten
+from numpy.random import randn, rand
+from numpy.linalg import inv, det, norm, eig, qr
+from scipy.linalg import sqrtm, expm, logm, norm, block_diag
 
-
-def geo_scalar_prod(u,v, θu, θv):
-    return u*v*cos(θu-θv)
-
-def dist(a,b):
-    xa, ya = a[0:2].flatten()
-    xb, yb = b[0:2].flatten()
-    return sqrt((xb-xa)**2 + (yb-ya)**2)
-
-
-def draw_boat_and_vector(x, col='darkblue', r=0.1, w=2):
-    """ Draw a boat with his speed vector """
-    mx, my, v, θ = list(x[0:4, 0])
-    M = r * array([[-1, 5, 7, 7, 5, -1, -1, -1], [-2, -2, -1, 1, 2, 2, -2, -2]])
-    M = add1(M)
-    draw_arrow(mx, my, θ, norm(v), 'red')
-    plot2D(tran2H(mx, my) @ rot2H(θ) @ M, col, w)
+from scipy.signal import place_poles
+from mpl_toolkits.mplot3d import Axes3D
+from math import factorial
+from matplotlib.patches import Ellipse, Rectangle, Circle, Wedge, Polygon, Arc
+from matplotlib.collections import PatchCollection
 
 
-def draw_field_around_c(ax, f, xmin, xmax, ymin, ymax, a, c):
-    """ Draw field with the parameter c """
-    Mx = arange(xmin, xmax, a)
-    My = arange(ymin, ymax, a)
-    X1, X2 = meshgrid(Mx, My)
-    VX, VY = f(X1, X2, c)
-    R = sqrt(VX ** 2 + VY ** 2)
-    quiver(Mx, My, VX / R, VY / R)
-
-
-def draw_circle(ax, center_x, center_y, radius, color):
-    circle = plt.Circle((center_x, center_y), radius, fill=False, color=color)
-    ax.add_artist(circle)
+# def add1(M):
+#     M = array(M)
+#     return vstack((M, ones(M.shape[1])))
+#
+# def plot2D(M, col='black', w=1):
+#     plot(M[0, :], M[1, :], col, linewidth=w)
+#
+# def tran2H(x, y):
+#     return array([[1, 0, x], [0, 1, y], [0, 0, 1]])
+#
+#
+# def rot2H(a):
+#     return array([[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0, 0, 1]])
+#
+# def arrow2H(L):
+#     e = 0.2
+#     return add1(L * array([[0, 1, 1 - e, 1, 1 - e], [0, 0, -e, 0, e]]))
+#
+# def sawtooth(x):
+#     return (x + pi) % (2 * pi) - pi  # or equivalently   2*arctan(tan(x/2))
+#
+#
+# def geo_scalar_prod(u,v, θu, θv):
+#     return u*v*cos(θu-θv)
+#
+# def dist(a,b):
+#     xa, ya = a[0:2].flatten()
+#     xb, yb = b[0:2].flatten()
+#     return sqrt((xb-xa)**2 + (yb-ya)**2)
+#
+#
+# def init_figure(xmin, xmax, ymin, ymax):
+#     fig = figure()
+#     ax = fig.add_subplot(111, aspect='equal')
+#     ax.xmin = xmin
+#     ax.xmax = xmax
+#     ax.ymin = ymin
+#     ax.ymax = ymax
+#     clear(ax)
+#     return ax
+#
+#
+# def clear(ax):
+#     pause(0.001)
+#     cla()
+#     ax.set_xlim(ax.xmin, ax.xmax)
+#     ax.set_ylim(ax.ymin, ax.ymax)
+#
+# def draw_arrow(x, y, θ, L, col='darkblue', w=1):
+#     plot2D(tran2H(x, y) @ rot2H(θ) @ arrow2H(L), col, w)
+#
+# def draw_boat_and_vector(x, col='darkblue', r=0.1, w=2):
+#     """ Draw a boat with his speed vector """
+#     mx, my, v, θ = list(x[0:4, 0])
+#     M = r * array([[-1, 5, 7, 7, 5, -1, -1, -1], [-2, -2, -1, 1, 2, 2, -2, -2]])
+#     M = add1(M)
+#     draw_arrow(mx, my, θ, norm(v), 'red')
+#     plot2D(tran2H(mx, my) @ rot2H(θ) @ M, col, w)
+#
+#
+# def draw_field_around_c(ax, f, xmin, xmax, ymin, ymax, a, c):
+#     """ Draw field with the parameter c """
+#     Mx = arange(xmin, xmax, a)
+#     My = arange(ymin, ymax, a)
+#     X1, X2 = meshgrid(Mx, My)
+#     VX, VY = f(X1, X2, c)
+#     R = sqrt(VX ** 2 + VY ** 2)
+#     quiver(Mx, My, VX / R, VY / R)
+#
+#
+# def draw_circle(ax, center_x, center_y, radius, color):
+#     circle = plt.Circle((center_x, center_y), radius, fill=False, color=color)
+#     ax.add_artist(circle)
 
 
 def Jφ0(p):
@@ -98,7 +153,13 @@ def control(x, φ, c):
     return array([[u1], [u2]])
 
 
-# TODO : initial traj
+def f(x,u):
+    x,u  = x.flatten(), u.flatten()
+    v,θ = x[2],x[3]
+    return array([[v*cos(θ)],[v*sin(θ)],[u[0]],[u[1]]])
+
+
+# TODO : plot initial traj and modifieed
 
 ''' Left lower zone '''
 # xp = array([[-2.5,-3,1,1]]).T      #x,y,v,θ of the boat
