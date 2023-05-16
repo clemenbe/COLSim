@@ -14,7 +14,7 @@ class Simulation:
         self.fps = 30
 
     # randomly create ships
-    # can improve by creating realistic ships
+    # can improve by creating different types of ships
     def create_ships(self):
         for _ in range(self.num_ships):
             x = random.randint(0, self.screen_width)
@@ -27,7 +27,7 @@ class Simulation:
     # check collisions and update all ship positions
     def update_positions(self):
         for ship in self.ships:
-            ship.avoid_collisions(self.ships, avoidance_radius=10)
+            ship.avoid_collisions(self.ships, avoidance_radius=30)
             ship.update_position()
 
     # draw all ships

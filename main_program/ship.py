@@ -30,37 +30,34 @@ class Ship:
     # need more sesearch
     # need to include different senarios
     def avoid_collisions(self, ships, avoidance_radius):
-        for other_ship in ships:
-            if other_ship != self:
-                dx = self.x - other_ship.x
-                dy = self.y - other_ship.y
-                distance = math.sqrt(dx ** 2 + dy ** 2)
+            dx_total = 0
+            dy_total = 0
+            for other_ship in ships:
+                if other_ship != self:
+                    dx = self.x - other_ship.x
+                    dy = self.y - other_ship.y
+                    distance = math.sqrt(dx ** 2 + dy ** 2)
+                    if distance < avoidance_radius:
+                        # calculate the direction away from the other ship
+                        angle = math.degrees(math.atan2(dy, dx))
+                        # calculate the direction of the other ship
+                        other_ship_direction = other_ship.direction
+                        # calculate the angle between the direction to the other ship and its direction of movement
+                        relative_angle = (other_ship_direction - angle) % 360
+                        if relative_angle > 180:
+                            relative_angle -= 360
+                        # if the other ship is moving towards this ship, decide the direction change based on the relative angle
+                        if relative_angle > -90 and relative_angle < 90:
+                            angle -= 90 if relative_angle > 0 else -90
+                        # calculate the repulsive force (the farther the ship, the less the force)
+                        force = 1 / (distance ** 2)
+                        # accumulate the repulsive forces from all ships
+                        dx_total += math.cos(math.radians(angle)) * force
+                        dy_total += math.sin(math.radians(angle)) * force
 
-                if distance < avoidance_radius:
-                    # Add an additional "kick" to separate the ships
-                    kick = avoidance_radius - distance
-                    angle = math.atan2(dy, dx)
-                    
-                    self.x += kick * math.cos(angle)
-                    self.y += kick * math.sin(angle)
-
-                    other_ship.x -= kick * math.cos(angle)
-                    other_ship.y -= kick * math.sin(angle)
-                    
-                    # Now they have some space, steer away from each other
-                    self.set_direction_away_from(other_ship)
-                    other_ship.set_direction_away_from(self)
-
-    # called by avoid_collision
-    # set the direction of a ship from another colliding ship
-    def set_direction_away_from(self, other_ship):
-        dx = self.x - other_ship.x
-        dy = self.y - other_ship.y
-        angle = math.degrees(math.atan2(dy, dx))
-        
-        # randomly move away from the other
-        # could improve by more research
-        self.direction = (angle + 180 + random.randint(-45, 45)) % 360
-                    
-
-    
+            # if there are any ships to avoid
+            if dx_total != 0 or dy_total != 0:
+                # calculate the angle of the total repulsive force
+                total_angle = math.degrees(math.atan2(dy_total, dx_total))
+                # gradually change the direction of the ship to the opposite of the total repulsive force
+                self.direction = (self.direction - 0.1 * (self.direction - ((total_angle + 180) % 360))) % 360
