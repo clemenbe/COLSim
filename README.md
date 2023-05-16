@@ -6,13 +6,13 @@
 
 
 ## Summary
-1. [Project Presentation](#project-presentation) 
-2. [Search for the existing](#search-for-the-existing)
+1. [Project Goals](#project-goals) 
+2. [Existing Simulators](#existing-simulators)
 3. [Ideas for the new simulator](#ideas-for-the-new-simulator)
 4. [Structure of the USV Simulator](#structure-of-the-usv-simulator)
 
 
-## Project Presentation
+## Project Goals
 
 This project present a new USV simulator using and merging two existing simulators in order to have an anti-collision system.
 The goal is to have a simple simulation so that it can be run a great number of times and learn from each simulation.
@@ -22,7 +22,7 @@ In the simulation, we should be able to simulate old boat scenes from AIS data, 
 The decision making module should have a basic implementation of obeying the rules of the sea.
 
 
-## Search for the existing
+## Existing Simulators
 
 ### The Fossen Simulator
 The [Fossen Simulator](https://www.fossen.biz/wiley/pythonVehicleSim.php) is designed to simulate the **behavior** of **different types of vehicles** in a **3D simulation** environment. It takes into account different simulation parameters such as **gravity, friction, air resistance**, and **vehicle dynamics** to simulate the movement and behavior of vehicles in real-time. Users can adjust simulation parameters to represent different types of vehicles and environments.
@@ -67,12 +67,18 @@ Overall, the UTSeaSim simulator uses an RRT algorithm to avoid obstacle.
 
 ## Structure of the USV Simulator
 
-### Librairie Files
-- [ ] geometry.py   → calcul distance, orientation between vectors ...
-- [ ] lineline.py   → display file
-- [ ] rrtTree.py    → code for the RRt algorithm
-- [ ] state.py      → class to give the state of the ship and the world
-- [ ] vect2d.py     → create operations with 2D vectors
+### main.py
+- [ ] runs the program
+- [ ] defines the number of total ships
 
+### simulation.py
+- [ ] runs the program in run()
+- [ ] constructor() initializes a ship vector
+- [ ] create_ships() adds ships
+- [ ] update_positions() keeps refreshing the screen, and calls each ship’s update_position() and avoid_colissions()
+
+### ship.py
+- [ ] draw() loads and displays the image of a ship
+- [ ] avoid_collision() checks current ship’s collision with all other ships and decides
 
 
