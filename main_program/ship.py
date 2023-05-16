@@ -1,25 +1,27 @@
 import math
 import pygame
 import random
+from avoiding_collision import *
+from numpy import array
+from calcul_tools import *
 
 class Ship:
 
     # initialize ship attributes
-    def __init__(self, x, y, speed, direction):
+    def __init__(self, xp):
         # x, y represent initial position
-        self.x = x
-        self.y = y
-        self.speed = speed
-        self.direction = direction
+        self.xp = xp
+        self.x, self.y, self.speed, self.direction = self.xp.flatten()
         self.image = self.load_image("./image/870056.png")
 
     # move the ship in its direction
-    def update_position(self):
-        self.x += self.speed * math.cos(math.radians(self.direction))
-        self.y += self.speed * math.sin(math.radians(self.direction))
-    
+    def update_position(self, up, uq, obstacle):
+        self.xp += dt * f(xp, up)
+        obstacle.xp += dt * f(obstacle.xp, uq)
+        
     def draw(self, surface):
-        rect = self.image.get_rect(center=(self.x, self.y))
+        x, y = self.xp[0:2].flatten()
+        rect = self.image.get_rect(center=(x, y))
         surface.blit(self.image, rect.topleft)
 
     def load_image(self, image_path):
@@ -30,34 +32,71 @@ class Ship:
     # need more sesearch
     # need to include different senarios
     def avoid_collisions(self, ships, avoidance_radius):
-            dx_total = 0
-            dy_total = 0
-            for other_ship in ships:
-                if other_ship != self:
-                    dx = self.x - other_ship.x
-                    dy = self.y - other_ship.y
-                    distance = math.sqrt(dx ** 2 + dy ** 2)
-                    if distance < avoidance_radius:
-                        # calculate the direction away from the other ship
-                        angle = math.degrees(math.atan2(dy, dx))
-                        # calculate the direction of the other ship
-                        other_ship_direction = other_ship.direction
-                        # calculate the angle between the direction to the other ship and its direction of movement
-                        relative_angle = (other_ship_direction - angle) % 360
-                        if relative_angle > 180:
-                            relative_angle -= 360
-                        # if the other ship is moving towards this ship, decide the direction change based on the relative angle
-                        if relative_angle > -90 and relative_angle < 90:
-                            angle -= 90 if relative_angle > 0 else -90
-                        # calculate the repulsive force (the farther the ship, the less the force)
-                        force = 1 / (distance ** 2)
-                        # accumulate the repulsive forces from all ships
-                        dx_total += math.cos(math.radians(angle)) * force
-                        dy_total += math.sin(math.radians(angle)) * force
 
-            # if there are any ships to avoid
-            if dx_total != 0 or dy_total != 0:
-                # calculate the angle of the total repulsive force
-                total_angle = math.degrees(math.atan2(dy_total, dx_total))
-                # gradually change the direction of the ship to the opposite of the total repulsive force
-                self.direction = (self.direction - 0.1 * (self.direction - ((total_angle + 180) % 360))) % 360
+        # see every other ship as an obstacle
+        for obstacle in ships:
+            # self ship
+            px, py, pv, pθ = self.xp.flatten()   
+            # obstacle
+            qx, qy, qv, qθ = obstacle.xp.flatten()   
+
+            # obstacle boat controler
+            uq = array([[0], [0]])    
+            # coordinates of the circle representing the obstacle zone to avoid
+            c = array([[qx], [qy]])      
+            scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
+
+            # Test to check if the boat is close to the obstacle
+            if dist(xq, xp) < r+Ɛ :
+                # Test to see if the boat have a heading close to the obstacle
+                # TODO : affine the precision of the application of the scalar product
+                if scalar_pdt >= 0:
+                    print('------------------Boats with close directions------------------')
+                    # Tests to find where the boat is compared with the obstacle
+                    if (py > qy + Ɛ) :
+                        # The boat is in the front zone of the obstacle
+                        print('------------------Front zone------------------')
+                        φ = φrep
+                    elif (py < qy + Ɛ) & (px < qx) :
+                        # The boat is in the left lower zone compared with the obstacle
+                        print('------------------Left lower zone------------------')
+                        φ = φcw
+                    else :
+                        # The boat is in the right lower zone compared with the obstacle
+                        print('------------------Right lower zone------------------')
+                        φ = φccw
+                    up = control(xp, φ, c)
+
+                else :
+                    print('------------------Boats in opposite directions------------------')
+                    # Tests to find where the boat is compared with the obstacle
+                    if (py > qy - Ɛ):
+                        # The boat is in the front zone of the obstacle
+                        print('------------------Left front zone------------------')
+                        φ = φccw
+                        # Boat
+                        up = control(xp, φ, c)
+
+                    elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
+                        # The boat is in the front zone of the obstacle
+                        print('------------------Right front zone (align)------------------')
+                        up = array([[0], [0]])
+
+                    elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt > abs(qv*pv)*cos(2.5)):
+                        # The boat is in the front zone of the obstacle
+                        print('------------------Right front zone------------------')
+                        φ = φccw
+                        # Boat
+                        up = control(xp, φ, c)
+
+                    else:
+                        # The boat is in the right lower zone compared with the obstacle
+                        print('------------------Lower zone------------------')
+                        φ = φrep
+                        # Boat
+                        up = control(xp, φ, c)
+
+            else :
+                up = array([[0], [0]])
+
+            self.update_position(up, uq, obstacle)

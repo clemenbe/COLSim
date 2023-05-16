@@ -101,7 +101,7 @@ def Jφ0(p):
                   [-2 * p1 * p2 + 1, -3 * p2 ** 2 - p2 ** 2 + 1]])
 
 
-def dφ(x):
+def dφ(x, c):
     p1, p2, v, θ = x.flatten()
     z = inv(D) @ array([[p1 - c[0,0]], [p2 - c[1,0]]])
     dv = D @ Jφ0(z) @ inv(D) @ array([[cos(θ)], [sin(θ)]])
@@ -145,7 +145,7 @@ def φrep(p1, p2, c):
 
 
 def control(x, φ, c):
-    dφ1, dφ2 = dφ(x)
+    dφ1, dφ2 = dφ(x, c)
     x, y, v, θ = x.flatten()
     φ1, φ2 = φ(x, y, c)
     u1 = 0
@@ -181,8 +181,8 @@ def f(x,u):
 # xp = array([[-1, 3, 1, 4.75]]).T      #x,y,v,θ of the boat
 # xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
 
-xp = array([[3, 3, 1, 4.75]]).T      #x,y,v,θ of the boat
-xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
+xp = array([[400, 300, 2, -1.5]]).T      #x,y,v,θ of the boat
+xq = array([[400, 400, 50, 0.8]]).T    #x,y,v,θ of the obstacle boat
 
 # qx, qy = 2, 2
 k = 0.5   # constant to determine the repulsion force of the field
@@ -203,92 +203,96 @@ ax = init_figure(-s,s,-s,s)
 # draw_circle(ax, c[0,0], c[1,0], r, 'magenta')
 # pause(20)
 
-for t in arange(0, 50, dt):
-    clear(ax)
-    # xq = array([[1 + 0.1 * t], [1]])
-    qx, qy, qv, qθ = xq.flatten()   # obstacle boat
-    px, py, pv, pθ = xp.flatten()   # boat
-    uq = array([[0], [0]])          # obstacle boat controler
-    c = array([[qx],
-               [qy]])               # coordinates of the circle representing the obstacle zone to avoid
-    scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
-    print('scalar_pdt=', geo_scalar_prod(qv, pv, qθ, pθ))
+if __name__ == '__main__':
+    for t in arange(0, 50, dt):
+        clear(ax)
+        # xq = array([[1 + 0.1 * t], [1]])
+        qx, qy, qv, qθ = xq.flatten()   # obstacle boat
+        px, py, pv, pθ = xp.flatten()   # boat
+        uq = array([[0], [0]])          # obstacle boat controler
+        c = array([[qx],
+                [qy]])               # coordinates of the circle representing the obstacle zone to avoid
+        scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
+        print('scalar_pdt=', geo_scalar_prod(qv, pv, qθ, pθ))
 
-    # Test to check if the boat is close to the obstacle
-    if dist(xq, xp) < r+Ɛ :
-        # Test to see if the boat have a heading close to the obstacle
-        # TODO : affine the precision of the application of the scalar product
-        if scalar_pdt >= 0:
-            print('------------------Boats with close directions------------------')
-            # Tests to find where the boat is compared with the obstacle
-            if (py > qy + Ɛ) :
-                # The boat is in the front zone of the obstacle
-                print('------------------Front zone------------------')
-                φ = φrep
-            elif (py < qy + Ɛ) & (px < qx) :
-                # The boat is in the left lower zone compared with the obstacle
-                print('------------------Left lower zone------------------')
-                φ = φcw
+        # Test to check if the boat is close to the obstacle
+        if dist(xq, xp) < r+Ɛ :
+            # Test to see if the boat have a heading close to the obstacle
+            # TODO : affine the precision of the application of the scalar product
+            if scalar_pdt >= 0:
+                print('------------------Boats with close directions------------------')
+                # Tests to find where the boat is compared with the obstacle
+                if (py > qy + Ɛ) :
+                    # The boat is in the front zone of the obstacle
+                    print('------------------Front zone------------------')
+                    φ = φrep
+                elif (py < qy + Ɛ) & (px < qx) :
+                    # The boat is in the left lower zone compared with the obstacle
+                    print('------------------Left lower zone------------------')
+                    φ = φcw
+                else :
+                    # The boat is in the right lower zone compared with the obstacle
+                    print('------------------Right lower zone------------------')
+                    φ = φccw
+                up = control(xp, φ, c)
+                print('u=', up)
+                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+
             else :
-                # The boat is in the right lower zone compared with the obstacle
-                print('------------------Right lower zone------------------')
-                φ = φccw
-            up = control(xp, φ, c)
-            print('u=', up)
-            draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+                print('------------------Boats in opposite directions------------------')
+                # Tests to find where the boat is compared with the obstacle
+                if (py > qy - Ɛ):
+                    # The boat is in the front zone of the obstacle
+                    print('------------------Left front zone------------------')
+                    φ = φccw
+                    # Boat
+                    up = control(xp, φ, c)
+                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+                elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
+                    # The boat is in the front zone of the obstacle
+                    print('------------------Right front zone (align)------------------')
+                    up = array([[0], [0]])
+                elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt > abs(qv*pv)*cos(2.5)):
+                    # The boat is in the front zone of the obstacle
+                    print('------------------Right front zone------------------')
+                    φ = φccw
+                    # Boat
+                    up = control(xp, φ, c)
+                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+                else:
+                    # The boat is in the right lower zone compared with the obstacle
+                    print('------------------Lower zone------------------')
+                    φ = φrep
+                    # Boat
+                    up = control(xp, φ, c)
+                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+                # # Boat
+                # up = control(xp, φ, c)
+                # print('up=', up)
+                # draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+                # # Obstacle boat
+                # # uq = control(xq, φ, array([[qx], [qy]]))
+                # print('uq=', uq)
+                # # draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, array([[qx], [qy]]))
+
 
         else :
-            print('------------------Boats in opposite directions------------------')
-            # Tests to find where the boat is compared with the obstacle
-            if (py > qy - Ɛ):
-                # The boat is in the front zone of the obstacle
-                print('------------------Left front zone------------------')
-                φ = φccw
-                # Boat
-                up = control(xp, φ, c)
-                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
-            elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
-                # The boat is in the front zone of the obstacle
-                print('------------------Right front zone (align)------------------')
-                up = array([[0], [0]])
-            elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt > abs(qv*pv)*cos(2.5)):
-                # The boat is in the front zone of the obstacle
-                print('------------------Right front zone------------------')
-                φ = φccw
-                # Boat
-                up = control(xp, φ, c)
-                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
-            else:
-                # The boat is in the right lower zone compared with the obstacle
-                print('------------------Lower zone------------------')
-                φ = φrep
-                # Boat
-                up = control(xp, φ, c)
-                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
-            # # Boat
-            # up = control(xp, φ, c)
-            # print('up=', up)
-            # draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
-            # # Obstacle boat
-            # # uq = control(xq, φ, array([[qx], [qy]]))
-            # print('uq=', uq)
-            # # draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, array([[qx], [qy]]))
+            up = array([[0], [0]])
+
+        # Euler integration method
+        xp = xp + dt * f(xp, up)
+        xq = xq + dt * f(xq, uq)
+        print('xp=', xp)
+        print('xq=', xq)
+        draw_boat_and_vector(xp)
+        draw_boat_and_vector(xq)
+        draw_circle(ax, c[0,0], c[1,0], r, 'red')               # DCPA zone to avoid
+        draw_circle(ax, c[0,0], c[1,0], r+Ɛ, 'magenta')         # DCPA zone extended for safety : manoeuvring area
+
+        draw_circle(ax, px, py, r, 'red')
 
 
-    else :
-        up = array([[0], [0]])
 
-    # Euler integration method
-    xp = xp + dt * f(xp, up)
-    xq = xq + dt * f(xq, uq)
-    print('xp=', xp)
-    print('xq=', xq)
-    draw_boat_and_vector(xp)
-    draw_boat_and_vector(xq)
-    draw_circle(ax, c[0,0], c[1,0], r, 'red')               # DCPA zone to avoid
-    draw_circle(ax, c[0,0], c[1,0], r+Ɛ, 'magenta')         # DCPA zone extended for safety : manoeuvring area
-
-    draw_circle(ax, px, py, r, 'red')
 
 
 
