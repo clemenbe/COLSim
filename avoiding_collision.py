@@ -98,6 +98,8 @@ def control(x, φ, c):
     return array([[u1], [u2]])
 
 
+# TODO : initial traj
+
 ''' Left lower zone '''
 # xp = array([[-2.5,-3,1,1]]).T      #x,y,v,θ of the boat
 # xq = array([[2,2,0.25,2]]).T    #x,y,v,θ of the obstacle boat
@@ -107,14 +109,17 @@ def control(x, φ, c):
 # xq = array([[0,0,0.25,2]]).T    #x,y,v,θ of the obstacle boat
 
 ''' Left upper zone '''
-# xp = array([[-2,-1,1,1]]).T      #x,y,v,θ of the boat
-# xq = array([[2,-2,0.25,2]]).T    #x,y,v,θ of the obstacle boat
+# xp = array([[-1,2,1,5]]).T      #x,y,v,θ of the boat
+# xq = array([[0,-2,0.25,2]]).T    #x,y,v,θ of the obstacle boat
 
 ''' Right upper zone '''
-# xp = array([[-2.5,-3,1,1]]).T      #x,y,v,θ of the boat
-# xq = array([[2,2,0.25,2]]).T    #x,y,v,θ of the obstacle boat
+# xp = array([[3,3,1,4]]).T      #x,y,v,θ of the boat
+# xq = array([[0,-2,0.25,2]]).T    #x,y,v,θ of the obstacle boat
 
 ''' Opposite direction '''
+# xp = array([[-1, 3, 1, 4.75]]).T      #x,y,v,θ of the boat
+# xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
+
 xp = array([[3, 3, 1, 4.75]]).T      #x,y,v,θ of the boat
 xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
 
@@ -153,6 +158,7 @@ for t in arange(0, 50, dt):
         # Test to see if the boat have a heading close to the obstacle
         # TODO : affine the precision of the application of the scalar product
         if scalar_pdt >= 0:
+            print('------------------Boats with close directions------------------')
             # Tests to find where the boat is compared with the obstacle
             if (py > qy + Ɛ) :
                 # The boat is in the front zone of the obstacle
@@ -180,10 +186,17 @@ for t in arange(0, 50, dt):
                 # Boat
                 up = control(xp, φ, c)
                 draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
-            if (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
+            elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
+                # The boat is in the front zone of the obstacle
+                print('------------------Right front zone (align)------------------')
+                up = array([[0], [0]])
+            elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt > abs(qv*pv)*cos(2.5)):
                 # The boat is in the front zone of the obstacle
                 print('------------------Right front zone------------------')
-                up = array([[0], [0]])
+                φ = φccw
+                # Boat
+                up = control(xp, φ, c)
+                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
             else:
                 # The boat is in the right lower zone compared with the obstacle
                 print('------------------Lower zone------------------')
@@ -212,7 +225,7 @@ for t in arange(0, 50, dt):
     draw_boat_and_vector(xp)
     draw_boat_and_vector(xq)
     draw_circle(ax, c[0,0], c[1,0], r, 'red')               # DCPA zone to avoid
-    draw_circle(ax, c[0,0], c[1,0], r+Ɛ, 'magenta')         # DCPA zone extended for safety
+    draw_circle(ax, c[0,0], c[1,0], r+Ɛ, 'magenta')         # DCPA zone extended for safety : manoeuvring area
 
     draw_circle(ax, px, py, r, 'red')
 
