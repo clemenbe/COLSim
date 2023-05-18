@@ -12,6 +12,7 @@ class Simulation:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption("Ship Simulator")
         self.clock = pygame.time.Clock()
+        self.dt = 0.5
         self.fps = 60
 
     
@@ -19,16 +20,13 @@ class Simulation:
     def create_ships(self):
         for _ in range(self.num_ships):
             # randomly create ships
-            '''x = random.randint(0, self.screen_width)
+            x = random.randint(0, self.screen_width)
             y = random.randint(0, self.screen_height)
             speed = random.uniform(1, 3)
             direction = random.randint(0, 360)
             ship = Ship(x, y, speed, direction)
-            self.ships.append(ship)'''
+            self.ships.append(ship)
         
-        # create ships by settings from avoiding_collision
-        self.ships.append(Ship(xp))
-        self.ships.append(Ship(xq))
         
         # creating two ships
 
@@ -38,7 +36,7 @@ class Simulation:
     def update_positions(self):
         for ship in self.ships:
             ship.avoid_collisions(self.ships, avoidance_radius=30)
-            # ship.update_position()
+            ship.update_position(self.dt)
 
     # draw all ships
     def draw(self):

@@ -182,7 +182,7 @@ def f(x,u):
 # xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
 
 xp = array([[400, 300, 2, -1.5]]).T      #x,y,v,θ of the boat
-xq = array([[400, 400, 50, 0.8]]).T    #x,y,v,θ of the obstacle boat
+xq = array([[400, 400, 15, -1.5]]).T    #x,y,v,θ of the obstacle boat
 
 # qx, qy = 2, 2
 k = 0.5   # constant to determine the repulsion force of the field
