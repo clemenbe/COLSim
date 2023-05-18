@@ -62,3 +62,12 @@ def draw_field_around_c(ax, f, xmin, xmax, ymin, ymax, a, c):
 def draw_circle(ax, center_x, center_y, radius, color):
     circle = plt.Circle((center_x, center_y), radius, fill=False, color=color)
     ax.add_artist(circle)
+
+
+def draw_disk(ax, c, r, col, alph=0.7, w=1):
+    # draw_disk(ax,array([[1],[2]]),0.5,"blue")
+    e = Ellipse(xy=c, width=2 * r, height=2 * r, angle=0, linewidth=w)
+    ax.add_artist(e)
+    e.set_clip_box(ax.bbox)
+    e.set_alpha(alph)  # transparency
+    e.set_facecolor(col)

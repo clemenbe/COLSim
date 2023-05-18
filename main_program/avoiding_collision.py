@@ -93,42 +93,41 @@ xq = array([[2,0,0.25,2]]).T    #x,y,v,θ of the obstacle boat
 
 
 k = 0.5     # constant to determine the repulsion force of the field
-r = 2       # DCPA
-D = array([[r, 0],
-          [0, r]])
-
-dt = 0.05   # step of the simulation
-s = 9       # size of  the simulation figure
+DCPA = 2       # DCPA
+D = array([[DCPA, 0],
+          [0, DCPA]])
 Ɛ = 2       # radius added to the dangerous zone
-#TODO : remplace Ɛ by two variables, one for the manoeuvring area and one for the
-ax = init_figure(-s,s,-s,s)
-px0, py0 = -2.5, -5
-Lx = [px0]
-Ly = [py0]
 
 
-if __name__ == '__main__':
-    for t in arange(0, 50, dt):
-        clear(ax)
+# call from simulation.py
+# simulation is the current simulation
+# colliding_ships and non_colliding_ships are vectors that contains ship objects
+def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = array([[1], [1]]), phat = array([[7.5], [8]]), qhat = array([[-2.5], [8]]), rhat = array([[-7.5], [-8]])):
+    dt = simulation.dt
+    r = simulation.collision_radius
 
-        qx, qy, qv, qθ = xq.flatten()   # obstacle boat
-        px, py, pv, pθ = xp.flatten()   # boat
+    while colliding_ships :
 
-        c = array([[qx], [qy]])         # coordinates of the circle representing the obstacle zone to avoid
+    # here is how you can access ships in collision
 
-        # Instructions
-        vhat = array([[1], [1]])        # desired acceleration and angular speed
-        phat = array([[7.5], [8]])      # coordinates for the final destination of the boat
-        qhat = array([[-2.5], [8]])     # coordinates for the final destination of the obstacle boat
+        for shippair in colliding_ships:
+            ship1, ship2 = shippair
+            # depents on which one you see as obstacle
+            px = ship1.x
+            py = ship1.y
+            qx = ship2.x
+            qy = ship2.y
+            pv = ship1.speed
+            qv = ship2.speed
+            pθ = ship1.direction
+            qθ = ship2.direction
+            xp = array([[px], [py], [pv], [pθ]])
+            xq = array([[qx], [qy], [qv], [qθ]])
 
-        scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
-        print('scalar_pdt=', geo_scalar_prod(qv, pv, qθ, pθ))
+            c = array([[qx], [qy]])         # coordinates of the circle representing the obstacle zone to avoid
+            scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
 
 
-        # Test to check if the boat is close to the obstacle
-        if dist(xq, xp) < r+Ɛ :
-            # Test to see if the boat have a heading close to the obstacle
-            # TODO : affine the precision of the application of the scalar product
             if scalar_pdt >= 0:
                 print('------------------Boats with close directions------------------')
                 # Tests to find where the boat is compared with the obstacle
@@ -146,7 +145,7 @@ if __name__ == '__main__':
                     φ = φccw
                 up = control(xp, φ, c)
                 print('u=', up)
-                draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
+
 
             else :
                 print('------------------Boats in opposite directions------------------')
@@ -157,7 +156,6 @@ if __name__ == '__main__':
                     φ = φccw
                     # Boat
                     up = control(xp, φ, c)
-                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
                 elif (py > qy - Ɛ) & (px > qx) & (scalar_pdt < abs(qv*pv)*cos(2.5)):
                     # The boat is in the front zone of the obstacle
                     print('------------------Right front zone (align)------------------')
@@ -168,91 +166,66 @@ if __name__ == '__main__':
                     φ = φccw
                     # Boat
                     up = control(xp, φ, c)
-                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
                 else:
                     # The boat is in the right lower zone compared with the obstacle
                     print('------------------Lower zone------------------')
                     φ = φrep
                     # Boat
                     up = control(xp, φ, c)
-                    draw_field_around_c(ax, φ, -s, s, -s, s, 0.51, c)
 
-        else :
-            # Control commande to reach the final destination if there is no risk of collision
-            wp = vhat - 2 * (array([[px], [py]]) - phat)
-            vbar_p = norm(wp)
-            thetabar_p = arctan2(wp[1, 0], wp[0, 0])
-            up = array([[0], [10 * arctan(tan(0.5 * (thetabar_p - pθ)))]])
 
-        # Control commande to reach the final destination of the obstacle
-        wq = vhat - 2 * (array([[qx], [qy]]) - qhat)
-        vbar_q = norm(wq)
-        thetabar_q = arctan2(wq[1, 0], wq[0, 0])
-        uq = array([[0], [10 * arctan(tan(0.5 * (thetabar_q - qθ)))]])
 
-        # Euler integration method
-        xp = xp + dt * f(xp, up)
-        xq = xq + dt * f(xq, uq)
-        print('xp=', xp)
-        print('xq=', xq)
+            # Control commande to reach the final destination of the obstacle
+            wq = vhat - 2 * (array([[qx], [qy]]) - qhat)
+            thetabar_q = arctan2(wq[1, 0], wq[0, 0])
+            uq = array([[0], [10 * arctan(tan(0.5 * (thetabar_q - qθ)))]])
 
-        ''' Display '''
-        draw_boat_and_vector(xp)                                # display of the boat
-        draw_boat_and_vector(xq)                                # display of the obstacle boat
-        draw_circle(ax, c[0,0], c[1,0], r, 'red')               # DCPA zone to avoid related to the obstacle boat
-        draw_circle(ax, c[0,0], c[1,0], r+Ɛ, 'magenta')         # DCPA zone extended for safety : manoeuvring area
-        draw_circle(ax, px, py, r, 'red')                       # DCPA zone to avoid related to the boat
+            # Euler integration method
+            xp = xp + dt * f(xp, up)
+            xq = xq + dt * f(xq, uq)
+            print('xp=', xp)
+            print('xq=', xq)
 
-        # Final destination of the boat and the obstacle boat
-        draw_disk(ax, phat, 0.2, 'green')
-        draw_disk(ax, qhat, 0.2, 'blue')
+            ship1.x = px
+            ship1.y = py
+            ship2.x = qx
+            ship2.y = qy
+            ship1.speed = pv
+            ship2.speed = qv
+            ship1.direction = pθ
+            ship2.direction = qθ
 
-        # Display of paths
-        ax.plot([px0, phat[0, 0]], [py0, phat[1, 0]], linestyle='dotted', color='purple')   # initial path
-        Lx.append(px)
-        Ly.append(py)
-        for x, y in zip(Lx, Ly):
-            draw_disk(ax, array([[x], [y]]), 0.08, 'green')                                 # corrected path to avoid collision
+            colliding_ships.remove(shippair)
 
 
 
 
+        # here is how you can access the rest of ships not in collision
 
-# call from simulation.py
-# simulation is the current simulation
-# colliding_ships and non_colliding_ships are vectors that contains ship objects
-def avoid_collision(simulation, colliding_ships, non_colliding_ships):
-    dt = simulation.dt
-    collision_radius = simulation.collision_radius
+        for other_ship in non_colliding_ships:
+            x = other_ship.x
+            y = other_ship.y
+            v = other_ship.speed
+            θ = other_ship.direction
 
-    # here is how you can access ships in collision
-    '''
-    for shippair in colliding_ships:
-        ship1, ship2 = shippair
-        # depents on which one you see as obstacle
-        px = ship1.x
-        py = ship1.y
-        qx = ship2.x
-        qy = ship2.y
-        pv = ship1.speed
-        qv = ship2.speed
-        pd = ship1.direction
-        qd = ship2.direction
-    '''
+            # Control commande to reach the final destination
+            w = vhat - 2 * (array([[x], [y]]) - rhat)
+            thetabar = arctan2(w[1, 0], w[0, 0])
+            u = array([[0], [10 * arctan(tan(0.5 * (thetabar - θ)))]])
 
-    # here is how you can access the rest of ships not in collision
-    '''
-    for other_ship in non_colliding_ships:
-        x = other_ship.x
-        y = other_ship.y
-        ...
+            x = x + dt * f(x, u)
 
-        # you can just make them move normally
-        other_ship.move()
+            other_ship.x = x
+            other_ship.y = y
+            other_ship.speed = v
+            other_ship.direction = θ
 
-    '''
+            non_colliding_ships.remove(other_ship)
 
-    # make sure all ships move, both colliding and non-colliding ships
-    # after each iteration of loop, call draw
-    # simulation.draw()
 
+    simulation.draw()
+
+
+
+
+# TODO : ax ? px0 ? draw functions ?
