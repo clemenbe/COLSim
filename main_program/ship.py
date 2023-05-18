@@ -17,7 +17,7 @@ class Ship:
         self.image = self.load_image("./image/870056.png")
 
     # update only ship itself position
-    def update_position(self, dt):
+    def move(self, dt):
         self.x += self.speed * dt * math.cos(math.radians(self.direction))
         self.y += self.speed * dt * math.sin(math.radians(self.direction))
         
@@ -29,8 +29,3 @@ class Ship:
         image = pygame.image.load(image_path)
         image = pygame.transform.scale(image, (30, 30))  # Scale the image to desired size
         return image
-    
-    # need more sesearch
-    # need to include different senarios
-    def avoid_collisions(self, ships, avoidance_radius):
-        return

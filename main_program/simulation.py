@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 from ship import Ship
 from avoiding_collision import *
 
@@ -14,6 +15,7 @@ class Simulation:
         self.clock = pygame.time.Clock()
         self.dt = 0.5
         self.fps = 60
+        self.collision_radius = 50
 
     
     # can improve by creating different types of ships
@@ -26,17 +28,32 @@ class Simulation:
             direction = random.randint(0, 360)
             ship = Ship(x, y, speed, direction)
             self.ships.append(ship)
-        
-        
-        # creating two ships
-
 
 
     # check collisions and update all ship positions
-    def update_positions(self):
-        for ship in self.ships:
-            ship.avoid_collisions(self.ships, avoidance_radius=30)
-            ship.update_position(self.dt)
+    def move_ships(self):
+        colliding_ships = []
+
+        # check collision between every two ships
+        for i, ship in enumerate(self.ships):
+            j = i + 1
+            while j < len(self.ships):
+                dx = ship.x - self.ships[j].x
+                dy = ship.y - self.ships[j].y
+                distance = math.sqrt(dx ** 2 + dy ** 2)
+
+                # collision here
+                if distance <= self.collision_radius:
+                    colliding_ships.append((ship, self.ships[j]))
+
+                j += 1
+
+        # update positions only when there is no colliding ships
+        if colliding_ships == []:
+            for ship in self.ships:
+                ship.move(self.dt)
+
+        return colliding_ships
 
     # draw all ships
     def draw(self):
@@ -56,7 +73,26 @@ class Simulation:
                     running = False
 
             # keep refreshing the screen
-            self.update_positions()
+            colliding_ships = self.move_ships()
+            # if any colliding ships
+            if colliding_ships != []:
+
+                # put every ship in collision situation in a set
+                colliding_ships_set = set()
+                for shippair in colliding_ships:
+                    ship1, ship2 = shippair
+                    colliding_ships_set.add(ship1)
+                    colliding_ships_set.add(ship2)
+                # all ships as a set
+                ships_set = set(self.ships)
+                # get ships not in collision
+                non_collding_ships = list(ships_set - colliding_ships_set)
+
+                # call avoiding_collision here
+                avoid_collision(self, colliding_ships, non_collding_ships)                
+
+                colliding_ships = []
+
             self.draw()
             
         pygame.quit()
