@@ -1,5 +1,6 @@
 from calcul_tools import *
 from draw import *
+import math
 
 
 def Jφ0(p):
@@ -8,7 +9,7 @@ def Jφ0(p):
     return array([[-3 * p1 ** 2 - p2 ** 2 + 1, -2 * p1 * p2 - 1],
                   [-2 * p1 * p2 + 1, -3 * p2 ** 2 - p2 ** 2 + 1]])
 
-def dφ(x):
+def dφ(x, c):
     p1, p2, v, θ = x.flatten()
     z = inv(D) @ array([[p1 - c[0,0]], [p2 - c[1,0]]])
     dv = D @ Jφ0(z) @ inv(D) @ array([[cos(θ)], [sin(θ)]])
@@ -52,7 +53,7 @@ def φrep(p1, p2, c):
 
 
 def control(x, φ, c):
-    dφ1, dφ2 = dφ(x)
+    dφ1, dφ2 = dφ(x, c)
     x, y, v, θ = x.flatten()
     φ1, φ2 = φ(x, y, c)
     u1 = 0
@@ -97,6 +98,7 @@ DCPA = 2       # DCPA
 D = array([[DCPA, 0],
           [0, DCPA]])
 Ɛ = 2       # radius added to the dangerous zone
+r = 2
 
 
 # call from simulation.py
@@ -110,8 +112,11 @@ def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = arr
 
     # here is how you can access ships in collision
 
-        for shippair in colliding_ships:
-            ship1, ship2 = shippair
+        for pair_index, shippair in enumerate(colliding_ships):
+            ship1_index, ship2_index = shippair
+            # get the ships object by index access
+            ship1 = simulation.ships[ship1_index]
+            ship2 = simulation.ships[ship2_index]
             # depents on which one you see as obstacle
             px = ship1.x
             py = ship1.y
@@ -181,46 +186,52 @@ def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = arr
             uq = array([[0], [10 * arctan(tan(0.5 * (thetabar_q - qθ)))]])
 
             # Euler integration method
+            print('up=', up)
             xp = xp + dt * f(xp, up)
             xq = xq + dt * f(xq, uq)
             print('xp=', xp)
             print('xq=', xq)
 
-            ship1.x = px
-            ship1.y = py
-            ship2.x = qx
-            ship2.y = qy
-            ship1.speed = pv
-            ship2.speed = qv
-            ship1.direction = pθ
-            ship2.direction = qθ
+            simulation.ships[ship1_index].x = px
+            simulation.ships[ship1_index].y = py
+            simulation.ships[ship2_index].x = qx
+            simulation.ships[ship2_index].y = qy
+            simulation.ships[ship1_index].speed = pv
+            simulation.ships[ship2_index].speed = qv
+            simulation.ships[ship1_index].direction = pθ
+            simulation.ships[ship2_index].direction = qθ
 
-            colliding_ships.remove(shippair)
-
-
+            # remove when out of collision
+            if math.sqrt((px - qx) ** 2 + (py - qy) ** 2) > r:
+                colliding_ships.pop(pair_index)
 
 
         # here is how you can access the rest of ships not in collision
 
-        for other_ship in non_colliding_ships:
-            x = other_ship.x
-            y = other_ship.y
-            v = other_ship.speed
-            θ = other_ship.direction
+        for other_ship_index in non_colliding_ships:
+            other_ship = simulation.ships[other_ship_index]
+            xr = other_ship.x
+            yr = other_ship.y
+            vr = other_ship.speed
+            θr = other_ship.direction
+            x = array([[xr], [yr], [vr], [θr]])
 
             # Control commande to reach the final destination
-            w = vhat - 2 * (array([[x], [y]]) - rhat)
+            w = vhat - 2 * (array([[xr], [yr]]) - rhat)
             thetabar = arctan2(w[1, 0], w[0, 0])
-            u = array([[0], [10 * arctan(tan(0.5 * (thetabar - θ)))]])
+            u = array([[0], [10 * arctan(tan(0.5 * (thetabar - θr)))]])
 
             x = x + dt * f(x, u)
 
-            other_ship.x = x
-            other_ship.y = y
-            other_ship.speed = v
-            other_ship.direction = θ
+            simulation.ships[other_ship_index].x = xr
+            simulation.ships[other_ship_index].y = yr
+            simulation.ships[other_ship_index].speed = vr
+            simulation.ships[other_ship_index].direction = θr
 
-            non_colliding_ships.remove(other_ship)
+            # if ship becomes in collision with any other, put in colliding ships
+            for i, ship in enumerate(simulation.ships):
+                if ship != other_ship and math.sqrt((ship.x - other_ship.x) ** 2 + (ship.y - other_ship.y) ** 2) <= r:
+                    colliding_ships.append(i, other_ship_index)
 
 
     simulation.draw()

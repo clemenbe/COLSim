@@ -21,6 +21,7 @@ class Simulation:
     # can improve by creating different types of ships
     def create_ships(self):
         for _ in range(self.num_ships):
+            '''
             # randomly create ships
             x = random.randint(0, self.screen_width)
             y = random.randint(0, self.screen_height)
@@ -28,6 +29,13 @@ class Simulation:
             direction = random.randint(0, 360)
             ship = Ship(x, y, speed, direction)
             self.ships.append(ship)
+            '''
+
+            # create two ships
+            ship1 = Ship(100, 400, 10, 1.5)
+            ship2 = Ship(400, 400, 4, -1.5)
+            self.ships = [ship1, ship2]
+
 
 
     # check collisions and update all ship positions
@@ -44,7 +52,7 @@ class Simulation:
 
                 # collision here
                 if distance <= self.collision_radius:
-                    colliding_ships.append((ship, self.ships[j]))
+                    colliding_ships.append((i, j))
 
                 j += 1
 
@@ -77,15 +85,15 @@ class Simulation:
             # if any colliding ships
             if colliding_ships != []:
 
-                # put every ship in collision situation in a set
+                # put every ship index in collision situation in a set
                 colliding_ships_set = set()
                 for shippair in colliding_ships:
-                    ship1, ship2 = shippair
-                    colliding_ships_set.add(ship1)
-                    colliding_ships_set.add(ship2)
-                # all ships as a set
-                ships_set = set(self.ships)
-                # get ships not in collision
+                    ship1_index, ship2_index = shippair
+                    colliding_ships_set.add(ship1_index)
+                    colliding_ships_set.add(ship2_index)
+                # all ships index as a set
+                ships_set = set(range(len(self.ships)))
+                # get ships index not in collision
                 non_collding_ships = list(ships_set - colliding_ships_set)
 
                 # call avoiding_collision here
