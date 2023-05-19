@@ -15,7 +15,7 @@ class Simulation:
         self.clock = pygame.time.Clock()
         self.dt = 0.5
         self.fps = 60
-        self.collision_radius = 50
+        self.collision_radius = 200
 
     
     # can improve by creating different types of ships
@@ -32,8 +32,8 @@ class Simulation:
             '''
 
             # create two ships
-            ship1 = Ship(100, 400, 10, 1.5)
-            ship2 = Ship(400, 400, 4, -1.5)
+            ship1 = Ship(100, 400, 3.5, 1.5)
+            ship2 = Ship(400, 400, 1.5, 0.5)
             self.ships = [ship1, ship2]
 
 
@@ -100,6 +100,7 @@ class Simulation:
                 avoid_collision(self, colliding_ships, non_collding_ships)                
 
                 colliding_ships = []
+                print('out!!')
 
             self.draw()
             
