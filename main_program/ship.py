@@ -13,13 +13,22 @@ class Ship:
         self.y = y
         self.speed = speed
         self.direction = direction
-        self.privilege =0
+        self.privilege = 0
         self.image = self.load_image("./image/870056.png")
 
     # update only ship itself position
-    def move(self, dt):
-        self.x += self.speed * dt * math.cos(math.radians(self.direction))
-        self.y += self.speed * dt * math.sin(math.radians(self.direction))
+    def move(self, surface, dt, vhat, phat):
+        # self.x += self.speed * dt * math.cos(math.radians(self.direction))
+        # self.y += self.speed * dt * math.sin(math.radians(self.direction))
+        wp = vhat - 2 * (array([[self.x], [self.y]]) - phat)
+        thetabar_p = arctan2(wp[1, 0], wp[0, 0])
+        up = array([[0], [10 * arctan(tan(0.5 * (thetabar_p - self.direction)))]])
+        print('up=',up)
+        xp = array([[self.x], [self.y], [self.speed], [self.direction]])
+        xp = xp + dt * f(xp, up)
+        self.screen.fill((255, 255, 255))
+        print('xp=',xp)
+        self.x, self.y, self.speed, self.direction = xp.flatten()
         
     def draw(self, surface):
         rect = self.image.get_rect(center=(self.x, self.y))
