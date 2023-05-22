@@ -17,16 +17,15 @@ class Ship:
         self.image = self.load_image("./image/870056.png")
 
     # update only ship itself position
-    def move(self, surface, dt, vhat, phat):
+    def move(self, dt, vhat, phat):
         # self.x += self.speed * dt * math.cos(math.radians(self.direction))
         # self.y += self.speed * dt * math.sin(math.radians(self.direction))
         wp = vhat - 2 * (array([[self.x], [self.y]]) - phat)
         thetabar_p = arctan2(wp[1, 0], wp[0, 0])
-        up = array([[0], [10 * arctan(tan(0.5 * (thetabar_p - self.direction)))]])
+        up = array([[0], [10 * arctan(tan(0.5 * (thetabar_p - math.radians(self.direction))))]])
         print('up=',up)
         xp = array([[self.x], [self.y], [self.speed], [self.direction]])
         xp = xp + dt * f(xp, up)
-        self.screen.fill((255, 255, 255))
         print('xp=',xp)
         self.x, self.y, self.speed, self.direction = xp.flatten()
         
