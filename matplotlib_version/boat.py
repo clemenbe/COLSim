@@ -2,6 +2,8 @@ from calcul_tools import *
 from draw import *
 
 class Boat:
+
+    # v is speed, theta is direction
     def __init__(self, x, y, v, theta):
         self.x = x
         self.y = y
@@ -17,3 +19,4 @@ class Boat:
 
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
+    

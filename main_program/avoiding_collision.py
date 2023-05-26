@@ -1,6 +1,7 @@
 from calcul_tools import *
 from draw import *
 import math
+import pygame
 
 
 def Jφ0(p):
@@ -104,21 +105,22 @@ r = 2
 # call from simulation.py
 # simulation is the current simulation
 # colliding_ships and non_colliding_ships are vectors that contains ship objects
-def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = array([[1], [1]]), phat = array([[7.5], [8]]), qhat = array([[-2.5], [8]]), rhat = array([[-7.5], [-8]])):
+def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = array([[1], [1]]), phat = array([[700], [400]]), qhat = array([[700], [400]]), rhat = array([[700], [400]])):
     dt = simulation.dt
     r = simulation.collision_radius
+    print('in!!')
 
-    while colliding_ships != []:
-        
+    while colliding_ships:
+    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
 
     # here is how you can access ships in collision
 
         #for pair_index, shippair in enumerate(colliding_ships):
-        #ship1_index, ship2_index = shippair
-        ship1_index, ship2_index = colliding_ships[0]
+        ship1, ship2 = colliding_ships[0]
         # get the ships object by index access
-        ship1 = simulation.ships[ship1_index]
-        ship2 = simulation.ships[ship2_index]
         # depents on which one you see as obstacle
         px = ship1.x
         py = ship1.y
@@ -126,16 +128,21 @@ def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = arr
         qy = ship2.y
         pv = ship1.speed
         qv = ship2.speed
-        pθ = math.radians(ship1.direction)
-        qθ = math.radians(ship2.direction)
+        pθ = ship1.direction
+        qθ = ship2.direction
         xp = array([[px], [py], [pv], [pθ]])
         xq = array([[qx], [qy], [qv], [qθ]])
+        print(xp)
+        print(xq)
 
         c = array([[qx], [qy]])         # coordinates of the circle representing the obstacle zone to avoid
         scalar_pdt = geo_scalar_prod(qv, pv, qθ, pθ)
 
-        if dist(xp, xq) < r :
+        ship1.move(simulation.dt, vhat, phat)
+        ship2.move(simulation.dt, vhat, phat)
 
+        if dist(xp, xq) < r :
+            
             if scalar_pdt >= 0:
                 print('------------------Boats with close directions------------------')
                 # Tests to find where the boat is compared with the obstacle
@@ -181,35 +188,46 @@ def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = arr
                     # Boat
                     up = control(xp, φ, c)
 
+            # wp = vhat - 2 * (array([[px], [py]]) - phat)
+            # thetabar_p = arctan2(wp[1, 0], wp[0, 0])
+            # up = array([[0], [0]])
 
+
+            # Control commande to reach the final destination of the obstacle
+            # wq = vhat - 2 * (array([[qx], [qy]]) - qhat)
+            # thetabar_q = arctan2(wq[1, 0], wq[0, 0])
+            # uq = array([[0], [10 * arctan(tan(0.5 * (thetabar_q - qθ)))]])
 
             # Control commande to reach the final destination of the obstacle
             wq = vhat - 2 * (array([[qx], [qy]]) - qhat)
             thetabar_q = arctan2(wq[1, 0], wq[0, 0])
-            uq = array([[0], [10 * arctan(tan(0.5 * (thetabar_q - qθ)))]])
+            uq = array([[0], [0]])
 
-            # Euler integration method
-            print('up=', up)
+
+
+        #     # Euler integration method
+        #     print('up=', up)
             xp = xp + dt * f(xp, up)
             xq = xq + dt * f(xq, uq)
-            print('xp=', xp)
-            print('xq=', xq)
+            # print('xp=', xp)
+            # print('xq=', xq)
 
             px, py, pv, pθ = xp.flatten()
             qx, qy, qv, qθ = xq.flatten()
 
-            simulation.ships[ship1_index].x = px
-            simulation.ships[ship1_index].y = py
-            simulation.ships[ship2_index].x = qx
-            simulation.ships[ship2_index].y = qy
-            simulation.ships[ship1_index].speed = pv
-            simulation.ships[ship2_index].speed = qv
-            simulation.ships[ship1_index].direction = math.degrees(pθ)
-            simulation.ships[ship2_index].direction = math.degrees(qθ)
+            ship1.x = px
+            ship1.y = py
+            ship2.x = qx
+            ship2.y = qy
+            ship1.speed = pv
+            ship2.speed = qv
+            ship1.direction = pθ
+            ship2.direction = qθ
 
         # remove when out of collision
-        else :
-            colliding_ships.pop()
+        if dist(xp, xq) >= r :
+            colliding_ships = []
+
 
 
         # here is how you can access the rest of ships not in collision
@@ -241,6 +259,8 @@ def avoid_collision(simulation, colliding_ships, non_colliding_ships, vhat = arr
 
 
         simulation.draw()
+
+    simulation.run_simulation()
 
 
 

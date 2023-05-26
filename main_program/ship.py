@@ -21,12 +21,13 @@ class Ship:
         # self.x += self.speed * dt * math.cos(math.radians(self.direction))
         # self.y += self.speed * dt * math.sin(math.radians(self.direction))
         wp = vhat - 2 * (array([[self.x], [self.y]]) - phat)
+        # wp = array([[700], [400]])
         thetabar_p = arctan2(wp[1, 0], wp[0, 0])
-        up = array([[0], [10 * arctan(tan(0.5 * (thetabar_p - math.radians(self.direction))))]])
-        print('up=',up)
+        up = array([[0], [0]])
+        #print('up=',up)
         xp = array([[self.x], [self.y], [self.speed], [self.direction]])
         xp = xp + dt * f(xp, up)
-        print('xp=',xp)
+        #print('xp=',xp)
         self.x, self.y, self.speed, self.direction = xp.flatten()
         
     def draw(self, surface):

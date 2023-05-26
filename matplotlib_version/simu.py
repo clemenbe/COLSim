@@ -24,7 +24,10 @@ def control(x, φ, c, D, k, r):
     u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
 
-
+def compute_destination(x, y, theta, distance):
+    destination_x = x + distance * cos(theta)
+    destination_y = y + distance * sin(theta)
+    return array([[destination_x], [destination_y]])
 
 
 class Simulation:
@@ -35,9 +38,15 @@ class Simulation:
         self.k = k
         self.r = r
 
-
     def run(self, num_steps, ax, Ɛ, s):
+
+        # instructions
+        vhat = array([[1], [1]])
+        phat = compute_destination(self.boat.x, self.boat.y, self.boat.theta, 10)  # here 10 is the desired travel distance for the boat
+        qhat = compute_destination(self.obstacle.x, self.obstacle.y, self.obstacle.theta, 5)  # and 5 is the desired travel distance for the obstacle
+
         for _ in range(num_steps):
+
             clear(ax)
 
             qx, qy, qv, qtheta = self.obstacle.get_state_vector().flatten()
@@ -47,10 +56,10 @@ class Simulation:
             D = array([[self.r, 0],
                        [0, self.r]])
 
-            # Instructions
-            vhat = array([[1], [1]])
-            phat = array([[7.5], [8]])
-            qhat = array([[-2.5], [8]])
+
+            
+            # phat = array([[7.5], [8]])
+            # qhat = array([[-2.5], [8]])
 
             scalar_pdt = geo_scalar_prod(qv, pv, qtheta, ptheta)
 
