@@ -9,13 +9,20 @@ def main():
     s = 9                               # size of  the simulation figure
     ax = init_figure(-s, s, -s, s)
 
-    # Initialisation of the objects
-    boat = Boat(-2.5, -2.5, 1.5, 0)     # x,y,v,θ of the boat
-    obstacle = Boat(1.5, 1.5, 0.5, 1)   # x,y,v,θ of the obstacle boat
     dt = 0.1                            # Step for the simulation
     k = 0.5                             # Constant to determine the repulsion force of the field
     r = 2                               # DCPA
-    simulation = Simulation(boat, obstacle, dt, k, r)
+
+    # Initialisation of the objects
+    boat1 = Boat(-2.5, -2.5, 1.5, 0)     # x,y,v,θ of the boat
+    obstacle1 = Boat(1.5, 1.5, 0.5, 1)   # x,y,v,θ of the obstacle boat
+
+    boat2 = Boat(3, 3, 1.5, 4.75)     # x,y,v,θ of the boat
+    obstacle2 = Boat(0,-2,0.25,3)   # x,y,v,θ of the obstacle boat
+
+    boatpairs = [(boat1, obstacle1), (boat2, obstacle2)]
+    
+    simulation = Simulation(boatpairs, dt, k, r)
 
     # Exécution de la simulation
     num_steps = 1000
