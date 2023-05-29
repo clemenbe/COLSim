@@ -53,11 +53,16 @@ class Simulation:
 
         for _ in range(num_steps):
 
+            clear(ax)
+
             for i, boatpair in enumerate(self.boatpairs):
 
                 boat, obstacle = boatpair
 
-                clear(ax)
+                phat = collision_variables[i][4]
+                qhat = collision_variables[i][5]
+
+                
 
                 qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
                 px, py, pv, ptheta = boat.get_state_vector().flatten()
