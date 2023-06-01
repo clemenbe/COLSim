@@ -35,23 +35,28 @@ class Boat:
         # 10 is the distance from initial position to destination
         self.phat = array([[self.x + 10 * cos(self.theta)], [self.y + 10 * sin(self.theta)]])
 
+    # update the position of a ship based on up controller
     def update(self, u, dt):
         x, y, v, theta = self.x, self.y, self.v, self.theta
         self.x += dt * v * cos(theta)
         self.y += dt * v * sin(theta)
-        self.v = v + dt * u[0]
-        self.theta += dt * u[1]
+        self.v = v + dt * u[0][0]
+        self.theta += dt * u[1][0]
 
-    def draw(self, ax, r):
+    # draw circle around boat
+    def draw(self, ax, r, Ɛ):
         draw_boat_and_vector(self.get_state_vector())  # display of the 
         draw_circle(ax, self.x, self.y, r, 'red')  # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')  # DCPA zone extended for safety : manoeuvring area
+        draw_disk(ax, self.phat, 0.2, 'green')
 
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
     
+    # called by move(), when there is risk of collision
     def avoid_collision(self, obstacle, ax, Ɛ, s, r, k):
-        px, py, pv, ptheta = (self.x, self.y, self.v, self.theta)
-        qx, qy, qv, qtheta = (obstacle.x, obstacle.y, obstacle.v, obstacle.theta)
+        px, py, pv, ptheta = self.get_state_vector().flatten()
+        qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
         
         scalar_pdt = geo_scalar_prod(qv, pv, qtheta, ptheta)
 
@@ -115,17 +120,23 @@ class Boat:
         return up
 
 
+    # move the ship straightly when there is no risk of collision
+    # called by move()
     def move_straight(self):
         vhat = array([[1], [1]])
         # Control commande to reach the final destination if there is no risk of collision
         wp = vhat - 2 * (array([[self.x], [self.y]]) - self.phat)
         thetabar_p = arctan2(wp[1, 0], wp[0, 0])
+        print(f'thetabar_p: {thetabar_p}, type: {type(thetabar_p)}')
+        print(f'self.theta: {self.theta}, type: {type(self.theta)}')
+
         up = array([[0], [10*arctan(tan(0.5*(thetabar_p - self.theta)))]])
         return up
 
     
+    # moves the ship every iteration
     def move(self, boats, checked_boats, ax, Ɛ, s, r, k, dt):
-        up = []
+        #up = array([[0], [0]])
         in_collision = False
 
         # check risks of collision

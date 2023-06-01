@@ -13,16 +13,22 @@ def main():
     k = 0.5                             # Constant to determine the repulsion force of the field
     r = 2                               # DCPA
 
-    # Initialisation of the objects
-    boat1 = Boat(-2.5, -2.5, 1.5, 0)     # x,y,v,θ of the boat
-    obstacle1 = Boat(1.5, 1.5, 0.5, 1)   # x,y,v,θ of the obstacle boat
-
-    boat2 = Boat(3, 3, 1.5, 4.75)     # x,y,v,θ of the boat
-    obstacle2 = Boat(0,-2,0.25,3)   # x,y,v,θ of the obstacle boat
-
-    # boatpairs = [(boat1, obstacle1), (boat2, obstacle2)]
-
-    boats = [boat1, obstacle1, boat2, obstacle2]
+    boats = []
+    # Initialising individual boats
+    boats.append(Boat(-2.5, -2.5, 1.5, 0))     # x,y,v,θ of the boat
+    boats.append(Boat(1.5, 1.5, 0.5, 1))   # x,y,v,θ of the boat
+    boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
+    # boats.append(Boat(0, -2, 0.25, 1.75))   # x,y,v,θ of the boat
+    # boats.append(Boat(-2.5, -5, 2, 1))
+    # boat6 = Boat(2, 0, 0.25, 2)
+    # boat7 = Boat(5, -6, 1.5, 2)
+    # boats.append(Boat(0, 0, 0.25, 2))
+    # boat9 = Boat(-1, 2, 1.5, 5)
+    # boat10 = Boat(0, -2, 0.25, 2)
+    # boat11 = Boat(3, 3, 1.5, 4)
+    boats.append(Boat(0, -2, 0.25, 2))
+    # boat13 = Boat(3, 3, 1.5, 4.75)
+    # boat14 = Boat(0,-2, 0.25, 1.75)
     
     simulation = Simulation(boats, dt, k, r)
 
