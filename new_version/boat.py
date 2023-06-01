@@ -127,8 +127,6 @@ class Boat:
         # Control commande to reach the final destination if there is no risk of collision
         wp = vhat - 2 * (array([[self.x], [self.y]]) - self.phat)
         thetabar_p = arctan2(wp[1, 0], wp[0, 0])
-        print(f'thetabar_p: {thetabar_p}, type: {type(thetabar_p)}')
-        print(f'self.theta: {self.theta}, type: {type(self.theta)}')
 
         up = array([[0], [10*arctan(tan(0.5*(thetabar_p - self.theta)))]])
         return up

@@ -14,6 +14,7 @@ class Simulation:
 
     def run(self, num_steps, ax, Ɛ, s):
 
+
         for _ in range(num_steps):
 
             clear(ax)
