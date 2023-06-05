@@ -72,9 +72,17 @@ Overall, the UTSeaSim simulator uses an RRT algorithm to avoid obstacle.
 ### matplot_version
 In this folder, there is a first version of the USV Simulator, using matlab to display the simulation.
 With those codes, you will be able to simulate two boats, be chosing his position (x and y), his speed v, and his heading/orientation theta.
-It is eaui
+It is equipped with an avoiding collision system.
+We used different classes to create a flexible structure :
+- [ ] **Simulation** : run a for loop in the time, depending on the number of steps chosen, applies the avoiding collision system which will atttribute the correct controler for each situation, will update the state vector of the considerated boat, and will display the boats.
+- [ ] **Boat** : allow to define each boat with x, y, v, theta, and define an update and get_state_vector fonction
+
+We created three .py files to use as librairies : **_calcul_tools, draw_** and **_potential_fields_**
 
 ### new_version
+The New Version is the matplotlib version extended to more than two boats. The structure completely changed. In order to make the avoiding collision system work individually for each boat, it is now located in the **Boat** class :
+- [ ] **Simulation** : run a for loop in the time, depending on the number of steps chosen. Route in a loop all boats present in the simulation, where it will call the function *move* form *Boat*, and then the function *draw* to display the simulation. It will also initialize a set where all the boats which has been checked for the risk of collision are gonna be put inside, in the *move* function 
+- [ ] **Boat** : allow to define each boat with x, y, v, theta, and define an *update* and *get_state_vector* function, *draw*, the all *avoiding_collision* function (retrun the consign *up* for the considerated boat p), *move_straight* to generate the consign *up* to follow his initial path, and *move* to called every iteration to make the boats move depending on their situation.
 
 ### cross_path_version
 
