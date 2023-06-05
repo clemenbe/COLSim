@@ -67,18 +67,14 @@ Overall, the UTSeaSim simulator uses an RRT algorithm to avoid obstacle.
 
 ## Structure of the USV Simulator
 
-### main.py
-- [ ] runs the program
-- [ ] defines the number of total ships
+### main_program
 
-### simulation.py
-- [ ] runs the program in run()
-- [ ] constructor() initializes a ship vector
-- [ ] create_ships() adds ships
-- [ ] update_positions() keeps refreshing the screen, and calls each ship’s update_position() and avoid_colissions()
+### matplot_version
+In this folder, there is a first version of the USV Simulator, using matlab to display the simulation.
+With those codes, you will be able to simulate two boats, be chosing his position (x and y), his speed v, and his heading/orientation theta.
+It is eaui
 
-### ship.py
-- [ ] draw() loads and displays the image of a ship
-- [ ] avoid_collision() checks current ship’s collision with all other ships and decides
+### new_version
 
+### cross_path_version
 
