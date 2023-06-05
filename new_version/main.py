@@ -2,11 +2,14 @@ from calcul_tools import *
 from draw import *
 from simu import Simulation
 from boat import Boat
+from whale import Whale
+from fisherman import Fisherman
+from ship import Ship
 
 def main():
 
     # Initialisation of the figure parameters
-    s = 9                               # size of  the simulation figure
+    s = 15                               # size of  the simulation figure
     ax = init_figure(-s, s, -s, s)
 
     dt = 0.1                            # Step for the simulation
@@ -15,9 +18,9 @@ def main():
 
     boats = []
     # Initialising individual boats
-    boats.append(Boat(-2.5, -3.5, 1.5, 0.25))     # x,y,v,θ of the boat
-    boats.append(Boat(1.5, 1.5, 0.5, 1))   # x,y,v,θ of the boat
-    # boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
+    boats.append(Whale(-2.5, -3.5, 1.5, 0.25))     # x,y,v,θ of the boat
+    boats.append(Fisherman(1.5, 1.5, 0.5, 1))   # x,y,v,θ of the boat
+    boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
     # boats.append(Boat(0, -2, 0.25, 1.75))   # x,y,v,θ of the boat
     # boats.append(Boat(-2.5, -5, 2, 1))
     # boat6 = Boat(2, 0, 0.25, 2)
@@ -26,7 +29,7 @@ def main():
     # boat9 = Boat(-1, 2, 1.5, 5)
     # boat10 = Boat(0, -2, 0.25, 2)
     # boat11 = Boat(3, 3, 1.5, 4)
-    # boats.append(Boat(0, -2, 0.5, 2))
+    boats.append(Ship(0, -2, 0.5, 2))
     # boat13 = Boat(3, 3, 1.5, 4.75)
     # boat14 = Boat(0,-2, 0.25, 1.75)
     
@@ -34,7 +37,7 @@ def main():
 
     # Exécution de la simulation
     num_steps = 1000
-    simulation.run(num_steps, ax, 2, 11)
+    simulation.run(num_steps, ax, 2, s)
 
 if __name__ == "__main__":
     main()

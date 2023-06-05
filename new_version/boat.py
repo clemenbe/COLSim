@@ -23,6 +23,73 @@ def control(x, φ, c, D, k, r):
     u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
 
+# called by move(), when there is risk of collision
+def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
+
+    px, py, pv, ptheta = boat.get_state_vector().flatten()
+    qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
+    
+    scalar_pdt = geo_scalar_prod(qv, pv, qtheta, ptheta)
+
+    c = array([[qx],
+            [qy]])
+    D = array([[r, 0],
+            [0, r]])
+
+    if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
+        if scalar_pdt >= 0:
+            print('------------------Boats with close directions------------------')
+            # Tests to find where the boat is compared with the obstacle
+            if py > qy + Ɛ:
+                # The boat is in the front zone of the obstacle
+                print('------------------Front zone------------------')
+                φ = φrep
+            elif (py < qy + Ɛ) and (px < qx):
+                # The boat is in the left lower zone compared with the obstacle
+                print('------------------Left lower zone------------------')
+                φ = φcw
+            else:
+                # The boat is in the right lower zone compared with the obstacle
+                print('------------------Right lower zone------------------')
+                φ = φccw
+            up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+            print('up = ',up)
+            draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+        else:
+            print('------------------Boats in opposite directions------------------')
+            # Tests to find where the boat is compared with the obstacle
+            if (py > qy - Ɛ):
+                # The boat is in the front zone of the obstacle
+                print('------------------Left front zone------------------')
+                φ = φccw
+                # Boat
+                up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                print('up = ', up)
+                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+            elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
+                # The boat is in the front zone of the obstacle
+                print('------------------Right front zone (align)------------------')
+                up = array([[0], [0]])
+            elif py > qy - Ɛ and px > qx and scalar_pdt > abs(qv * pv) * cos(2.5):
+                # The boat is in the front zone of the obstacle
+                print('------------------Right front zone------------------')
+                φ = φccw
+                # Boat
+                up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                print('up = ', up)
+                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
+            else:
+                # The boat is in the right lower zone compared with the obstacle
+                print('------------------Lower zone------------------')
+                φ = φrep
+                # Boat
+                up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                print('up = ', up)
+                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
+    return up
+
 
 class Boat:
 
@@ -33,14 +100,15 @@ class Boat:
         self.v = v
         self.theta = theta
         # 10 is the distance from initial position to destination
-        self.phat = array([[self.x + 10 * cos(self.theta)], [self.y + 10 * sin(self.theta)]])
+        self.phat = array([[self.x + 15 * cos(self.theta)], [self.y + 10 * sin(self.theta)]])
+        self.privilege = 0
 
     # update the position of a ship based on up controller
     def update(self, u, dt):
         x, y, v, theta = self.x, self.y, self.v, self.theta
-        self.x += dt * v * cos(theta)
-        self.y += dt * v * sin(theta)
-        self.v = v + dt * u[0][0]
+        self.x += dt * v * cos(theta) 
+        self.y += dt * v * sin(theta) 
+        self.v = v + dt * u[0][0] 
         self.theta += dt * u[1][0]
 
     # draw circle around boat
@@ -52,72 +120,6 @@ class Boat:
 
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
-    
-    # called by move(), when there is risk of collision
-    def avoid_collision(self, obstacle, ax, Ɛ, s, r, k):
-        px, py, pv, ptheta = self.get_state_vector().flatten()
-        qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
-        
-        scalar_pdt = geo_scalar_prod(qv, pv, qtheta, ptheta)
-
-        c = array([[qx],
-                [qy]])
-        D = array([[r, 0],
-                [0, r]])
-
-        if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
-            if scalar_pdt >= 0:
-                print('------------------Boats with close directions------------------')
-                # Tests to find where the boat is compared with the obstacle
-                if py > qy + Ɛ:
-                    # The boat is in the front zone of the obstacle
-                    print('------------------Front zone------------------')
-                    φ = φrep
-                elif (py < qy + Ɛ) and (px < qx):
-                    # The boat is in the left lower zone compared with the obstacle
-                    print('------------------Left lower zone------------------')
-                    φ = φcw
-                else:
-                    # The boat is in the right lower zone compared with the obstacle
-                    print('------------------Right lower zone------------------')
-                    φ = φccw
-                up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                print('up = ',up)
-                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-            else:
-                print('------------------Boats in opposite directions------------------')
-                # Tests to find where the boat is compared with the obstacle
-                if (py > qy - Ɛ):
-                    # The boat is in the front zone of the obstacle
-                    print('------------------Left front zone------------------')
-                    φ = φccw
-                    # Boat
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                    print('up = ', up)
-                    draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-                elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
-                    # The boat is in the front zone of the obstacle
-                    print('------------------Right front zone (align)------------------')
-                    up = array([[0], [0]])
-                elif py > qy - Ɛ and px > qx and scalar_pdt > abs(qv * pv) * cos(2.5):
-                    # The boat is in the front zone of the obstacle
-                    print('------------------Right front zone------------------')
-                    φ = φccw
-                    # Boat
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                    print('up = ', up)
-                    draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-
-                else:
-                    # The boat is in the right lower zone compared with the obstacle
-                    print('------------------Lower zone------------------')
-                    φ = φrep
-                    # Boat
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                    print('up = ', up)
-                    draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-
-        return up
 
 
     # move the ship straightly when there is no risk of collision
@@ -143,7 +145,11 @@ class Boat:
             if self != other_boat and other_boat not in checked_boats:
                 # avoid collision
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < r + Ɛ:
-                    up = self.avoid_collision(other_boat, ax, Ɛ, s, r, k)
+                    # avoid collision depending on privilege
+                    if self.privilege <= other_boat.privilege:
+                        up = avoid_collision(self, other_boat, ax, Ɛ, s, r, k)
+                    else:
+                        up = avoid_collision(other_boat, self, ax, Ɛ, s, r, k)
                     in_collision = True
 
         # if no collision

@@ -18,8 +18,8 @@ from matplotlib.patches import Ellipse, Rectangle, Circle, Wedge, Polygon, Arc
 from matplotlib.collections import PatchCollection
 
 
-def init_figure(xmin, xmax, ymin, ymax):
-    fig = figure()
+def init_figure(xmin, xmax, ymin, ymax, width=10, height=10):
+    fig = figure(figsize=(width, height))
     ax = fig.add_subplot(111, aspect='equal')
     ax.xmin = xmin
     ax.xmax = xmax

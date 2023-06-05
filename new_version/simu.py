@@ -30,7 +30,7 @@ class Simulation:
 
             plt.xlim(-s, s)
             plt.ylim(-s, s)
-            plt.pause(0.01)
+            plt.pause(0.0001)
 
         plt.show()
 
