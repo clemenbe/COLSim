@@ -152,15 +152,17 @@ class Boat:
         for other_boat in boats:
             # If the boat has not been checked before
             if self != other_boat and other_boat not in checked_boats:
-                # future_state_boat = self.get_future_state(dt)
-                # future_state_obstacle = other_boat.get_future_state(dt)
+                future_state_boat = self.get_future_state(dt)
+                future_state_obstacle = other_boat.get_future_state(dt)
                 # Avoid collision
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < r + Ɛ:
-                #     if check_cross_path(future_state_boat, future_state_obstacle, r) == False :
-                #         continue
-                    #else :
-                    up = self.avoid_collision(other_boat, ax, Ɛ, s, r, k)
-                    in_collision = True
+                    temp = (self.x, self.y, self.v, self.theta)
+                    if check_cross_path(future_state_boat, future_state_obstacle, r) == False :
+                        self.x, self.y, self.v, self.theta = temp
+                        continue
+                    else :
+                        up = self.avoid_collision(other_boat, ax, Ɛ, s, r, k)
+                        in_collision = True
 
         # If no collision
         if not in_collision:

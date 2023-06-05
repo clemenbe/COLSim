@@ -15,9 +15,9 @@ def main():
 
     boats = []
     # Initialising individual boats
-    boats.append(Boat(-2.5, -2.5, 1.5, 0))     # x,y,v,θ of the boat
+    boats.append(Boat(-2.5, -3.5, 1.5, 0.25))     # x,y,v,θ of the boat
     boats.append(Boat(1.5, 1.5, 0.5, 1))   # x,y,v,θ of the boat
-    boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
+    # boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
     # boats.append(Boat(0, -2, 0.25, 1.75))   # x,y,v,θ of the boat
     # boats.append(Boat(-2.5, -5, 2, 1))
     # boat6 = Boat(2, 0, 0.25, 2)
@@ -26,7 +26,7 @@ def main():
     # boat9 = Boat(-1, 2, 1.5, 5)
     # boat10 = Boat(0, -2, 0.25, 2)
     # boat11 = Boat(3, 3, 1.5, 4)
-    boats.append(Boat(0, -2, 0.25, 2))
+    # boats.append(Boat(0, -2, 0.5, 2))
     # boat13 = Boat(3, 3, 1.5, 4.75)
     # boat14 = Boat(0,-2, 0.25, 1.75)
     
