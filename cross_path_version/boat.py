@@ -135,11 +135,17 @@ class Boat:
 
     def get_future_state(self, dt):
         future_state = []
+
+        temp = (self.x, self.y, self.v, self.theta)
+
         for t in arange(0, 10*dt, 5*dt):
             u = self.move_straight()
             self.update(u, dt)
             x_boat = self.get_state_vector()
             future_state.append(x_boat)
+
+        self.x, self.y, self.v, self.theta = temp
+        
         return future_state
 
 
@@ -152,13 +158,18 @@ class Boat:
         for other_boat in boats:
             # If the boat has not been checked before
             if self != other_boat and other_boat not in checked_boats:
-                future_state_boat = self.get_future_state(dt)
-                future_state_obstacle = other_boat.get_future_state(dt)
+
                 # Avoid collision
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < r + Ɛ:
-                    temp = (self.x, self.y, self.v, self.theta)
-                    if check_cross_path(future_state_boat, future_state_obstacle, r) == False :
-                        self.x, self.y, self.v, self.theta = temp
+
+                    # predict future moves
+                    future_state_boat = self.get_future_state(dt)
+                    future_state_other = other_boat.get_future_state(dt)
+
+                    cross_path = check_cross_path(future_state_boat, future_state_other, r)
+                    
+                    # when there is no danger of collision
+                    if not cross_path :
                         continue
                     else :
                         up = self.avoid_collision(other_boat, ax, Ɛ, s, r, k)
