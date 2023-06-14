@@ -11,13 +11,16 @@ def main():
 
     dt = 0.1                            # Step for the simulation
     k = 0.5                             # Constant to determine the repulsion force of the field
-    r = 2                               # DCPA
+    r = 1.25                               # DCPA
+    Ɛ = 1.75
 
     boats = []
     # Initialising individual boats
-    boats.append(Boat(-2.5, 0, 1.5, 0))     # x,y,v,θ of the boat
-    boats.append(Boat(1.5, 1.5, 0.5, 1))   # x,y,v,θ of the boat
-    boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
+    boats.append(Boat(-8, 0, 3, 0))     # x,y,v,θ of the boat
+    # boats.append(Boat(-6, 0, 3.5, 0.2))     # x,y,v,θ of the boat
+
+    boats.append(Boat(1.5, 0.5, 1, 1))   # x,y,v,θ of the boat
+    # boats.append(Boat(-1, 3, 1.5, 4.75))     # x,y,v,θ of the boat
     # boats.append(Boat(0, -2, 0.25, 1.75))   # x,y,v,θ of the boat
     # boats.append(Boat(-2.5, -5, 2, 1))
     # boat6 = Boat(2, 0, 0.25, 2)
@@ -26,7 +29,7 @@ def main():
     # boat9 = Boat(-1, 2, 1.5, 5)
     # boat10 = Boat(0, -2, 0.25, 2)
     # boat11 = Boat(3, 3, 1.5, 4)
-    boats.append(Boat(0, -2, 0.25, 2))
+    # boats.append(Boat(0, -2, 0.25, 2))
     # boat13 = Boat(3, 3, 1.5, 4.75)
     # boat14 = Boat(0,-2, 0.25, 1.75)
     
@@ -34,7 +37,7 @@ def main():
 
     # Execution of the simulation
     num_steps = 1000
-    simulation.run(num_steps, ax, 2, 11)
+    simulation.run(num_steps, ax, Ɛ, 11)
 
 if __name__ == "__main__":
     main()

@@ -23,9 +23,11 @@ class Simulation:
             checked_boats = set()
 
             for boat in self.boats:
+                # future_state_boat, future_state_other = boat.move(self.boats, checked_boats, ax, Ɛ, s, self.r, self.k, self.dt)
                 boat.move(self.boats, checked_boats, ax, Ɛ, s, self.r, self.k, self.dt)
 
-            for boat in self.boats:
+            # for boat in self.boats:
+            #     boat.draw_seg(ax, self.r, Ɛ, future_state_boat, future_state_other)
                 boat.draw(ax, self.r, Ɛ)
 
             step += 1
