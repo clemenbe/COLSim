@@ -24,8 +24,6 @@ class Simulation:
 
             for boat in self.boats:
                 boat.move(self.boats, checked_boats, ax, Ɛ, s, self.r, self.k, self.dt)
-
-            for boat in self.boats:
                 boat.draw(ax, self.r, Ɛ)
 
             plt.xlim(-s, s)
