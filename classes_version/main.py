@@ -64,7 +64,11 @@ def main():
     # boat9 = Boat(-1, 2, 1.5, 5)
     # boat10 = Boat(0, -2, 0.25, 2)
     # boat11 = Boat(3, 3, 1.5, 4)
+<<<<<<< HEAD
     # boats.append(Whale(0, -2, 0.5, 2))
+=======
+    boats.append(Whale(0, -2, 0.5, 2))
+>>>>>>> 4d12afb109427aea11ae9ab466e77c44bfb8e18d
     # boat13 = Boat(3, 3, 1.5, 4.75)
     # boat14 = Boat(0,-2, 0.25, 1.75)
 
