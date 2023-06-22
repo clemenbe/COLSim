@@ -23,7 +23,7 @@ def control(x, φ, c, D, k, r):
     u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
 
-# Called by move(), when there is risk of collision
+# called by move(), when there is risk of collision
 def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
 
     px, py, pv, ptheta = boat.get_state_vector().flatten()
@@ -103,7 +103,7 @@ class Boat:
         self.phat = array([[self.x + 15 * cos(self.theta)], [self.y + 10 * sin(self.theta)]])
         self.privilege = 0
 
-    # Update the position of a ship based on up controller
+    # update the position of a ship based on up controller
     def update(self, u, dt):
         x, y, v, theta = self.x, self.y, self.v, self.theta
         self.x += dt * v * cos(theta) 
@@ -111,19 +111,19 @@ class Boat:
         self.v = v + dt * u[0][0] 
         self.theta += dt * u[1][0]
 
-    # Draw circle around boat
+    # draw circle around boat
     def draw(self, ax, r, Ɛ):
-        draw_boat_and_vector(self.get_state_vector())           # Display of the boat
-        draw_circle(ax, self.x, self.y, r, 'red')               # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area
-        draw_disk(ax, self.phat, 0.2, 'green')                  # Display of the final destination
+        draw_boat_and_vector(self.get_state_vector())  # display of the 
+        draw_circle(ax, self.x, self.y, r, 'red')  # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')  # DCPA zone extended for safety : manoeuvring area
+        draw_disk(ax, self.phat, 0.2, 'green')
 
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
 
 
-    # Move the ship straightly when there is no risk of collision
-    # Called by move()
+    # move the ship straightly when there is no risk of collision
+    # called by move()
     def move_straight(self):
         vhat = array([[1], [1]])
         # Control commande to reach the final destination if there is no risk of collision
@@ -134,32 +134,32 @@ class Boat:
         return up
 
     
-    # Moves the ship every iteration
+    # moves the ship every iteration
     def move(self, boats, checked_boats, ax, Ɛ, s, r, k, dt):
         #up = array([[0], [0]])
         in_collision = False
 
-        # Check risks of collision
+        # check risks of collision
         for other_boat in boats:
-            # If the boat has not been checked before
+            # if the boat has not been checked before
             if self != other_boat and other_boat not in checked_boats:
-                # Avoid collision
+                # avoid collision
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < r + Ɛ:
-                    # Avoid collision depending on privilege
+                    # avoid collision depending on privilege
                     if self.privilege <= other_boat.privilege:
                         up = avoid_collision(self, other_boat, ax, Ɛ, s, r, k)
                     else:
                         up = avoid_collision(other_boat, self, ax, Ɛ, s, r, k)
                     in_collision = True
 
-        # If no collision
+        # if no collision
         if not in_collision:
             up = self.move_straight()
 
-        # Update position
+        # update position
         self.update(up, dt)
 
-        # Add checked boat
+        # add checked boat
         checked_boats.add(self)
 
                     
