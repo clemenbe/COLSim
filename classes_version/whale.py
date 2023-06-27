@@ -7,6 +7,7 @@ class Whale(Boat):
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor
         self.privilege = 500
+        self.r = 2
 
     def draw(self, ax, r, Ɛ, col='blue', coef=0.1, w=2):
         """ Display of the whale """
@@ -18,6 +19,6 @@ class Whale(Boat):
         plt.plot(M_transformed[0], M_transformed[1], color=col, linewidth=w, zorder=1)
         plt.gca().add_patch(Polygon(M_transformed[:2].T, facecolor=col, edgecolor=None, zorder=0))
         """ Display of the zones """
-        draw_circle(ax, self.x, self.y, r, 'red')                           # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvring area
+        draw_circle(ax, self.x, self.y, self.r, 'red')                           # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvring area
         draw_disk(ax, self.phat, 0.2, 'green')                              # Display of the final destination

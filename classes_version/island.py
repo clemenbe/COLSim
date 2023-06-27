@@ -7,6 +7,7 @@ class Island(Boat):
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor
         self.privilege = 1000
+        self.r = 3
 
     def draw(self, ax, r, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """
@@ -27,5 +28,6 @@ class Island(Boat):
         plt.plot(M2_transformed[0], M2_transformed[1], color=col2, linewidth=w, zorder=1)
         plt.gca().add_patch(Polygon(M2_transformed[:2].T, facecolor=col2, edgecolor=None, zorder=0))
         """ Display of the zones """
-        draw_circle(ax, self.x, self.y, r, 'red')               # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
+        draw_circle(ax, self.x, self.y, self.r, 'red')               # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
+

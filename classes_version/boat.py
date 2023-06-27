@@ -100,8 +100,10 @@ class Boat:
         self.v = v
         self.theta = theta
         # 10 is the distance from initial position to destination
-        self.phat = array([[self.x + 15 * cos(self.theta)], [self.y + 10 * sin(self.theta)]])
+        self.phat = array([[self.x + 20 * cos(self.theta)], [self.y + 20 * sin(self.theta)]])
         self.privilege = 0
+        self.r = 2
+        self.in_collision = False
 
     # Update the position of a ship based on up controller
     def update(self, u, dt):
@@ -114,8 +116,8 @@ class Boat:
     # Draw circle around boat
     def draw(self, ax, r, Ɛ):
         draw_boat_and_vector(self.get_state_vector())           # Display of the boat
-        draw_circle(ax, self.x, self.y, r, 'red')               # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area
+        draw_circle(ax, self.x, self.y, self.r, 'red')               # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area
         draw_disk(ax, self.phat, 0.2, 'green')                  # Display of the final destination
 
     def get_state_vector(self):
@@ -137,6 +139,8 @@ class Boat:
     # Moves the ship every iteration
     def move(self, boats, checked_boats, ax, Ɛ, s, r, k, dt):
         #up = array([[0], [0]])
+        print('priviliege', self.privilege)
+
         in_collision = False
 
         # Check risks of collision
@@ -144,20 +148,33 @@ class Boat:
             # If the boat has not been checked before
             if self != other_boat and other_boat not in checked_boats:
                 # Avoid collision
-                if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < r + Ɛ:
+                if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < max(self.r, other_boat.r) + Ɛ:
+                    self.in_collision = True
+                    other_boat.in_collision = True
                     # Avoid collision depending on privilege
                     if self.privilege <= other_boat.privilege:
-                        up = avoid_collision(self, other_boat, ax, Ɛ, s, r, k)
+                        up = avoid_collision(self, other_boat, ax, Ɛ, s, max(self.r, other_boat.r), k)
+                        # Update position
+                        self.update(up, dt)
+                        print('ship')
                     else:
-                        up = avoid_collision(other_boat, self, ax, Ɛ, s, r, k)
+                        up = avoid_collision(other_boat, self, ax, Ɛ, s, max(self.r, other_boat.r), k)
+                        # Update position
+                        other_boat.update(up, dt)
                     in_collision = True
 
-        # If no collision
-        if not in_collision:
-            up = self.move_straight()
+                else:
+                    if not in_collision:
+                        self.in_collision = False
+                        other_boat.in_collision = False
 
-        # Update position
-        self.update(up, dt)
+        # If no collision
+        if not self.in_collision:
+            up = self.move_straight()
+            # Update position
+            self.update(up, dt)
+
+
 
         # Add checked boat
         checked_boats.add(self)
