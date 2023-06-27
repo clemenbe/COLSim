@@ -137,7 +137,7 @@ class Boat:
 
     
     # Moves the ship every iteration
-    def move(self, boats, checked_boats, ax, Ɛ, s, r, k, dt):
+    def move(self, boats, ax, Ɛ, s, r, k, dt):
         #up = array([[0], [0]])
         print('priviliege', self.privilege)
 
@@ -146,38 +146,25 @@ class Boat:
         # Check risks of collision
         for other_boat in boats:
             # If the boat has not been checked before
-            if self != other_boat and other_boat not in checked_boats:
+            if self != other_boat:
                 # Avoid collision
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < max(self.r, other_boat.r) + Ɛ:
-                    self.in_collision = True
-                    other_boat.in_collision = True
                     # Avoid collision depending on privilege
                     if self.privilege <= other_boat.privilege:
                         up = avoid_collision(self, other_boat, ax, Ɛ, s, max(self.r, other_boat.r), k)
                         # Update position
                         self.update(up, dt)
                         print('ship')
-                    else:
-                        up = avoid_collision(other_boat, self, ax, Ɛ, s, max(self.r, other_boat.r), k)
-                        # Update position
-                        other_boat.update(up, dt)
-                    in_collision = True
+                        in_collision = True
 
-                else:
-                    if not in_collision:
-                        self.in_collision = False
-                        other_boat.in_collision = False
 
         # If no collision
-        if not self.in_collision:
+        if not in_collision:
             up = self.move_straight()
             # Update position
             self.update(up, dt)
 
 
-
-        # Add checked boat
-        checked_boats.add(self)
 
                     
     

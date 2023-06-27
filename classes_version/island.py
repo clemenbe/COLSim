@@ -7,7 +7,7 @@ class Island(Boat):
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor
         self.privilege = 1000
-        self.r = 3
+        self.r = 4
 
     def draw(self, ax, r, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """
@@ -30,4 +30,7 @@ class Island(Boat):
         """ Display of the zones """
         draw_circle(ax, self.x, self.y, self.r, 'red')               # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
+
+        def move(self, boats, ax, Ɛ, s, r, k, dt):
+            return
 

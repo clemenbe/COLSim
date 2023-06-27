@@ -19,11 +19,8 @@ class Simulation:
 
             clear(ax)
 
-            # record the boats that are already checked
-            checked_boats = set()
-
             for boat in self.boats:
-                boat.move(self.boats, checked_boats, ax, Ɛ, s, self.r, self.k, self.dt)
+                boat.move(self.boats, ax, Ɛ, s, self.r, self.k, self.dt)
                 boat.draw(ax, self.r, Ɛ)
 
             plt.xlim(-s, s)

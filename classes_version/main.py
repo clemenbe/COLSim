@@ -19,10 +19,10 @@ def main():
 
     boats = []
     # Initialising individual boats
-    boats.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
-    boats.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
-    boats.append(Island(0, 2, 0, 0))
-    boats.append(Ship(10, -2, 0.5, 3))  # x,y,v,θ of the boat
+    # boats.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
+    # boats.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
+    boats.append(Island(0, 2, 0, 1))
+    boats.append(Ship(10, -4, 1.5, 3))  # x,y,v,θ of the boat
 
     # Initialisation of the simulation
     simulation = Simulation(boats, dt, k, r)

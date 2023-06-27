@@ -6,7 +6,7 @@ class Ship(Boat):
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor
         self.privilege = 30
-        self.r = 3
+        self.r = 4
 
     def draw(self, ax, r, Ɛ, col1='royalblue', col2='steelblue', col3='slategray', r1=0.3, w=1):
         """ Draw of the ship """
