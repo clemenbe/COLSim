@@ -43,7 +43,8 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
             if py > qy + Ɛ:
                 # The boat is in the front zone of the obstacle
                 print('------------------Front zone------------------')
-                φ = φrep
+                # φ = φrep
+                φ = double_φrep
             elif (py < qy + Ɛ) and (px < qx):
                 # The boat is in the left lower zone compared with the obstacle
                 print('------------------Left lower zone------------------')
@@ -82,7 +83,8 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
             else:
                 # The boat is in the right lower zone compared with the obstacle
                 print('------------------Lower zone------------------')
-                φ = φrep
+                # φ = φrep
+                φ = double_φrep
                 # Boat
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ', up)

@@ -37,3 +37,23 @@ def φrep(p1, p2, c, D, k, r):
     c = ((p1 - c[0, 0]) ** 2 + (p2 - c[1, 0]) ** 2 - r ** 2) * (p2 - c[1, 0])
     φ2 = c/b
     return φ1, φ2
+
+def double_φrep(p1, p2, c, D, k, r):
+    """ Vector field repulsing to a circle of radius r and center c
+    and replusing to a circle smaller to make it attractive in the interior of the
+    biggest circle """
+    a1 = k*((p1-c[0,0])**2 + (p2-c[1,0])**2 - r**2)*(p1-c[0,0])
+    b1 = k*((p1-c[0,0])**2 + (p2-c[1,0])**2)**(3/2)
+    φx1 = a1/b1
+    c1 = ((p1 - c[0, 0]) ** 2 + (p2 - c[1, 0]) ** 2 - r ** 2) * (p2 - c[1, 0])
+    φy1 = c1/b1
+
+    rp = 0.1*r
+    kp = 4*k
+    a2 = kp*((φx1-c[0,0])**2 + (φy1-c[1,0])**2 - rp**2)*(φx1-c[0,0])
+    b2 = kp*((φx1-c[0,0])**2 + (φy1-c[1,0])**2)**(3/2)
+    φx2 = a2/b2
+    c2 = ((φx1 - c[0, 0]) ** 2 + (φy1 - c[1, 0]) ** 2 - rp ** 2) * (φy1 - c[1, 0])
+    φy2 = c2/b2
+
+    return φx2, φy2

@@ -33,4 +33,3 @@ class Island(Boat):
 
         def move(self, boats, ax, Ɛ, s, r, k, dt):
             return
-
