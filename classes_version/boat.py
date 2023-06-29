@@ -2,6 +2,7 @@ from calcul_tools import *
 from draw import *
 from potential_fields import *
 
+
 def Jφ0(p):
     """ Jacobian Matrix of φ0 """
     p1, p2 = p.flatten()
@@ -24,7 +25,10 @@ def control(x, φ, c, D, k, r):
     return array([[u1], [u2]])
 
 # Called by move(), when there is risk of collision
-def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
+def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k, rule_window):
+
+    # get display color for each instance
+    color = boat.get_color()
 
     px, py, pv, ptheta = boat.get_state_vector().flatten()
     qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
@@ -36,6 +40,7 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
     D = array([[r, 0],
             [0, r]])
 
+
     if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
         if scalar_pdt >= 0:
             print('------------------Boats with close directions------------------')
@@ -45,17 +50,27 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
                 print('------------------Front zone------------------')
                 # φ = φrep
                 φ = double_φrep
+
+                rule_window.apply_rule("finish overtaking the obstacle", color)
+                
             elif (py < qy + Ɛ) and (px < qx):
                 # The boat is in the left lower zone compared with the obstacle
                 print('------------------Left lower zone------------------')
                 φ = φcw
+
+                rule_window.apply_rule("overtaking the obstacle on the left side", color)
+
             else:
                 # The boat is in the right lower zone compared with the obstacle
                 print('------------------Right lower zone------------------')
                 φ = φccw
+
+                rule_window.apply_rule("overtaking the obstacle on the right side", color)
+
             up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
             print('up = ',up)
             draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
         else:
             print('------------------Boats in opposite directions------------------')
             # Tests to find where the boat is compared with the obstacle
@@ -67,10 +82,16 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ', up)
                 draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
+                rule_window.apply_rule("red to red rule to avoid the collision", color)
+
             elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
                 # The boat is in the front zone of the obstacle
                 print('------------------Right front zone (align)------------------')
                 up = array([[0], [0]])
+
+                rule_window.apply_rule("red to red rule to avoid the collision", color)
+
             elif py > qy - Ɛ and px > qx and scalar_pdt > abs(qv * pv) * cos(2.5):
                 # The boat is in the front zone of the obstacle
                 print('------------------Right front zone------------------')
@@ -79,6 +100,8 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ', up)
                 draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
+                rule_window.apply_rule("red to red rule to avoid the collision", color)
 
             else:
                 # The boat is in the right lower zone compared with the obstacle
@@ -89,6 +112,8 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k):
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ', up)
                 draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+
+                rule_window.apply_rule("finish overtaking the obstacle", color)
 
     return up
 
@@ -124,7 +149,10 @@ class Boat:
 
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
-
+    
+    # get the color displayed on the rules
+    def get_color(self):
+        return "green"
 
     # Move the ship straightly when there is no risk of collision
     # Called by move()
@@ -139,7 +167,7 @@ class Boat:
 
     
     # Moves the ship every iteration
-    def move(self, boats, ax, Ɛ, s, r, k, dt):
+    def move(self, boats, ax, Ɛ, s, r, k, dt, rule_window):
         #up = array([[0], [0]])
         print('priviliege', self.privilege)
 
@@ -153,7 +181,7 @@ class Boat:
                 if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < max(self.r, other_boat.r) + Ɛ:
                     # Avoid collision depending on privilege
                     if self.privilege <= other_boat.privilege:
-                        up = avoid_collision(self, other_boat, ax, Ɛ, s, max(self.r, other_boat.r), k)
+                        up = avoid_collision(self, other_boat, ax, Ɛ, s, max(self.r, other_boat.r), k, rule_window)
                         # Update position
                         self.update(up, dt)
                         print('ship')

@@ -6,6 +6,8 @@ from whale import Whale
 from fisherman import Fisherman
 from island import Island
 from ship import Ship
+from rules import RuleApplicationWindow
+import threading
 
 def main():
 
@@ -19,8 +21,8 @@ def main():
 
     boats = []
     # Initialising individual boats
-    # boats.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
-    # boats.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
+    boats.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
+    boats.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
     boats.append(Island(0, 2, 0, 1))
     boats.append(Ship(10, -4, 1.5, 3))  # x,y,v,θ of the boat
 
@@ -29,7 +31,17 @@ def main():
 
     # Exécution de la simulation
     num_steps = 1000
-    simulation.run(num_steps, ax, 2, s)
+
+    # Initialize the rules window
+    # Instantiate the GUI
+    rules = ["finish overtaking the obstacle", "overtaking the obstacle on the left side", "overtaking the obstacle on the right side", "red to red rule to avoid the collision", "red to red rule to avoid the collision"]
+    rule_window = RuleApplicationWindow(rules)
+
+    # start simulation
+    simulation.run(num_steps, ax, 2, s, rule_window)
+
+    # start the tkinter main loop in a separate thread so it doesn't block simulation
+    threading.Thread(target=rules_window.run).start()
 
 
 

@@ -9,6 +9,10 @@ class Whale(Boat):
         self.privilege = 500
         self.r = 2
 
+    # get the color displayed on the rules
+    def get_color(self):
+        return "blue"
+
     def draw(self, ax, r, Ɛ, col='blue', coef=0.1, w=2):
         """ Display of the whale """
         M = coef * array(

@@ -8,6 +8,10 @@ class Ship(Boat):
         self.privilege = 30
         self.r = 4
 
+    # get the color displayed on the rules
+    def get_color(self):
+        return "red"
+
     def draw(self, ax, r, Ɛ, col1='royalblue', col2='steelblue', col3='slategray', r1=0.3, w=1):
         """ Draw of the ship """
         M1 = r1 * np.array([[-6.5, -6, 4, 7, 4, -6, -6.5, -6.5],

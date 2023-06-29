@@ -12,15 +12,17 @@ class Simulation:
         self.r = r
 
 
-    def run(self, num_steps, ax, Ɛ, s):
+    def run(self, num_steps, ax, Ɛ, s, rule_window):
 
 
         for _ in range(num_steps):
 
             clear(ax)
 
+            rule_window.reset_rules()
+
             for boat in self.boats:
-                boat.move(self.boats, ax, Ɛ, s, self.r, self.k, self.dt)
+                boat.move(self.boats, ax, Ɛ, s, self.r, self.k, self.dt, rule_window)
                 boat.draw(ax, self.r, Ɛ)
 
             plt.xlim(-s, s)
