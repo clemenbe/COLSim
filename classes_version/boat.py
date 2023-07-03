@@ -48,8 +48,7 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k, rule_window):
             if py > qy + Ɛ:
                 # The boat is in the front zone of the obstacle
                 print('------------------Front zone------------------')
-                # φ = φrep
-                φ = double_φrep
+                φ = φrep
 
                 rule_window.apply_rule("finish overtaking the obstacle", color)
                 
@@ -106,8 +105,7 @@ def avoid_collision(boat, obstacle, ax, Ɛ, s, r, k, rule_window):
             else:
                 # The boat is in the right lower zone compared with the obstacle
                 print('------------------Lower zone------------------')
-                # φ = φrep
-                φ = double_φrep
+                φ = φrep
                 # Boat
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ', up)

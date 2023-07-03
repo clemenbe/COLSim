@@ -34,7 +34,7 @@ def main():
 
     # Initialize the rules window
     # Instantiate the GUI
-    rules = ["finish overtaking the obstacle", "overtaking the obstacle on the left side", "overtaking the obstacle on the right side", "red to red rule to avoid the collision", "red to red rule to avoid the collision"]
+    rules = ["finish overtaking the obstacle", "overtaking the obstacle on the left side", "overtaking the obstacle on the right side", "red to red rule to avoid the collision"]
     rule_window = RuleApplicationWindow(rules)
 
     # start simulation
