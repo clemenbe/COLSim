@@ -1,6 +1,6 @@
-from boat import Boat
+from sea_object import *
 
-class Fisherman(Boat):
+class Fisherman(SeaObject):
 
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor

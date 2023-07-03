@@ -19,15 +19,15 @@ def main():
     k = 0.5                             # Constant to determine the repulsion force of the field
     r = 2                               # DCPA
 
-    boats = []
+    sea_objects = []
     # Initialising individual boats
-    boats.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
-    boats.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
-    boats.append(Island(0, 2, 0, 1))
-    boats.append(Ship(10, -4, 1.5, 3))  # x,y,v,θ of the boat
+    sea_objects.append(Whale(-0.5, -3.5, 1.5, 1.5))      # x,y,v,θ of the boat
+    sea_objects.append(Boat(-3, 5, 1.5, 0.25))  # x,y,v,θ of the boat
+    sea_objects.append(Island(0, 2, 0, 1))
+    sea_objects.append(Ship(10, -4, 1.5, 3))  # x,y,v,θ of the boat
 
     # Initialisation of the simulation
-    simulation = Simulation(boats, dt, k, r)
+    simulation = Simulation(sea_objects, dt, k, r)
 
     # Exécution de la simulation
     num_steps = 1000

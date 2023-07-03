@@ -1,8 +1,8 @@
-from boat import Boat
+from sea_object import *
 from calcul_tools import *
 from draw import *
 
-class Island(Boat):
+class Island(SeaObject):
 
     def __init__(self, x, y, v, theta):
         super().__init__(x, y, v, theta)  # call the superclass's constructor
