@@ -26,19 +26,20 @@ def control(x, φ, c, D, k, r):
 
 class SeaObject:
 
-    # v is speed, theta is direction
+    # x, y are positions, v is speed, theta is direction
     def __init__(self, x, y, v, theta):
         self.x = x
         self.y = y
         self.v = v
         self.theta = theta
-        # 10 is the distance from initial position to destination
-        self.phat = array([[self.x + 20 * cos(self.theta)], [self.y + 20 * sin(self.theta)]])
-        self.privilege = 0
-        self.r = 2
-        self.in_collision = False
 
-    # Update the position of a ship based on up controller
+        destination_distance = 20 # the distance from initial position to destination
+        self.phat = array([[self.x + destination_distance * cos(self.theta)], [self.y + destination_distance * sin(self.theta)]])
+
+        self.privilege = 0
+        self.r = 2 # collision avoidance radius for the object
+
+    # Update the position of an object based on up controller
     def update(self, u, dt):
         x, y, v, theta = self.x, self.y, self.v, self.theta
         self.x += dt * v * cos(theta) 
@@ -46,10 +47,11 @@ class SeaObject:
         self.v = v + dt * u[0][0] 
         self.theta += dt * u[1][0]
 
+    # return the object's x, y, speed and direction in a state vector
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
     
-    # Move the ship straightly when there is no risk of collision
+    # Move the object straight when there is no risk of collision
     # Called by move()
     def move_straight(self):
         vhat = array([[1], [1]])
@@ -63,7 +65,7 @@ class SeaObject:
     # Called by move(), when there is risk of collision
     def avoid_collision(self, obstacle, ax, Ɛ, s, r, k, rule_window):
 
-        # get display color for each instance
+        # get display color in the rules for each object
         color = self.get_color()
 
         px, py, pv, ptheta = self.get_state_vector().flatten()
@@ -77,6 +79,7 @@ class SeaObject:
                 [0, r]])
 
 
+        # different cases of collision avoidance
         if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
             if scalar_pdt >= 0:
                 print('------------------Boats with close directions------------------')
@@ -153,31 +156,27 @@ class SeaObject:
 
 
     
-    # Moves the ship every iteration
-    def move(self, boats, ax, Ɛ, s, r, k, dt, rule_window):
+    # Moves the object every iteration
+    def move(self, sea_objects, ax, Ɛ, s, r, k, dt, rule_window):
         #up = array([[0], [0]])
-        print('priviliege', self.privilege)
 
         in_collision = False
 
-        # Check risks of collision
-        for other_boat in boats:
-            # If the boat has not been checked before
-            if self != other_boat:
-                # Avoid collision
-                if dist(array([[other_boat.x], [other_boat.y]]), array([[self.x], [self.y]])) < max(self.r, other_boat.r) + Ɛ:
-                    # Avoid collision depending on privilege
-                    if self.privilege <= other_boat.privilege:
-                        up = self.avoid_collision(other_boat, ax, Ɛ, s, max(self.r, other_boat.r), k, rule_window)
-                        # Update position
-                        self.update(up, dt)
-                        print('ship')
+        # Check risks of collision with every other object
+        for other_object in sea_objects:
+
+            if self != other_object:
+                # when distance is smaller than collision radius
+                if dist(array([[other_object.x], [other_object.y]]), array([[self.x], [self.y]])) < max(self.r, other_object.r) + Ɛ:
+                    # object with smaller privilege avoids collision
+                    if self.privilege <= other_object.privilege:
+                        up = self.avoid_collision(other_object, ax, Ɛ, s, max(self.r, other_object.r), k, rule_window)
                         in_collision = True
 
-
-        # If no collision
+        # If there is no need to avoid collision
         if not in_collision:
             up = self.move_straight()
-            # Update position
-            self.update(up, dt)
+            
+        # Update position
+        self.update(up, dt)
 
