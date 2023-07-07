@@ -73,7 +73,7 @@ This is the most up-to-date version of the simulator and includes the following 
 
 - [ ] **SimulationRunner** : Initializes all objects and constants for the simulation like **Ship**, **Whale**, repulsive force, etc.
 - [ ] **Simulation** : Runs the whole simulation in a for loop, depended on the number of steps chosen. It accepts the sea_objects vector which includes different objects of **SeaObject**, **Ship**, **Whale**, **Island** classes, and calls each of them's *move* and *draw* in each matplotlib iteration.
-- [ ] **SeaObject** : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how these classes work, see main_program README.
+- [ ] **SeaObject** : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how the main_program version works, see the [README in the main_program directory](./main_program/README.md).
 
 ### matplot_version
 This is the first version of the USV Simulator, using matlab to display the simulation.
@@ -86,4 +86,9 @@ We used different classes to create a flexible structure :
 We created three .py files to use as librairies : **_calcul_tools, draw_** and **_potential_fields_**
 
 ### cross_path_version
+This version of the simulator addresses scenarios where a **Ship** moves northwards and another **Ship** or **SeaObject** moves beneath it. In the current system, the moving **Ship** would detect the collision zone and attempt to avoid the **Ship** moving beneath by also moving northwards. This leads to inefficiency and safety issues as the **Ship** deviates from its original path. This version aims to improve the pathing logic to enable the **Ship** to maintain its original path if it's safe to do so.
+
+### map_version
+
+This version is a future concept where a background map would be inputted to the simulator. This would allow for more realistic simulations as the map could represent different sea conditions, the presence of islands, and other features. This could provide the **SeaObject** objects with a richer context and allow for more complex and realistic simulations.
 
