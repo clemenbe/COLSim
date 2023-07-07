@@ -157,7 +157,7 @@ class SeaObject:
 
     
     # Moves the object every iteration
-    def move(self, sea_objects, ax, Ɛ, s, r, k, dt, rule_window):
+    def move(self, sea_objects, ax, Ɛ, s, k, dt, rule_window):
         #up = array([[0], [0]])
 
         in_collision = False

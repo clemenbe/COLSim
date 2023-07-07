@@ -5,11 +5,10 @@ from potential_fields import *
 
 
 class Simulation:
-    def __init__(self, sea_objects, dt, k, r):
+    def __init__(self, sea_objects, dt, k):
         self.sea_objects = sea_objects
         self.dt = dt
         self.k = k
-        self.r = r
 
 
     def run(self, num_steps, ax, Ɛ, s, rule_window):
@@ -22,8 +21,8 @@ class Simulation:
             rule_window.reset_rules()
 
             for sea_objects in self.sea_objects:
-                sea_objects.move(self.sea_objects, ax, Ɛ, s, self.r, self.k, self.dt, rule_window)
-                sea_objects.draw(ax, self.r, Ɛ)
+                sea_objects.move(self.sea_objects, ax, Ɛ, s, self.k, self.dt, rule_window)
+                sea_objects.draw(ax, Ɛ)
 
             plt.xlim(-s, s)
             plt.ylim(-s, s)

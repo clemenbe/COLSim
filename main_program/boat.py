@@ -10,7 +10,7 @@ class Boat(SeaObject):
         self.r = 2
     
     # Draw circle around boat
-    def draw(self, ax, r, Ɛ):
+    def draw(self, ax, Ɛ):
         draw_boat_and_vector(self.get_state_vector())           # Display of the boat
         draw_circle(ax, self.x, self.y, self.r, 'red')               # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area

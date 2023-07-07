@@ -9,7 +9,7 @@ class Island(SeaObject):
         self.privilege = 1000
         self.r = 4
 
-    def draw(self, ax, r, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
+    def draw(self, ax, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """
         M1 = r1 * np.array([[-5, -4.5, -3, -2, -1, 1, 2, 3, 2, 1, 1, 1.5, 2.5, 4, 3, 2, 1, -1, -1.5, -3, -4, -5],
                             [0, 2, 3, 2.5, 4, 4, 3.75, 3, 2.5, 1.5, 0.75, 0, 0, -1, -2.5, -3.5, -3.5, -2.5, -2.5, -1.25,
@@ -32,5 +32,5 @@ class Island(SeaObject):
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
 
     # an island never moves
-    def move(self, boats, ax, Ɛ, s, r, k, dt, rule_window):
+    def move(self, boats, ax, Ɛ, s, k, dt, rule_window):
         return

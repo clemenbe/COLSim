@@ -13,7 +13,7 @@ class Whale(SeaObject):
     def get_color(self):
         return "blue"
 
-    def draw(self, ax, r, Ɛ, col='blue', coef=0.1, w=2):
+    def draw(self, ax, Ɛ, col='blue', coef=0.1, w=2):
         """ Display of the whale """
         M = coef * array(
             [[-1, 5, 7, 7, 5, -1, -4, -5, -7, -7, -5, -4, -1], [-3, -3, -2, 2, 3, 3, 1, 1, 3, -3, -1, -1, -3]])
