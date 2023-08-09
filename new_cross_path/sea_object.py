@@ -87,45 +87,46 @@ class SeaObject:
                 if (px < qx - Ɛ) and self.cross_path:
                     print('------------------Left Repulsion------------------')
                     φ = φrep
-                    table[1, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
+                elif (px > qx - Ɛ) and self.cross_path:
+                    print('------------------Right Repulsion------------------')
+                    φ = φrep
+                    table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif py > qy + Ɛ:
                     # The boat is in the front zone of the obstacle
                     print('------------------Front zone------------------')
                     φ = φrep
-                    table[1, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif (py < qy + Ɛ) and (px < qx):
                     # The boat is in the left lower zone compared with the obstacle
                     print('------------------Left lower zone------------------')
                     φ = φcw
-                    table[2, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[2, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
                 elif (py < qy + Ɛ) and (px < qx) and (self.phat[0, 1] < qy + Ɛ) and (self.phat[0, 0] > qx):
                     # The boat is in the left lower zone compared with the obstacle
                     print('------------------Left lower zone --> Destination Right lower zone------------------')
                     φ = φccw
-                    table[4, mmsi_list.index(self.mmsi)].set_facecolor('green')
-                    if px > qx + Ɛ:
-                        print('------------------Right Repulsion------------------')
-                        φ = φrep
-                        table[1, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    self.cross_path = True
+                    table[4, mmsi_list.index(self.mmsi+1)].set_facecolor('green')
 
                 elif (py < qy + Ɛ) and (px > qx) and (self.phat[1] < qy + Ɛ) and (self.phat[0] < qx):
                     # The boat is in the right lower zone compared with the obstacle
                     print('------------------Right lower zone-> Destination Left lower zone------------------')
                     φ = φcw
                     self.cross_path = True
-                    table[3, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[3, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 else:
                     # The boat is in the right lower zone compared with the obstacle
                     print('------------------Right lower zone------------------')
                     φ = φccw
-                    table[3, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[3, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 print('up = ',up)
-                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
+                draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.9, c, D, k, r)
 
             else:
                 print('------------------Boats in opposite directions------------------')
@@ -138,13 +139,13 @@ class SeaObject:
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     print('up = ', up)
                     draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-                    table[4, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[4, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
                     # The boat is in the front zone of the obstacle
                     print('------------------Right front zone (align)------------------')
                     up = array([[0], [0]])
-                    table[4, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[4, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif py > qy - Ɛ and px > qx and scalar_pdt > abs(qv * pv) * cos(2.5):
                     # The boat is in the front zone of the obstacle
@@ -154,7 +155,7 @@ class SeaObject:
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     print('up = ', up)
                     draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-                    table[4, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[4, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 else:
                     # The boat is in the right lower zone compared with the obstacle
@@ -164,7 +165,7 @@ class SeaObject:
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     print('up = ', up)
                     draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.51, c, D, k, r)
-                    table[1, mmsi_list.index(self.mmsi)].set_facecolor('green')
+                    table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
         print('cross_path =', self.cross_path)
         return up
 

@@ -37,6 +37,8 @@ class SimulationRunner:
         sea_objects.append(Boat(222, -3, 5, 1.5, 0.25))
         sea_objects.append(Island(333, 0, 2, 0, 1))
         sea_objects.append(Ship(444, 10, -4, 1.5, 3))
+        # sea_objects.append(Ship(444, -10, -4, 1.5, 0.15))
+
         return sea_objects
 
     def initialize_data(self, sea_object, data):
@@ -57,7 +59,9 @@ class SimulationRunner:
         sea_objects = self.initialize_sea_objects()
         data, mmsi_list = self.initialize_data(sea_objects, self.data)
         fig, ax = init_figure(-self.s, self.s, -self.s, self.s)
-        fig_leg, ax_leg, table = init_table(data, self.legend, -self.s, self.s, -self.s, self.s)
+        fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
+        #fig_leg, ax_leg, table = init_table(data, self.legend, -self.s, self.s, -self.s, self.s)
+        table = init_table(data, self.legend,fig_leg,ax_leg)
         simulation = Simulation(sea_objects, self.dt, self.k)
         simulation.run(self.num_steps, mmsi_list, table, ax, ax_leg, 2, self.s, fig, fig_leg)
 
@@ -69,10 +73,10 @@ class SimulationRunner:
 """ Examples of initial position to test different cases """
 
 ''' Four boats '''
-# boats.append(Ship(-2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
-# boats.append(Fisherman(1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
-# boats.append(Boat(-1, 3, 1.5, 4.75))  # x,y,v,θ of the boat
-# boats.append(Boat(0, 0, 0.25, 2))
+# sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
+# sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
+# sea_objects.append(Boat(333, -1, 3, 1.5, 4.75))  # x,y,v,θ of the boat
+# sea_objects.append(Boat(444, 0, 0, 0.25, 2))
 
 ''' Left lower zone '''
 # xp = array([[-2.5,-5,2,1]]).T      #x,y,v,θ of the boat

@@ -32,13 +32,13 @@ class Simulation:
             ax_leg.set_ylim(-s, s)
             # plt.pause(0.0001)
 
-            fig.canvas.draw()  # Update of the first figure
-            plt.pause(0.0001)  # Pause to display the first figure
+            # fig.canvas.draw()  # Update of the first figure
+            # plt.pause(0.0001)  # Pause to display the first figure
 
-            fig_leg.canvas.draw()  # Update of the second figure
-            plt.pause(0.0001)  # Pause to display the second figure
+            # fig_leg.canvas.draw()  # Update of the second figure
+            # plt.pause(0.0001)  # Pause to display the second figure
 
         # plt.show()
-        fig.show()
-        fig_leg.show()
+        # fig.show()
+        # fig_leg.show()
 

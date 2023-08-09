@@ -32,7 +32,7 @@ def init_figure(xmin, xmax, ymin, ymax, width=10, height=10):
     return fig, ax
 
 
-def init_table(data, legend, xmin, xmax, ymin, ymax, text_size=11, length=4, width=2):
+def init_table2(data, legend, xmin, xmax, ymin, ymax, text_size=11, length=4, width=2):
     fig, ax = plt.subplots()
     plt.suptitle('Active rules of the sea', size='x-large')
     table = plt.table(cellText=data, loc='center')
@@ -65,6 +65,46 @@ def init_table(data, legend, xmin, xmax, ymin, ymax, text_size=11, length=4, wid
     fig.tight_layout()
     return fig, ax, table
 
+def init_table(data, legend,fig,ax, text_size=11, length=4, width=2):
+    #fig, ax = plt.subplots()
+    # fig, ax = plt.subplots(figsize=(3, 0.5))
+    plt.suptitle('Active rules of the sea', size='x-large')
+    table = plt.table(cellText=data, loc='center')
+    legend_table = plt.table(cellText=legend, loc='bottom')
+
+    # # Modification du style de la première colonne
+    # first_column_cells = [table.get_celld()[row, 0] for row in range(len(data))]
+    # for cell in first_column_cells:
+    #     cell.set_width(length * 1.2)  # Double la largeur de la première colonne
+
+    table.auto_set_font_size(False)
+    table.set_fontsize(text_size)
+    # table.scale(length, width)
+    # table.scale(0.3, 0.3)
+    # ax.xmin = xmin
+    # ax.xmax = xmax
+    # ax.ymin = ymin
+    # ax.ymax = ymax
+    # Colouring of specific boxes
+    cell_colors = []
+    for row in range(len(data)):
+        current_row = []
+        for col in range(len(data[row])):
+            if (row, col) == (row, 0):  # Condition pour les cases à colorer
+                current_row.append('lightgray')
+            else:
+                current_row.append('white')
+        cell_colors.append(current_row)
+
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            table[row, col].set_facecolor(cell_colors[row][col])
+
+    ax.axis('off')
+    fig.tight_layout()
+    # plt.subplots_adjust(left=0.7, top=0.3)
+
+    return table
 
 def clear(ax):
     pause(0.001)
