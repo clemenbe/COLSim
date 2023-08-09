@@ -8,7 +8,7 @@ class Ship(SeaObject):
         self.privilege = 30
         self.r = 4
 
-    # get the color displayed on the rules
+    # Get the color displayed on the rules
     def get_color(self):
         return "red"
 

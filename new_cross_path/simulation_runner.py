@@ -15,7 +15,7 @@ class SimulationRunner:
         self.dt = 0.1 
         self.k = 0.5 
         self.num_steps = 1000
-        self.data = [
+        self.rules = [
             ["Rules :"],
             ["Finish OT"],
             ["Left OT"],
@@ -41,29 +41,29 @@ class SimulationRunner:
 
         return sea_objects
 
-    def initialize_data(self, sea_object, data):
+    def initialize_data(self, sea_object, rules):
         mmsi_list = []
         # Create each blank cases
-        for row in range(1, len(data)):
+        for row in range(1, len(rules)):
             for col in range(len(sea_object)):
-                data[row].append(" ")
+                rules[row].append(" ")
         # Create the colum's titles
         for col in range(len(sea_object)):
-            data[0].append(sea_object[col].mmsi)
+            rules[0].append(sea_object[col].mmsi)
             mmsi_list.append(sea_object[col].mmsi)
-        return data, mmsi_list
+        return rules, mmsi_list
 
 
 
     def run(self):
         sea_objects = self.initialize_sea_objects()
-        data, mmsi_list = self.initialize_data(sea_objects, self.data)
+        rules, mmsi_list = self.initialize_data(sea_objects, self.rules)
         fig, ax = init_figure(-self.s, self.s, -self.s, self.s)
         fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
         #fig_leg, ax_leg, table = init_table(data, self.legend, -self.s, self.s, -self.s, self.s)
-        table = init_table(data, self.legend,fig_leg,ax_leg)
+        table = init_table(rules, self.legend,fig_leg,ax_leg)
         simulation = Simulation(sea_objects, self.dt, self.k)
-        simulation.run(self.num_steps, mmsi_list, table, ax, ax_leg, 2, self.s, fig, fig_leg)
+        simulation.run(self.num_steps, mmsi_list, rules, table, ax, ax_leg, 2, self.s, fig, fig_leg)
 
         # plt.show()
 

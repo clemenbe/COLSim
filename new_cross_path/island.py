@@ -31,6 +31,6 @@ class Island(SeaObject):
         draw_circle(ax, self.x, self.y, self.r, 'red')                  # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
 
-    # an island never moves
-    def move(self, boats, mmsi_list, table, ax, Ɛ, s, k, dt):
+    # An island never moves
+    def move(self, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
         return

@@ -49,7 +49,7 @@ class SeaObject:
         self.v = v + dt * u[0][0] 
         self.theta += dt * u[1][0]
 
-    # return the object's x, y, speed and direction in a state vector
+    # Return the object's x, y, speed and direction in a state vector
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
     
@@ -65,7 +65,7 @@ class SeaObject:
         return up
     
     # Called by move(), when there is risk of collision
-    def avoid_collision(self, obstacle, mmsi_list, table, ax, Ɛ, s, r, k):
+    def avoid_collision(self, obstacle, mmsi_list, rules, table, ax, Ɛ, s, r, k):
 
         px, py, pv, ptheta = self.get_state_vector().flatten()
         qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
@@ -77,8 +77,7 @@ class SeaObject:
         D = array([[r, 0],
                 [0, r]])
 
-
-        # different cases of collision avoidance
+        # Different cases of collision avoidance
         if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
             if scalar_pdt >= 0:
                 print('------------------Boats with close directions------------------')
@@ -87,28 +86,48 @@ class SeaObject:
                 if (px < qx - Ɛ) and self.cross_path:
                     print('------------------Left Repulsion------------------')
                     φ = φrep
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
                 elif (px > qx - Ɛ) and self.cross_path:
                     print('------------------Right Repulsion------------------')
                     φ = φrep
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif py > qy + Ɛ:
                     # The boat is in the front zone of the obstacle
                     print('------------------Front zone------------------')
                     φ = φrep
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[1, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 elif (py < qy + Ɛ) and (px < qx):
                     # The boat is in the left lower zone compared with the obstacle
                     print('------------------Left lower zone------------------')
                     φ = φcw
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[2, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
                 elif (py < qy + Ɛ) and (px < qx) and (self.phat[0, 1] < qy + Ɛ) and (self.phat[0, 0] > qx):
                     # The boat is in the left lower zone compared with the obstacle
                     print('------------------Left lower zone --> Destination Right lower zone------------------')
                     φ = φccw
                     self.cross_path = True
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[4, mmsi_list.index(self.mmsi+1)].set_facecolor('green')
 
                 elif (py < qy + Ɛ) and (px > qx) and (self.phat[1] < qy + Ɛ) and (self.phat[0] < qx):
@@ -116,12 +135,20 @@ class SeaObject:
                     print('------------------Right lower zone-> Destination Left lower zone------------------')
                     φ = φcw
                     self.cross_path = True
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[3, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 else:
                     # The boat is in the right lower zone compared with the obstacle
                     print('------------------Right lower zone------------------')
                     φ = φccw
+                    # Reinitialize the situation in the table
+                    for row in arange(len(rules)):
+                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                    # Put in green the current applied rule in the table
                     table[3, mmsi_list.index(self.mmsi)+1].set_facecolor('green')
 
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
@@ -172,7 +199,7 @@ class SeaObject:
 
     
     # Moves the object every iteration
-    def move(self, sea_objects, mmsi_list, table, ax, Ɛ, s, k, dt):
+    def move(self, sea_objects, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
         #up = array([[0], [0]])
 
         in_collision = False
@@ -181,11 +208,11 @@ class SeaObject:
         for other_object in sea_objects:
 
             if self != other_object:
-                # when distance is smaller than collision radius
+                # When distance is smaller than collision radius
                 if dist(array([[other_object.x], [other_object.y]]), array([[self.x], [self.y]])) < max(self.r, other_object.r) + Ɛ:
-                    # object with smaller privilege avoids collision
+                    # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
-                        up = self.avoid_collision(other_object, mmsi_list, table, ax, Ɛ, s, max(self.r, other_object.r), k)
+                        up = self.avoid_collision(other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
                         in_collision = True
 
         # If there is no need to avoid collision

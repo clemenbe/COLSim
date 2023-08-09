@@ -16,7 +16,7 @@ class Boat(SeaObject):
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area
         draw_disk(ax, self.phat, 0.2, 'green')                  # Display of the final destination
 
-    # get the color displayed on the rules
+    # Get the color displayed on the rules
     def get_color(self):
         return "green"
 

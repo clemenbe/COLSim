@@ -11,7 +11,7 @@ class Simulation:
         self.k = k
 
 
-    def run(self, num_steps,  mmsi_list, table, ax, ax_leg, Ɛ, s, fig, fig_leg):
+    def run(self, num_steps,  mmsi_list, rules, table, ax, ax_leg, Ɛ, s, fig, fig_leg):
 
 
         for _ in range(num_steps):
@@ -22,7 +22,7 @@ class Simulation:
             # ax_leg.cla()
 
             for sea_objects in self.sea_objects:
-                sea_objects.move(self.sea_objects, mmsi_list, table, ax, Ɛ, s, self.k, self.dt)
+                sea_objects.move(self.sea_objects, mmsi_list, rules, table, ax, Ɛ, s, self.k, self.dt)
                 sea_objects.draw(ax, Ɛ)
                 # ax.cla()
 

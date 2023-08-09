@@ -9,7 +9,7 @@ class Whale(SeaObject):
         self.privilege = 500
         self.r = 2
 
-    # get the color displayed on the rules
+    # Get the color displayed on the rules
     def get_color(self):
         return "blue"
 
