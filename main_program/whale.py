@@ -4,12 +4,12 @@ from draw import *
 
 class Whale(SeaObject):
 
-    def __init__(self, x, y, v, theta):
-        super().__init__(x, y, v, theta)  # call the superclass's constructor
+    def __init__(self, mmsi, x, y, v, theta):
+        super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
         self.privilege = 500
         self.r = 2
 
-    # get the color displayed on the rules
+    # Get the color displayed on the rules
     def get_color(self):
         return "blue"
 
@@ -18,11 +18,11 @@ class Whale(SeaObject):
         M = coef * array(
             [[-1, 5, 7, 7, 5, -1, -4, -5, -7, -7, -5, -4, -1], [-3, -3, -2, 2, 3, 3, 1, 1, 3, -3, -1, -1, -3]])
         M = add1(M)
-        draw_arrow(self.x, self.y, self.theta, norm(self.v), 'red')
+        draw_arrow(ax, self.x, self.y, self.theta, norm(self.v), 'red')
         M_transformed = tran2H(self.x, self.y) @ rot2H(self.theta) @ M
-        plt.plot(M_transformed[0], M_transformed[1], color=col, linewidth=w, zorder=1)
-        plt.gca().add_patch(Polygon(M_transformed[:2].T, facecolor=col, edgecolor=None, zorder=0))
+        ax.plot(M_transformed[0], M_transformed[1], color=col, linewidth=w, zorder=1)
+        ax.add_patch(Polygon(M_transformed[:2].T, facecolor=col, edgecolor=None, zorder=0))
         """ Display of the zones """
         draw_circle(ax, self.x, self.y, self.r, 'red')                           # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvring area
-        draw_disk(ax, self.phat, 0.2, 'green')                              # Display of the final destination
+        draw_disk(ax, self.phat, 0.2, 'green')                                  # Display of the final destination

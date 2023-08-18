@@ -20,8 +20,8 @@ def add1(M):
     M = array(M)
     return vstack((M, ones(M.shape[1])))
 
-def plot2D(M, col='black', w=1):
-    plot(M[0, :], M[1, :], col, linewidth=w)
+def plot2D(ax, M, col='black', w=1):
+    ax.plot(M[0, :], M[1, :], col, linewidth=w)
 
 def tran2H(x, y):
     return array([[1, 0, x], [0, 1, y], [0, 0, 1]])

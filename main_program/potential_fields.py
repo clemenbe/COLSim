@@ -29,15 +29,6 @@ def φccw(p1, p2, c, D, k, r):
     return v1, v2
 
 
-# def φrep(p1, p2, c, D, k, r):
-#     """ Vector field repulsing to a circle of radius r and center c"""
-#     a = k*((p1-c[0,0])**2 + (p2-c[1,0])**2 - r**2)*(p1-c[0,0])
-#     b = k*((p1-c[0,0])**2 + (p2-c[1,0])**2)**(3/2)
-#     φ1 = a/b
-#     c = ((p1 - c[0, 0]) ** 2 + (p2 - c[1, 0]) ** 2 - r ** 2) * (p2 - c[1, 0])
-#     φ2 = c/b
-#     return φ1, φ2
-
 def φrep(p1, p2, c, D, k, r):
     """ Vector field repulsing to the center c of a circle """
     φ1 = k * (p1 - c[0, 0])
