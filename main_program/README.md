@@ -34,4 +34,4 @@ Whether an object moves straight or avoids collision, both actions return a cont
 
 In this manner, each sea object is responsible for its own actions, deciding whether to avoid collision or not, based on the rules defined in its methods. The object does not care about the reactions of others, ensuring each object makes decisions autonomously.
 
-For a detailed explanation of how these classes function and interact with one another, please refer to the comments in the source code. The simulator offers the possibility of simulating different sea conditions and object interactions, which makes it a versatile tool for researching and studying marine navigation and collision avoidance systems.
+For a detailed explanation of how these classes function and interact with one another, please refer to the comments in the source code. 
