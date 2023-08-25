@@ -9,8 +9,7 @@
 ## Summary
 1. [Project Goals](#project-goals) 
 2. [Existing Simulators](#existing-simulators)
-3. [Ideas for the new simulator](#ideas-for-the-new-simulator)
-4. [Versions of the USV Simulator](#versions-of-the-usv-simulator)
+3. [Versions of the USV Simulator](#versions-of-the-usv-simulator)
 
 
 ## Project Goals
@@ -62,7 +61,8 @@ Overall, the UTSeaSim simulator uses an RRT algorithm to avoid obstacle.
 We created three .py files to use as librairies : **_calcul_tools, draw_** and **_potential_fields_**
 
 ### main_program
-This is the most up-to-date version of the simulator and includes the following key components:
+This is the most up-to-date version of the simulator and allows to runned a simualtion with fictive USV that the user can choose to initialise.
+It includes the following key components:
 
 - [ ] **SimulationRunner** : Initializes all objects and constants for the simulation like **Ship**, **Whale**, repulsive force, etc.
 - [ ] **Simulation** : Runs the whole simulation in a for loop, depended on the number of steps chosen. It accepts the sea_objects vector which includes different objects of **SeaObject**, **Ship**, **Whale**, **Island** classes, and calls each of them's *move* and *draw* in each matplotlib iteration.
@@ -74,14 +74,14 @@ It can be runned in two different ways :
 
 
 ### AIS
-
+This version allows this time to run a simulation based on AIS data, so of an past real scene.
+For more information on how the AIS version works, see the [README in the main_program directory](./AIS/README.md).
 
 ### AIS_new
+This version is the implementation of a new solution to run a simulation based on AIS data. The implementation is not done yet.
+For more information on how the AIS_new version works, see the [README in the main_program directory](./AIS_new/README.md).
 
 
 
-
-For a detailed explanation of how these classes function and interact with one another, please refer to the comments in the source code. The simulator offers the possibility of simulating different sea conditions and object interactions, which makes it a versatile tool for researching and studying marine navigation and collision avoidance systems.
-
-This version is a future concept where a background map would be inputted to the simulator. This would allow for more realistic simulations as the map could represent different sea conditions, the presence of islands, and other features. This could provide the **SeaObject** objects with a richer context and allow for more complex and realistic simulations.
+For a detailed explanation of how the different classes, function and other specific notions interact with one another, please refer to the comments in the source code. The simulator offers the possibility of simulating different sea conditions and object interactions, which makes it a versatile tool for researching and studying marine navigation and collision avoidance systems.
 
