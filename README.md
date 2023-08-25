@@ -75,11 +75,11 @@ It can be runned in two different ways :
 
 ### AIS
 This version allows this time to run a simulation based on AIS data, so of an past real scene.
-For more information on how the AIS version works, see the [README in the main_program directory](./AIS/README.md).
+For more information on how the AIS version works, see the [README in the AIS directory](./AIS/README.md).
 
 ### AIS_new
 This version is the implementation of a new solution to run a simulation based on AIS data. The implementation is not done yet.
-For more information on how the AIS_new version works, see the [README in the main_program directory](./AIS_new/README.md).
+For more information on how the AIS_new version works, see the [README in the AIS_new directory](./AIS_new/README.md).
 
 
 
