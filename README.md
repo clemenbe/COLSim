@@ -15,19 +15,18 @@
 
 ## Project Goals
 
-This project present a new USV simulator using and merging two existing simulators in order to have an anti-collision system.
-The goal is to have a simple simulation so that it can be run a great number of times and learn from each simulation.
+This project present a new USV simulator implemented in Python, with a collision avoidance system on every USV, that adheres to the COLREGs. With this simulator, several research could then use it to train an AI using historical AIS-based simulations of real-world scenarios.
+Therefore, the goal is to have a simple simulation so that it can be run a great number of times and learn from each simulation.
 
-In the simulation, we should be able to simulate old boat scenes from AIS data, and add to these scenes a new boat. All the boats should adapt their trajectory to the new added boat.
+Old boat scenes from AIS data can be simulated, but also fictive boats. All the boats should adapt their trajectory to the new added boats.
 
-The decision making module should have a basic implementation of obeying the rules of the sea.
+The decision making module should have a basic implementation of obeying the rules of the sea (COLREGs).
 
 
 ## Existing Simulators
 
 ### The Python Vehicle Simulator
 The [Python Vehicle Simulator](https://www.fossen.biz/wiley/pythonVehicleSim.php) is designed to simulate the **behavior** of **different types of vehicles** in a **3D simulation** environment. It takes into account different simulation parameters such as **gravity, friction, air resistance**, and **vehicle dynamics** to simulate the movement and behavior of vehicles in real-time. Users can adjust simulation parameters to represent different types of vehicles and environments.
-Each vehicle is modeled as an object in Python and the vehicle class has methods for guidance, navigation and control. The main program main.py is used to define vehicle objects for real-time simulation.
 
 **Pros :**
 - good dynamic modelisation
@@ -57,16 +56,10 @@ Overall, the UTSeaSim simulator uses an RRT algorithm to avoid obstacle.
 
 
 
-
-
-## Ideas for the new simulator
-- [ ] regrouping the different types of boat in python Classes (work with those described in fossen simu)
-- [ ] artificial potential fields ? → potential based method to find a good controller (if they can see each other but can’t communicate)
-- [ ] coupled to a path planning method
-
-
-
 ## Versions of the USV Simulator
+
+### Librairies
+We created three .py files to use as librairies : **_calcul_tools, draw_** and **_potential_fields_**
 
 ### main_program
 This is the most up-to-date version of the simulator and includes the following key components:
@@ -75,20 +68,20 @@ This is the most up-to-date version of the simulator and includes the following 
 - [ ] **Simulation** : Runs the whole simulation in a for loop, depended on the number of steps chosen. It accepts the sea_objects vector which includes different objects of **SeaObject**, **Ship**, **Whale**, **Island** classes, and calls each of them's *move* and *draw* in each matplotlib iteration.
 - [ ] **SeaObject** : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how the main_program version works, see the [README in the main_program directory](./main_program/README.md).
 
-### matplot_version
-This is the first version of the USV Simulator, using matlab to display the simulation.
-With those codes, you will be able to simulate two boats, be chosing his position (x and y), his speed v, and his heading/orientation theta.
-It is equipped with an avoiding collision system.
-We used different classes to create a flexible structure :
-- [ ] **Simulation** : run a for loop in the time, depending on the number of steps chosen, applies the avoiding collision system which will atttribute the correct controler for each situation, will update the state vector of the considerated boat, and will display the boats.
-- [ ] **Boat** : allow to define each boat with x, y, v, theta, and define an update and get_state_vector fonction
+It can be runned in two different ways : 
+- [ ] The simulation with the scene **displayed**
+- [ ] The simulation runned without any display, but with the USV's following information : **MMSI number, x, y, theta, v** saved in a .csv file
 
-We created three .py files to use as librairies : **_calcul_tools, draw_** and **_potential_fields_**
 
-### cross_path_version
-This version of the simulator addresses scenarios where a **Ship** moves northwards and another **Ship** or **SeaObject** moves beneath it. In the current system, the moving **Ship** would detect the collision zone and attempt to avoid the **Ship** moving beneath by also moving northwards. This leads to inefficiency and safety issues as the **Ship** deviates from its original path. This version aims to improve the pathing logic to enable the **Ship** to maintain its original path if it's safe to do so.
+### AIS
 
-### map_version
+
+### AIS_new
+
+
+
+
+For a detailed explanation of how these classes function and interact with one another, please refer to the comments in the source code. The simulator offers the possibility of simulating different sea conditions and object interactions, which makes it a versatile tool for researching and studying marine navigation and collision avoidance systems.
 
 This version is a future concept where a background map would be inputted to the simulator. This would allow for more realistic simulations as the map could represent different sea conditions, the presence of islands, and other features. This could provide the **SeaObject** objects with a richer context and allow for more complex and realistic simulations.
 
