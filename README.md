@@ -64,9 +64,9 @@ We created three .py files to use as librairies : **_calcul_tools, draw_** and *
 This is the most up-to-date version of the simulator and allows to runned a simualtion with fictive USV that the user can choose to initialise.
 It includes the following key components:
 
-- [ ] **SimulationRunner** : Initializes all objects and constants for the simulation like **Ship**, **Whale**, repulsive force, etc.
-- [ ] **Simulation** : Runs the whole simulation in a for loop, depended on the number of steps chosen. It accepts the sea_objects vector which includes different objects of **SeaObject**, **Ship**, **Whale**, **Island** classes, and calls each of them's *move* and *draw* in each matplotlib iteration.
-- [ ] **SeaObject** : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how the main_program version works, see the [README in the main_program directory](./main_program/README.md).
+- `SimulationRunner` : Initializes all objects and constants for the simulation like **Ship**, **Whale**, repulsive force, etc.
+- `Simulation` : Runs the whole simulation in a for loop, depended on the number of steps chosen. It accepts the sea_objects vector which includes different objects of **SeaObject**, **Ship**, **Whale**, **Island** classes, and calls each of them's *move* and *draw* in each matplotlib iteration.
+- `SeaObject` : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how the main_program version works, see the [README in the main_program directory](./main_program/README.md).
 
 It can be runned in two different ways : 
 - [ ] The simulation with the scene **displayed**
