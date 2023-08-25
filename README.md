@@ -79,7 +79,7 @@ For more information on how the AIS version works, see the [README in the AIS di
 
 ### AIS_new
 This version is the implementation of a new solution to run a simulation based on AIS data. The implementation is not done yet.
-For more information on how the AIS_new version works, see the [README in the AIS_new directory](./AIS_new/README.md).
+For more information on how the AIS_new version works, see the [README in the AIS_new directory](./AIS new/README.md).
 
 
 
