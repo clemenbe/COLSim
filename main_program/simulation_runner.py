@@ -15,8 +15,8 @@ class SimulationRunner:
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
-        self.num_steps = 1000
-        self.record_data = True
+        self.num_steps = 120
+        self.record_data = False
         self.rules = [
             ["Rules :"],
             ["Finish OT"],
@@ -58,6 +58,10 @@ class SimulationRunner:
 
     def run(self):
         sea_objects = self.initialize_sea_objects()
+        # sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
+        # sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
+        # sea_objects.append(Boat(333, -1, 3, 1.5, 4.75))  # x,y,v,θ of the boat
+        # sea_objects.append(Boat(444, 0, 0, 0.25, 2))
         rules, mmsi_list = self.initialize_data(sea_objects, self.rules)
         simulation = Simulation(sea_objects, self.dt, self.k)
         fig, ax = init_figure(-self.s, self.s, -self.s, self.s)

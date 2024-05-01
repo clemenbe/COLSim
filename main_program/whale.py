@@ -24,5 +24,5 @@ class Whale(SeaObject):
         ax.add_patch(Polygon(M_transformed[:2].T, facecolor=col, edgecolor=None, zorder=0))
         """ Display of the zones """
         draw_circle(ax, self.x, self.y, self.r, 'red')                           # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvring area
+        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvering area
         draw_disk(ax, self.phat, 0.2, 'green')                                  # Display of the final destination
