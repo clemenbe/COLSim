@@ -6,6 +6,7 @@ from whale import Whale
 from fisherman import Fisherman
 from island import Island
 from ship import Ship
+import random
 
 
 
@@ -39,8 +40,33 @@ class SimulationRunner:
         sea_objects.append(Boat(222, -3, 5, 1.5, 0.25))
         sea_objects.append(Island(333, 0, 2, 0, 1))
         sea_objects.append(Ship(444, 10, -4, 1.5, 3))
-        # sea_objects.append(Ship(444, -10, -4, 1.5, 0.15))
+        sea_objects.append(Ship(444, -10, -4, 1.5, 0.15))
         return sea_objects
+    
+    def place_random_objects(self, object_type):
+            mmsi = random.randint(100, 999)
+            x = round(random.uniform(-self.s, self.s), 1)
+            y = round(random.uniform(-self.s, self.s), 1)
+            v = random.uniform(0, 3)
+            theta = random.uniform(0, 6)
+            return globals().get(object_type)(mmsi,x, y, v, theta)
+
+    def initialize_sea_objects_random(self, list_sea_objects):
+        sea_objects = []
+        for i in list_sea_objects:
+            object = self.place_random_objects(i)
+            if len(sea_objects) != 0:
+                object = self.check_position(object, sea_objects)
+            sea_objects.append(object)
+        return sea_objects
+    
+    def check_position(self, object, sea_objects):
+        for i in sea_objects:
+            if dist(array([[object.x], [object.y]]), array([[i.x], [i.y]])) < max(object.r, i.r) + self.Ɛ:
+                object.x = round(random.uniform(-self.s, self.s), 1)
+                object.y = round(random.uniform(-self.s, self.s), 1)
+                self.check_position(object, sea_objects)
+        return object
 
     def initialize_data(self, sea_object, rules):
         mmsi_list = []
@@ -57,7 +83,8 @@ class SimulationRunner:
 
 
     def run(self):
-        sea_objects = self.initialize_sea_objects()
+        list_sea_objects = ["Boat", "Boat", "Whale", "Island", "Ship", "Ship"]
+        sea_objects = self.initialize_sea_objects_random(list_sea_objects)
         # sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(333, -1, 3, 1.5, 4.75))  # x,y,v,θ of the boat
