@@ -33,6 +33,7 @@ class SeaObject:
         self.y = y
         self.v = v
         self.theta = theta
+        self.agent = False
 
         destination_distance = 20 # the distance from initial position to destination
         self.phat = array([[self.x + destination_distance * cos(self.theta)], [self.y + destination_distance * sin(self.theta)]])
@@ -201,17 +202,86 @@ class SeaObject:
                     other_object.collision_risk = 1
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
-                        up = self.avoid_collision(record_data, other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
-                        in_collision = True
+                        if self.agent:
+                            # self.perform_action(action, other_object,k)
+                            pass
+                        else:
+                            up = self.avoid_collision(record_data, other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
+                            in_collision = True
 
         # If there is no need to avoid collision
         if not in_collision:
             self.collision_risk = 0
             other_object.collision_risk = 0
-            up = self.move_straight()
+            if self.agent:
+                pass
+            else:
+                up = self.move_straight()
             
         # Update position
         self.update(up, dt)
 
         return [self.mmsi, self.get_state_vector()]
 
+    def perform_action(self, action, other=None, k=0):
+        px, py, pv, ptheta = self.get_state_vector().flatten()
+        if other:
+            qx, qy, qv, qtheta = other.get_state_vector().flatten()
+            r = max(self.r, other.r)
+
+        c = array([[qx],
+                [qy]])
+        D = array([[r, 0],
+                [0, r]])
+
+        # Left Repulsion
+        if action == 0:
+            print('Left Repulsion')
+            φ = φrep
+        # Right Repulsion
+        elif action == 1:
+            print('Right Repulsion')
+            φ = φrep
+        # Front zone
+        elif action == 2:
+            print('Front zone')
+            φ = φrep
+        # Left lower zone
+        elif action == 3:
+            print('Left lower zone')
+            φ = φcw
+        # Left lower zone --> Destination Right lower zone
+        elif action == 4:
+            print('Left lower zone --> Destination Right lower zone')
+            φ = φccw
+            self.cross_path = True
+        # Right lower zone-> Destination Left lower zone
+        elif action == 5:
+            print('Right lower zone-> Destination Left lower zone')
+            φ = φcw
+            self.cross_path = True
+
+        # Right lower zone
+        elif action == 6:
+            print('Right lower zone')
+            φ = φccw
+        # Left front zone
+        elif action == 7:
+            print('Left front zone')
+            φ = φccw
+            rule = 4
+            up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+        # Right front zone (align)
+        elif action == 8:
+            print('Right front zone (align)')
+            up = array([[0], [0]])
+        # Right front zone
+        elif action == 9:
+            print('Right front zone')
+            φ = φccw
+            up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+        # Lower zone
+        elif action == 10:
+            print('Lower zone')
+            φ = φrep
+            up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)

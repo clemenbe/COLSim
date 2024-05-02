@@ -4,6 +4,6 @@ AIS/nari_dynamic.csv
 AIS/nari_static.csv
 **/.idea
 **/.vscode
-**/*.pyc
-**/__pycache__
+*.pyc
+__pycache__/
 *.csv

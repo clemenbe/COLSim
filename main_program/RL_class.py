@@ -9,8 +9,8 @@ from calcul_tools import dist
 class ASVEnv(Env):
 
     def __init__(self):
-        # Actions that we can take: turn left, turn right, go straight
-        self.action_space = Discrete(3)
+        # Actions that we can take
+        self.action_space = Discrete(11)
         # Distance to objective and risk of collision
         self.observation_space = Box(low=np.array([0, 0]), high=np.array([20, 1]), dtype=np.float64)
         # Set start position of the Boat agent using initialize_sea_objects_random
@@ -18,7 +18,7 @@ class ASVEnv(Env):
         self.boat = runner.initialize_sea_objects_random(["Boat"])[0]
         self.boat.agent = True
         # Set the destination of the Boat agent
-        destination_distance = random.uniform(10, 30)
+        destination_distance = (random.uniform(10, 30))
         self.boat.phat = np.array([[self.boat.x + destination_distance * np.cos(self.boat.theta)], [self.boat.y + destination_distance * np.sin(self.boat.theta)]])
         # Set the distance to the objective and the risk of collision
         self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), self.boat.collision_risk], dtype=np.float64)
@@ -29,23 +29,36 @@ class ASVEnv(Env):
 
 
     def step(self, action):
+        self.old_state = self.state
         # Apply action
-        # 0 = turn left
-        # 1 = turn right
-        # 2 = go straight
+
+        # Left Repulsion
+        # Right Repulsion
+        # Front zone
+        # Left lower zone
+        # Left lower zone --> Destination Right lower zone
+        # Right lower zone-> Destination Left lower zone
+        # Right lower zone
+
+        # Left front zone
+        # Right front zone (align)
+        # Right front zone
+        # Lower zone
         # TODO: Implement action
+
+        
+
+
         
         # Recalculation of the boat's position and risk of collision
         self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), self.boat.collision_risk], dtype=np.float64)
-
-
-
-        # Reduce shower length by 1 second
+        # Reduce simulation length by 1 second
         self.simulation_length -= 1
 
-        # TODO: Implement reward
         # Calculate reward
-        if self.state >= 37 and self.state <= 39:
+        # if the distance to the objective decreased and no risk of collision, reward = 1
+        if self.state[0] < self.old_state[0] and self.state[1] == 0:
+            reward = 1
             reward = 1
         else:
             reward = -1

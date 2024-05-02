@@ -117,7 +117,7 @@ def draw_arrow(ax, x, y, θ, L, col='darkblue', w=1):
     plot2D(ax, tran2H(x, y) @ rot2H(θ) @ arrow2H(L), col, w)
 
 
-def draw_boat_and_vector(ax, x, col='orange', r=0.1, w=2):
+def draw_boat_and_vector(ax, x, col='darkblue', r=0.1, w=2):
     """ Draw a boat with his speed vector """
     mx, my, v, θ = list(x[0:4, 0])
     M = r * array([[-1, 5, 7, 7, 5, -1, -1, -1], [-2, -2, -1, 1, 2, 2, -2, -2]])
