@@ -2,11 +2,11 @@ from gym import Env
 from gym.spaces import Discrete, Box
 import numpy as np
 import random
-from stable_baselines3.common.env_checker import check_env
+# from stable_baselines3.common.env_checker import check_env
 from simulation_runner import SimulationRunner
 from calcul_tools import dist
 
-class ShowerEnv(Env):
+class ASVEnv(Env):
 
     def __init__(self):
         # Actions that we can take: turn left, turn right, go straight
@@ -16,11 +16,12 @@ class ShowerEnv(Env):
         # Set start position of the Boat agent using initialize_sea_objects_random
         runner = SimulationRunner()
         self.boat = runner.initialize_sea_objects_random(["Boat"])[0]
+        self.boat.agent = True
         # Set the destination of the Boat agent
-        destination_distance = 20
+        destination_distance = random.uniform(10, 30)
         self.boat.phat = np.array([[self.boat.x + destination_distance * np.cos(self.boat.theta)], [self.boat.y + destination_distance * np.sin(self.boat.theta)]])
         # Set the distance to the objective and the risk of collision
-        self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), 0], dtype=np.float64)
+        self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), self.boat.collision_risk], dtype=np.float64)
         # Set the simulation lenght
         self.simulation_length = 120
 
@@ -33,7 +34,10 @@ class ShowerEnv(Env):
         # 1 = turn right
         # 2 = go straight
         # TODO: Implement action
-        self.state += action - 1
+        
+        # Recalculation of the boat's position and risk of collision
+        self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), self.boat.collision_risk], dtype=np.float64)
+
 
 
         # Reduce shower length by 1 second
@@ -65,7 +69,7 @@ class ShowerEnv(Env):
         runner = SimulationRunner()
         self.boat = runner.initialize_sea_objects_random(["Boat"])[0]
         # Set the destination of the Boat agent
-        destination_distance = 20
+        destination_distance = random.uniform(10, 30)
         self.boat.phat = np.array([[self.boat.x + destination_distance * np.cos(self.boat.theta)], [self.boat.y + destination_distance * np.sin(self.boat.theta)]])
         # Set the distance to the objective and the risk of collision
         self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), 0], dtype=np.float64)
@@ -75,5 +79,6 @@ class ShowerEnv(Env):
         return np.array([self.state], dtype=np.float64)
     
 
-env = ShowerEnv()
-check_env(env)
+env = ASVEnv()
+print(env.state)
+# check_env(env)
