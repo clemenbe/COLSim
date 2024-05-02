@@ -10,7 +10,7 @@ class ASVEnv(Env):
 
     def __init__(self):
         # Actions that we can take
-        self.action_space = Discrete(11)
+        self.action_space = Discrete(9)
         # Distance to objective and risk of collision
         self.observation_space = Box(low=np.array([0, 0]), high=np.array([20, 1]), dtype=np.float64)
         # Set start position of the Boat agent using initialize_sea_objects_random
@@ -44,12 +44,11 @@ class ASVEnv(Env):
         # Right front zone (align)
         # Right front zone
         # Lower zone
-        # TODO: Implement action
-
-        
 
 
-        
+        # TODO Understand how to implement only one instance of the SimulationRunner class 
+        # self.boat.move(record_data, sea_objects, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+
         # Recalculation of the boat's position and risk of collision
         self.state = np.array([dist(np.array([[self.boat.x], [self.boat.y]]), self.boat.phat), self.boat.collision_risk], dtype=np.float64)
         # Reduce simulation length by 1 second

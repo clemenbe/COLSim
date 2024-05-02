@@ -1,6 +1,7 @@
 from calcul_tools import *
 from draw import *
 from potential_fields import *
+from enum import Enum
 
 def Jφ0(p):
     """ Jacobian Matrix of φ0 """
@@ -22,8 +23,17 @@ def control(x, φ, c, D, k, r):
     u1 = 0
     u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
+class Boat_agent(Enum):
 
-
+    Repulsion=0
+    Left_Lower_Zone=1
+    Left_Lower_Zone_Destination_Right_Lower_Zone=2
+    Right_Lower_Zone_Destination_Left_Lower_Zone=3
+    Right_Lower_zone=4
+    Left_and_Right_Front_Zone=5
+    Right_Front_Zone_Align=6
+    Lower_Zone=7
+    Straight=8
 class SeaObject:
 
     # x, y are positions, v is speed, theta is direction
@@ -203,7 +213,7 @@ class SeaObject:
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
                         if self.agent:
-                            # self.perform_action(action, other_object,k)
+                            self.perform_action(Boat_agent, other_object,k)
                             pass
                         else:
                             up = self.avoid_collision(record_data, other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
@@ -214,7 +224,7 @@ class SeaObject:
             self.collision_risk = 0
             other_object.collision_risk = 0
             if self.agent:
-                pass
+                self.perform_action(Boat_agent, other_object,k)
             else:
                 up = self.move_straight()
             
@@ -234,54 +244,34 @@ class SeaObject:
         D = array([[r, 0],
                 [0, r]])
 
-        # Left Repulsion
+        # Repulsion
         if action == 0:
-            print('Left Repulsion')
-            φ = φrep
-        # Right Repulsion
-        elif action == 1:
-            print('Right Repulsion')
-            φ = φrep
-        # Front zone
-        elif action == 2:
-            print('Front zone')
             φ = φrep
         # Left lower zone
-        elif action == 3:
-            print('Left lower zone')
+        elif action == 1:
             φ = φcw
         # Left lower zone --> Destination Right lower zone
-        elif action == 4:
-            print('Left lower zone --> Destination Right lower zone')
+        elif action == 2:
             φ = φccw
             self.cross_path = True
         # Right lower zone-> Destination Left lower zone
-        elif action == 5:
-            print('Right lower zone-> Destination Left lower zone')
+        elif action == 3:
             φ = φcw
             self.cross_path = True
-
         # Right lower zone
-        elif action == 6:
-            print('Right lower zone')
+        elif action == 4:
             φ = φccw
-        # Left front zone
-        elif action == 7:
-            print('Left front zone')
+        # Left  and right front zone
+        elif action == 5:
             φ = φccw
-            rule = 4
             up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
         # Right front zone (align)
-        elif action == 8:
-            print('Right front zone (align)')
+        elif action == 6:
             up = array([[0], [0]])
-        # Right front zone
-        elif action == 9:
-            print('Right front zone')
-            φ = φccw
-            up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
         # Lower zone
-        elif action == 10:
-            print('Lower zone')
+        elif action == 7:
             φ = φrep
             up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+        elif action == 8:
+            up = self.move_straight()
+        return up
