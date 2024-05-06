@@ -5,7 +5,8 @@ from potential_fields import *
 import csv
 import re
 import ast
-
+from datetime import datetime
+import os
 
 class Simulation:
     def __init__(self, sea_objects, dt, k):
@@ -64,4 +65,9 @@ class Simulation:
             y = [i[1][1] for i in value]
             ax.plot(x, y, label=value[0][0] + " " + str(key))
         ax.legend()
-        plt.show()
+        # Directory to save the plot
+        directory = 'plots'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        plt.savefig(f'plot_{datetime.now().strftime("%Y%m%d%H%M%S")}.png')
+        # plt.show()
