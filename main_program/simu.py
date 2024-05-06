@@ -85,4 +85,3 @@ class Simulation:
         if not os.path.exists(directory):
             os.makedirs(directory)
         plt.savefig(f'{directory}/plot_{self.save}.png')
-        # plt.show()

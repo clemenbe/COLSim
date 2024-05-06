@@ -32,6 +32,7 @@ class SimulationRunner:
             ["Red to red rule to avoid the collision", "R to R"]
         ]
         self.list_sea_objects = []
+        self.visu_figure = True
 
 
 
@@ -91,15 +92,23 @@ class SimulationRunner:
         # sea_objects.append(Boat(444, 0, 0, 0.25, 2))
         rules, mmsi_list = self.initialize_data(sea_objects, self.rules)
         simulation = Simulation(sea_objects, self.dt, self.k)
-        fig, ax = init_figure(-self.s, self.s, -self.s, self.s)
-        fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
-        table = init_table(rules, self.legend, fig_leg, ax_leg)
-        if self.record_data:
-            simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
-            simulation.process_data(f"saves/data/{simulation.save}.csv")
-            simulation.visualize_data()
+        if self.visu_figure:
+            fig, ax = init_figure(-self.s, self.s, -self.s, self.s)
+            fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
+            table = init_table(rules, self.legend, fig_leg, ax_leg)
+            if self.record_data:
+                simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
+                simulation.process_data(f"saves/data/{simulation.save}.csv")
+                simulation.visualize_data()
+            else:
+                simulation.run(self.record_data, self.num_steps, mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)
         else:
-            simulation.run(self.record_data, self.num_steps, mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)
+            if self.record_data:
+                simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, None, None, self.Ɛ, self.s)
+                simulation.process_data(f"saves/data/{simulation.save}.csv")
+                simulation.visualize_data()
+            else:
+                simulation.run(self.record_data, self.num_steps, mmsi_list, rules, None, None, None, self.Ɛ, self.s)
 
 
 
