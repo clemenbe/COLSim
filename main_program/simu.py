@@ -69,5 +69,5 @@ class Simulation:
         directory = 'plots'
         if not os.path.exists(directory):
             os.makedirs(directory)
-        plt.savefig(f'plot_{datetime.now().strftime("%Y%m%d%H%M%S")}.png')
+        plt.savefig(f'{directory}/plot_{datetime.now().strftime("%Y%m%d%H%M%S")}.png')
         # plt.show()
