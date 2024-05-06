@@ -98,7 +98,7 @@ class SimulationRunner:
         table = init_table(rules, self.legend, fig_leg, ax_leg)
         if self.record_data:
             simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
-            simulation.process_data("simulation_log.csv")
+            simulation.process_data(f"saves/data/{simulation.save}.csv")
             simulation.visualize_data()
         else:
             simulation.run(self.record_data, self.num_steps, mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)

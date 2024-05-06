@@ -17,6 +17,7 @@ class Simulation:
         self.sea_objects = sea_objects
         self.dt = dt
         self.k = k
+        self.save = datetime.now().strftime("%Y%m%d%H%M%S")
 
 
     def run(self, record_data, num_steps,  mmsi_list, rules, table, ax, ax_leg, Ɛ, s):
@@ -36,8 +37,12 @@ class Simulation:
 
 
     def run_with_data(self, record_data, num_steps,  mmsi_list, rules, table, ax, Ɛ, s):
+        # Directory to save the data
+        directory = 'saves/data'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         # Create and open the .csv file
-        with open('simulation_log.csv', 'w', newline='') as csvfile:
+        with open(f'{directory}/{self.save}.csv', 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
 
             for _ in range(num_steps):
@@ -78,8 +83,8 @@ class Simulation:
             object = globals().get(processed_string[1])(int(processed_string[0]), x_final, y_final, 0, theta_final)
             object.draw(ax, 0)
         # Directory to save the plot
-        directory = 'plots'
+        directory = 'saves/plots'
         if not os.path.exists(directory):
             os.makedirs(directory)
-        plt.savefig(f'{directory}/plot_{datetime.now().strftime("%Y%m%d%H%M%S")}.png')
+        plt.savefig(f'{directory}/plot_{self.save}.png')
         # plt.show()

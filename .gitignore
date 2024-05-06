@@ -8,5 +8,5 @@ AIS/nari_static.csv
 main_program/__pycache__/
 *.csv
 main_program/plots/
-plots/
+saves/
 test.py
