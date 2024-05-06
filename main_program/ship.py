@@ -7,6 +7,8 @@ class Ship(SeaObject):
         super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
         self.privilege = 30
         self.r = 4
+        self.color = 'red'
+        self.name = 'Ship'
 
     # Get the color displayed on the rules
     def get_color(self):

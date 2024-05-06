@@ -8,6 +8,8 @@ class Boat(SeaObject):
         super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
         self.privilege = 0
         self.r = 2
+        self.color = 'green'
+        self.name = 'Boat'
     
     # Draw circle around boat
     def draw(self, ax, Ɛ):

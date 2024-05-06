@@ -8,6 +8,7 @@ class Island(SeaObject):
         super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
         self.privilege = 1000
         self.r = 4
+        self.name = 'Island'
 
     def draw(self, ax, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """
@@ -33,4 +34,4 @@ class Island(SeaObject):
 
     # An island never moves
     def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
-        return [self.mmsi, self.get_state_vector()]
+        return [self.mmsi, self.name, self.get_state_vector()]

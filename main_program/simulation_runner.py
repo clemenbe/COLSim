@@ -83,7 +83,8 @@ class SimulationRunner:
 
 
     def run(self):
-        list_sea_objects = ["Boat", "Boat", "Whale", "Island", "Ship", "Ship"]
+        # list_sea_objects = ["Boat", "Boat", "Whale", "Island", "Ship", "Ship"]
+        list_sea_objects = ["Boat", "Boat"]
         sea_objects = self.initialize_sea_objects_random(list_sea_objects)
         # sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
@@ -96,6 +97,8 @@ class SimulationRunner:
         table = init_table(rules, self.legend, fig_leg, ax_leg)
         if self.record_data:
             simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
+            simulation.process_data("simulation_log.csv")
+            simulation.visualize_data()
         else:
             simulation.run(self.record_data, self.num_steps, mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)
 

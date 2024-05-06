@@ -3,6 +3,8 @@ from draw import *
 from boat import Boat
 from potential_fields import *
 import csv
+import re
+import ast
 
 
 class Simulation:
@@ -40,3 +42,26 @@ class Simulation:
 
                     # Add the log data to the CSV file
                     csv_writer.writerow(log_data)
+
+    def process_data(self, log_data):
+        with open(log_data, 'r') as csvfile:
+            csv_reader = csv.reader(csvfile)
+            self.sea_objects = {}
+            for row in csv_reader:
+                mmsi = int(row[0])
+                if mmsi not in self.sea_objects:
+                    self.sea_objects[mmsi] = []
+                cleaned_string = re.sub(r'[\n\s]+', ',', row[2].strip())
+                cleaned_string = cleaned_string.replace("[,", "[")
+                self.sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string)])
+                # print(mmsi)
+            return self.sea_objects
+        
+    def visualize_data(self):
+        fig, ax = plt.subplots()
+        for key, value in self.sea_objects.items():
+            x = [i[1][0] for i in value]
+            y = [i[1][1] for i in value]
+            ax.plot(x, y, label=value[0][0] + " " + str(key))
+        ax.legend()
+        plt.show()

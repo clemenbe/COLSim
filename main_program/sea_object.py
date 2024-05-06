@@ -231,7 +231,7 @@ class SeaObject:
         # Update position
         self.update(up, dt)
 
-        return [self.mmsi, self.get_state_vector()]
+        return [self.mmsi, self.name, self.get_state_vector()]
 
     def perform_action(self, action, other=None, k=0):
         px, py, pv, ptheta = self.get_state_vector().flatten()

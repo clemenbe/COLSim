@@ -8,6 +8,8 @@ class Whale(SeaObject):
         super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
         self.privilege = 500
         self.r = 2
+        self.color= 'blue'
+        self.name = 'Whale'
 
     # Get the color displayed on the rules
     def get_color(self):
