@@ -17,7 +17,7 @@ class Simulation:
         self.sea_objects = sea_objects
         self.dt = dt
         self.k = k
-        self.save = datetime.now().strftime("%Y%m%d%H%M%S")
+        self.save = datetime.now().strftime("%Y%m%d%H%M%S%f%z")
 
 
     def run(self, record_data, num_steps,  mmsi_list, rules, table, ax, ax_leg, Ɛ, s):
@@ -67,6 +67,7 @@ class Simulation:
             return self.sea_objects
         
     def visualize_data(self):
+        plt.ioff()
         fig, ax = plt.subplots()
         for key, value in self.sea_objects.items():
             x = [i[1][0] for i in value]
@@ -85,3 +86,4 @@ class Simulation:
         if not os.path.exists(directory):
             os.makedirs(directory)
         plt.savefig(f'{directory}/plot_{self.save}.png')
+        plt.close(fig)
