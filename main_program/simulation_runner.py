@@ -69,6 +69,13 @@ class SimulationRunner:
                 object.y = round(random.uniform(-self.s, self.s), 1)
                 self.check_position(object, sea_objects)
         return object
+    
+    def random_object_list(self, nb):
+        object_list = ["Boat"]
+        for i in range(nb):
+            object_list.append(random.choice(["Whale", "Boat", "Ship", "Island"]))
+        return object_list
+
 
     def initialize_data(self, sea_object, rules):
         mmsi_list = []

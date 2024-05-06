@@ -4,7 +4,7 @@ from tqdm.auto import tqdm
 import time
 
 if __name__ == "__main__":
-    nb_simulations = 1000
+    nb_simulations = 10
     matplotlib.rcParams['interactive'] = False
     start_time = time.time()
     
@@ -13,5 +13,5 @@ if __name__ == "__main__":
         runner.num_steps = 200
         runner.record_data = True
         runner.visu_figure = False
-        runner.list_sea_objects = ["Island", "Boat", "Ship","Whale"]
+        runner.list_sea_objects = runner.random_object_list(10)
         runner.run()
