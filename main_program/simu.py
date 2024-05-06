@@ -1,6 +1,10 @@
 from calcul_tools import *
 from draw import *
 from boat import Boat
+from whale import Whale
+from fisherman import Fisherman
+from island import Island
+from ship import Ship
 from potential_fields import *
 import csv
 import re
@@ -49,13 +53,12 @@ class Simulation:
             csv_reader = csv.reader(csvfile)
             self.sea_objects = {}
             for row in csv_reader:
-                mmsi = int(row[0])
+                mmsi = row[0] +'_' +row[1]
                 if mmsi not in self.sea_objects:
                     self.sea_objects[mmsi] = []
                 cleaned_string = re.sub(r'[\n\s]+', ',', row[2].strip())
                 cleaned_string = cleaned_string.replace("[,", "[")
                 self.sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string)])
-                # print(mmsi)
             return self.sea_objects
         
     def visualize_data(self):
@@ -65,6 +68,15 @@ class Simulation:
             y = [i[1][1] for i in value]
             ax.plot(x, y, label=value[0][0] + " " + str(key))
         ax.legend()
+        for key in self.sea_objects.keys():
+            processed_string = key.split('_')
+            x_final = float(round(self.sea_objects[key][-1][1][0],1))
+            y_final = float(round(self.sea_objects[key][-1][1][1],1))
+            theta_final = float(round(self.sea_objects[key][-1][1][3],0))
+            print(x_final, y_final, theta_final)
+            # object = globals().get(processed_string[1])(int(processed_string[0]), 10, 10, 0, 3)
+            object = globals().get(processed_string[1])(int(processed_string[0]), x_final, y_final, 0, theta_final)
+            object.draw(ax, 0)
         # Directory to save the plot
         directory = 'plots'
         if not os.path.exists(directory):

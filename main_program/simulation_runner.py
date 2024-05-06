@@ -31,6 +31,7 @@ class SimulationRunner:
             ["Overtaking the obstacle on the right side", "Right OT"],
             ["Red to red rule to avoid the collision", "R to R"]
         ]
+        self.list_sea_objects = []
 
 
 
@@ -51,9 +52,9 @@ class SimulationRunner:
             theta = random.uniform(0, 6)
             return globals().get(object_type)(mmsi,x, y, v, theta)
 
-    def initialize_sea_objects_random(self, list_sea_objects):
+    def initialize_sea_objects_random(self):
         sea_objects = []
-        for i in list_sea_objects:
+        for i in self.list_sea_objects:
             object = self.place_random_objects(i)
             if len(sea_objects) != 0:
                 object = self.check_position(object, sea_objects)
@@ -84,8 +85,8 @@ class SimulationRunner:
 
     def run(self):
         # list_sea_objects = ["Boat", "Boat", "Whale", "Island", "Ship", "Ship"]
-        list_sea_objects = ["Boat", "Boat"]
-        sea_objects = self.initialize_sea_objects_random(list_sea_objects)
+
+        sea_objects = self.initialize_sea_objects_random()
         # sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(333, -1, 3, 1.5, 4.75))  # x,y,v,θ of the boat

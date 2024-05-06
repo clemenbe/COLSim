@@ -2,8 +2,11 @@ from simulation_runner import SimulationRunner
 
 
 if __name__ == "__main__":
-    runner = SimulationRunner()
-    runner.num_steps = 200
-    runner.record_data = True
-    runner.run()
+    nb_simulations = 10
+    for i in range(nb_simulations):
+        runner = SimulationRunner()
+        runner.num_steps = 200
+        runner.record_data = True
+        runner.list_sea_objects = ["Island", "Boat", "Ship","Whale"]
+        runner.run()
     
