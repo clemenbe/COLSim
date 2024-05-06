@@ -92,53 +92,53 @@ class SeaObject:
         # Different cases of collision avoidance
         if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
             if scalar_pdt >= 0:
-                print('------------------Boats with close directions------------------')
+                # print('------------------Boats with close directions------------------')
                 # Tests to find where the boat is compared with the obstacle
 
                 if (px < qx - Ɛ) and self.cross_path:
-                    print('------------------Left Repulsion------------------')
+                    # print('------------------Left Repulsion------------------')
                     φ = φrep
                     rule = 1
 
                 elif (px > qx - Ɛ) and self.cross_path:
-                    print('------------------Right Repulsion------------------')
+                    # print('------------------Right Repulsion------------------')
                     φ = φrep
                     rule = 1
 
                 elif py > qy + Ɛ:
                     # The boat is in the front zone of the obstacle
-                    print('------------------Front zone------------------')
+                    # print('------------------Front zone------------------')
                     φ = φrep
                     rule = 1
 
                 elif (py < qy + Ɛ) and (px < qx):
                     # The boat is in the left lower zone compared with the obstacle
-                    print('------------------Left lower zone------------------')
+                    # print('------------------Left lower zone------------------')
                     φ = φcw
                     rule = 2
 
                 elif (py < qy + Ɛ) and (px < qx) and (self.phat[0, 1] < qy + Ɛ) and (self.phat[0, 0] > qx):
                     # The boat is in the left lower zone compared with the obstacle
-                    print('------------------Left lower zone --> Destination Right lower zone------------------')
+                    # print('------------------Left lower zone --> Destination Right lower zone------------------')
                     φ = φccw
                     self.cross_path = True
                     rule = 4
 
                 elif (py < qy + Ɛ) and (px > qx) and (self.phat[1] < qy + Ɛ) and (self.phat[0] < qx):
                     # The boat is in the right lower zone compared with the obstacle
-                    print('------------------Right lower zone-> Destination Left lower zone------------------')
+                    # print('------------------Right lower zone-> Destination Left lower zone------------------')
                     φ = φcw
                     self.cross_path = True
                     rule = 3
 
                 else:
                     # The boat is in the right lower zone compared with the obstacle
-                    print('------------------Right lower zone------------------')
+                    # print('------------------Right lower zone------------------')
                     φ = φccw
                     rule = 3
 
                 up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                print('up = ',up)
+                # print('up = ',up)
                 # We display the simulation if record_data=False
                 if not record_data:
                     # Reinitialize the situation in the table
@@ -149,25 +149,25 @@ class SeaObject:
                     draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.9, c, D, k, r)
 
             else:
-                print('------------------Boats in opposite directions------------------')
+                # print('------------------Boats in opposite directions------------------')
                 # Tests to find where the boat is compared with the obstacle
                 if (py > qy - Ɛ):
                     # The boat is in the front zone of the obstacle
-                    print('------------------Left front zone------------------')
+                    # print('------------------Left front zone------------------')
                     φ = φccw
                     rule = 4
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                    print('up = ', up)
+                    # print('up = ', up)
 
                 elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
                     # The boat is in the front zone of the obstacle
-                    print('------------------Right front zone (align)------------------')
+                    # print('------------------Right front zone (align)------------------')
                     up = array([[0], [0]])
                     rule = 4
 
                 elif py > qy - Ɛ and px > qx and scalar_pdt > abs(qv * pv) * cos(2.5):
                     # The boat is in the front zone of the obstacle
-                    print('------------------Right front zone------------------')
+                    # print('------------------Right front zone------------------')
                     φ = φccw
                     rule = 4
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
@@ -175,15 +175,15 @@ class SeaObject:
 
                 else:
                     # The boat is in the right lower zone compared with the obstacle
-                    print('------------------Lower zone------------------')
+                    # print('------------------Lower zone------------------')
                     φ = φrep
                     rule = 1
                     # Boat
                     up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
-                    print('up = ', up)
+                    # print('up = ', up)
 
 
-        print('cross_path =', self.cross_path)
+        # print('cross_path =', self.cross_path)
 
         # We display the simulation if record_data=False
         if not record_data:

@@ -9,4 +9,5 @@ if __name__ == "__main__":
         runner.record_data = True
         runner.list_sea_objects = ["Island", "Boat", "Ship","Whale"]
         runner.run()
+        print(f" {(i + 1)/nb_simulations*100}% completed")
     

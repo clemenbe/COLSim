@@ -78,8 +78,6 @@ class Simulation:
             x_final = float(round(self.sea_objects[key][-1][1][0],1))
             y_final = float(round(self.sea_objects[key][-1][1][1],1))
             theta_final = float(round(self.sea_objects[key][-1][1][3],0))
-            print(x_final, y_final, theta_final)
-            # object = globals().get(processed_string[1])(int(processed_string[0]), 10, 10, 0, 3)
             object = globals().get(processed_string[1])(int(processed_string[0]), x_final, y_final, 0, theta_final)
             object.draw(ax, 0)
         # Directory to save the plot

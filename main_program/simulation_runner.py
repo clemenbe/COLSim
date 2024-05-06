@@ -84,8 +84,6 @@ class SimulationRunner:
 
 
     def run(self):
-        # list_sea_objects = ["Boat", "Boat", "Whale", "Island", "Ship", "Ship"]
-
         sea_objects = self.initialize_sea_objects_random()
         # sea_objects.append(Boat(111, -2.5, -3.5, 1.5, 0.25))  # x,y,v,θ of the boat
         # sea_objects.append(Boat(222, 1.5, 1.5, 0.5, 1))  # x,y,v,θ of the boat
