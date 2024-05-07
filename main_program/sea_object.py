@@ -52,6 +52,8 @@ class SeaObject:
         self.r = 2 # collision avoidance radius for the object
         self.cross_path = False
         self.collision_risk = 0
+        self.save_graph = False
+
 
     # Update the position of an object based on up controller
     def update(self, u, dt):
@@ -210,6 +212,7 @@ class SeaObject:
                 if dist(array([[other_object.x], [other_object.y]]), array([[self.x], [self.y]])) < max(self.r, other_object.r) + Ɛ:
                     self.collision_risk = 1
                     other_object.collision_risk = 1
+                    self.save_graph = True
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
                         if self.agent:

@@ -13,5 +13,6 @@ if __name__ == "__main__":
         runner.num_steps = 200
         runner.record_data = True
         runner.visu_figure = False
-        runner.list_sea_objects = runner.random_object_list(10)
+        # runner.list_sea_objects = runner.random_object_list(10)
+        runner.list_sea_objects = ["Boat", "Boat"]
         runner.run()

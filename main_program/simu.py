@@ -52,6 +52,15 @@ class Simulation:
 
                     # Add the log data to the CSV file
                     csv_writer.writerow(log_data)
+        for s in self.sea_objects:
+            # if one of the sea object have been in collision, we save the data else we delete the file
+            if s.save_graph:
+                self.process_data(f'{directory}/{self.save}.csv')
+                self.visualize_data()
+                break
+            else:
+                os.remove(f'{directory}/{self.save}.csv')
+                break
 
     def process_data(self, log_data):
         with open(log_data, 'r') as csvfile:
@@ -72,7 +81,7 @@ class Simulation:
         for key, value in self.sea_objects.items():
             x = [i[1][0] for i in value]
             y = [i[1][1] for i in value]
-            ax.plot(x, y, label=value[0][0] + " " + str(key))
+            ax.plot(x, y, label=str(key))
         ax.legend()
         for key in self.sea_objects.keys():
             processed_string = key.split('_')
