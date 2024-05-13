@@ -53,6 +53,7 @@ class SeaObject:
         self.cross_path = False
         self.collision_risk = 0
         self.save_graph = False
+        self.history = []
 
 
     # Update the position of an object based on up controller
@@ -234,7 +235,7 @@ class SeaObject:
         # Update position
         self.update(up, dt)
 
-        return [self.mmsi, self.name, self.get_state_vector()]
+        return [self.mmsi, self.name, self.get_state_vector(), self.collision_risk]
 
     def perform_action(self, action, other=None, k=0):
         px, py, pv, ptheta = self.get_state_vector().flatten()
@@ -278,3 +279,11 @@ class SeaObject:
         elif action == 8:
             up = self.move_straight()
         return up
+    
+    def __str__(self):
+        return f"Object {self.mmsi} at position ({self.x}, {self.y}) with speed {self.v} and direction {self.theta}"
+    
+    def update_history(self, lenght):
+        if len(self.history) == lenght:
+            self.history.pop(0)
+        self.history.append([self.mmsi, self.name, self.get_state_vector(), self.collision_risk])

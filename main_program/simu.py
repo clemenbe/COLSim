@@ -72,7 +72,7 @@ class Simulation:
                     self.sea_objects[mmsi] = []
                 cleaned_string = re.sub(r'[\n\s]+', ',', row[2].strip())
                 cleaned_string = cleaned_string.replace("[,", "[")
-                self.sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string)])
+                self.sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string), row[3]])
             return self.sea_objects
         
     def visualize_data(self):
@@ -85,9 +85,9 @@ class Simulation:
         ax.legend()
         for key in self.sea_objects.keys():
             processed_string = key.split('_')
-            x_final = float(round(self.sea_objects[key][-1][1][0],1))
-            y_final = float(round(self.sea_objects[key][-1][1][1],1))
-            theta_final = float(round(self.sea_objects[key][-1][1][3],0))
+            x_final = float(round(self.sea_objects[key][-2][1][0],1))
+            y_final = float(round(self.sea_objects[key][-2][1][1],1))
+            theta_final = float(round(self.sea_objects[key][-2][1][3],0))
             object = globals().get(processed_string[1])(int(processed_string[0]), x_final, y_final, 0, theta_final)
             object.draw(ax, 0)
         # Directory to save the plot

@@ -34,4 +34,4 @@ class Island(SeaObject):
 
     # An island never moves
     def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
-        return [self.mmsi, self.name, self.get_state_vector()]
+        return [self.mmsi, self.name, self.get_state_vector(),0]
