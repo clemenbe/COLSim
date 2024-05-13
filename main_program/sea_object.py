@@ -54,6 +54,8 @@ class SeaObject:
         self.collision_risk = 0
         self.save_graph = False
         self.history = []
+        self.collision_history = []
+        self.history_lenght = 10
 
 
     # Update the position of an object based on up controller
@@ -63,6 +65,7 @@ class SeaObject:
         self.y += dt * v * sin(theta) 
         self.v = v + dt * u[0][0] 
         self.theta += dt * u[1][0]
+        self.update_history(self.history_lenght)
 
     # Return the object's x, y, speed and direction in a state vector
     def get_state_vector(self):
@@ -204,7 +207,6 @@ class SeaObject:
     def move(self, record_data, sea_objects, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
 
         in_collision = False
-
         # Check risks of collision with every other object
         for other_object in sea_objects:
 
@@ -214,6 +216,7 @@ class SeaObject:
                     self.collision_risk = 1
                     other_object.collision_risk = 1
                     self.save_graph = True
+                    self.collision_history = [other_object.mmsi, other_object.history]
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
                         if self.agent:
@@ -235,7 +238,7 @@ class SeaObject:
         # Update position
         self.update(up, dt)
 
-        return [self.mmsi, self.name, self.get_state_vector(), self.collision_risk]
+        return [self.mmsi, self.name, self.get_state_vector(), self.collision_risk, self.collision_history]
 
     def perform_action(self, action, other=None, k=0):
         px, py, pv, ptheta = self.get_state_vector().flatten()
@@ -286,4 +289,4 @@ class SeaObject:
     def update_history(self, lenght):
         if len(self.history) == lenght:
             self.history.pop(0)
-        self.history.append([self.mmsi, self.name, self.get_state_vector(), self.collision_risk])
+        self.history.append(self.get_state_vector())
