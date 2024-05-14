@@ -55,8 +55,9 @@ class Simulation:
         for s in self.sea_objects:
             # if one of the sea object have been in collision, we save the data else we delete the file
             if s.save_graph:
-                self.process_data(f'{directory}/{self.save}.csv')
-                self.visualize_data()
+                sea_obj = self.process_data(f'{directory}/{self.save}.csv')
+                self.visualize_data(sea_obj)
+                col = self.use_history(s, sea_obj)
                 break
             else:
                 os.remove(f'{directory}/{self.save}.csv')
@@ -65,11 +66,11 @@ class Simulation:
     def process_data(self, log_data):
         with open(log_data, 'r') as csvfile:
             csv_reader = csv.reader(csvfile)
-            self.sea_objects = {}
+            sea_objects = {}
             for row in csv_reader:
                 mmsi = row[0] +'_' +row[1]
-                if mmsi not in self.sea_objects:
-                    self.sea_objects[mmsi] = []
+                if mmsi not in sea_objects:
+                    sea_objects[mmsi] = []
                 cleaned_string_self = re.sub(r'[\n\s]+', ',', row[2].strip())
                 cleaned_string_self = cleaned_string_self.replace("[,", "[")
                 cleaned_string_history = re.sub(r'[\n\s]+', ',', row[4].strip())
@@ -77,22 +78,22 @@ class Simulation:
                 cleaned_string_history = cleaned_string_history.replace(",]", "]")
                 cleaned_string_history = cleaned_string_history.replace(",,", ",")
                 cleaned_string_history = cleaned_string_history.replace("array", "")
-                self.sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string_self), row[3], ast.literal_eval(cleaned_string_history)])
-            return self.sea_objects
+                sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string_self), row[3], ast.literal_eval(cleaned_string_history)])
+            return sea_objects
         
-    def visualize_data(self):
+    def visualize_data(self,all_sea_objects):
         plt.ioff()
         fig, ax = plt.subplots()
-        for key, value in self.sea_objects.items():
+        for key, value in all_sea_objects.items():
             x = [i[1][0] for i in value]
             y = [i[1][1] for i in value]
             ax.plot(x, y, label=str(key))
         ax.legend()
-        for key in self.sea_objects.keys():
+        for key in all_sea_objects.keys():
             processed_string = key.split('_')
-            x_final = float(round(self.sea_objects[key][-3][1][0],1))
-            y_final = float(round(self.sea_objects[key][-3][1][1],1))
-            theta_final = float(round(self.sea_objects[key][-3][1][3],0))
+            x_final = float(round(all_sea_objects[key][-3][1][0],1))
+            y_final = float(round(all_sea_objects[key][-3][1][1],1))
+            theta_final = float(round(all_sea_objects[key][-3][1][3],0))
             object = globals().get(processed_string[1])(int(processed_string[0]), x_final, y_final, 0, theta_final)
             object.draw(ax, 0)
         # Directory to save the plot
@@ -102,5 +103,26 @@ class Simulation:
         plt.savefig(f'{directory}/plot_{self.save}.png')
         plt.close(fig)
 
-    def use_history(self, sea_object):
-        main_history = sea_object.history
+    def use_history(self, sea_object, all_sea_objects):
+        mmsi = sea_object.mmsi
+        name = sea_object.name
+        key = f'{mmsi}_{name}'
+        col = {}
+        if key in all_sea_objects:  # Checking if key exists in all_sea_objects
+            for i in range(len(all_sea_objects[key])):
+                # name_1 = all_sea_objects[key][i][0]
+                # current_status = all_sea_objects[key][i][1]
+                collision = all_sea_objects[key][i][2]
+                history = all_sea_objects[key][i][3]
+                if float(collision):
+                    if key not in col:
+                        col[key] = {'id': [history[0]], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
+                    for k in range(1, len(history)):
+                        for l in range(len(history[k])):
+                            col[key]['x'].append(history[k][l][0][0])
+                            col[key]['y'].append(history[k][l][1][0])
+                            col[key]['v'].append(history[k][l][2][0])
+                            col[key]['theta'].append(history[k][l][3][0])
+        return col
+
+
