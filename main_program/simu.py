@@ -57,7 +57,9 @@ class Simulation:
             if s.save_graph:
                 sea_obj = self.process_data(f'{directory}/{self.save}.csv')
                 self.visualize_data(sea_obj)
-                col = self.use_history(s, sea_obj)
+                for k in self.sea_objects:
+                    col = self.use_history(k, sea_obj)
+                    self.show_history(col)
                 break
             else:
                 os.remove(f'{directory}/{self.save}.csv')
@@ -128,4 +130,16 @@ class Simulation:
                             col[key]['theta'].append(history[k][l][3][0])
         return col
 
+    def show_history(self, col):
+        fig, ax = plt.subplots()
+        # Directory to save the plot
+        directory = 'saves/test_plots'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        for key in col:
+            ax.scatter(col[key]['x'], col[key]['y'], label=col[key]['id'], marker='x')
+            ax.set_title(f'Encounters of {key}')
+            ax.legend()
+            plt.savefig(f'{directory}/history_{self.save}_{key}.png')
+        plt.close(fig)
 
