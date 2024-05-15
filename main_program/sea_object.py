@@ -55,7 +55,7 @@ class SeaObject:
         self.save_graph = False
         self.history = []
         self.collision_history = []
-        self.history_lenght = 2
+        self.history_lenght = 10
 
 
     # Update the position of an object based on up controller

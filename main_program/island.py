@@ -9,6 +9,8 @@ class Island(SeaObject):
         self.privilege = 1000
         self.r = 4
         self.name = 'Island'
+        self.history = [np.vstack((self.x, self.y, self.v, self.theta))]
+        self.collision_history = ["None"]
 
     def draw(self, ax, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """

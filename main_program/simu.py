@@ -73,11 +73,14 @@ class Simulation:
                     sea_objects[mmsi] = []
                 cleaned_string_self = re.sub(r'[\n\s]+', ',', row[2].strip())
                 cleaned_string_self = cleaned_string_self.replace("[,", "[")
-                cleaned_string_history = re.sub(r'[\n\s]+', ',', row[4].strip())
-                cleaned_string_history = cleaned_string_history.replace("[,", "[")
-                cleaned_string_history = cleaned_string_history.replace(",]", "]")
-                cleaned_string_history = cleaned_string_history.replace(",,", ",")
-                cleaned_string_history = cleaned_string_history.replace("array", "")
+                if row[1] != 'Island':
+                    cleaned_string_history = re.sub(r'[\n\s]+', ',', row[4].strip())
+                    cleaned_string_history = cleaned_string_history.replace("[,", "[")
+                    cleaned_string_history = cleaned_string_history.replace(",]", "]")
+                    cleaned_string_history = cleaned_string_history.replace(",,", ",")
+                    cleaned_string_history = cleaned_string_history.replace("array", "")
+                else:
+                    cleaned_string_history = "None" # Island has no history
                 sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string_self), row[3], ast.literal_eval(cleaned_string_history)])
             return sea_objects
         
