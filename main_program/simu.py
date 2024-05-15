@@ -137,9 +137,10 @@ class Simulation:
         if not os.path.exists(directory):
             os.makedirs(directory)
         for key in col:
-            ax.scatter(col[key]['x'], col[key]['y'], label=col[key]['id'], marker='x')
+            encounter = col[key]['id']
+            ax.scatter(col[key]['x'], col[key]['y'], label=encounter, marker='x')
             ax.set_title(f'Encounters of {key}')
             ax.legend()
-            plt.savefig(f'{directory}/history_{self.save}_{key}.png')
+            plt.savefig(f'{directory}/history_{self.save}_{key}_{encounter}.png')
         plt.close(fig)
 
