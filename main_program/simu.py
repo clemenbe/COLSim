@@ -76,11 +76,15 @@ class Simulation:
                 cleaned_string_self = re.sub(r'[\n\s]+', ',', row[2].strip())
                 cleaned_string_self = cleaned_string_self.replace("[,", "[")
                 if row[1] != 'Island':
+                    # print("row(4) = ", row[4])
                     cleaned_string_history = re.sub(r'[\n\s]+', ',', row[4].strip())
+                    # print("cleaned_string_history = ", cleaned_string_history)
                     cleaned_string_history = cleaned_string_history.replace("[,", "[")
                     cleaned_string_history = cleaned_string_history.replace(",]", "]")
                     cleaned_string_history = cleaned_string_history.replace(",,", ",")
                     cleaned_string_history = cleaned_string_history.replace("array", "")
+                    cleaned_string_history = cleaned_string_history.replace(":,", ":")
+                    # print("cleaned_string_history final = ", cleaned_string_history)
                 else:
                     cleaned_string_history = "None" # Island has no history
                 sea_objects[mmsi].append([row[1], ast.literal_eval(cleaned_string_self), row[3], ast.literal_eval(cleaned_string_history)])
@@ -119,16 +123,19 @@ class Simulation:
                 current_status = all_sea_objects[key][i][1]
                 collision = all_sea_objects[key][i][2]
                 history = all_sea_objects[key][i][3]
+                history_key = history.keys()
                 if float(collision):
-                    if key not in col:
-                        col[key] = {'current status': [current_status],'id': [history[0]], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
-                    for k in range(1, len(history)):
-                        for l in range(len(history[k])):
-                            col[key]['x'].append(history[k][l][0][0])
-                            col[key]['y'].append(history[k][l][1][0])
-                            col[key]['v'].append(history[k][l][2][0])
-                            col[key]['theta'].append(history[k][l][3][0])
-        print("col from use_history", col)
+                    for h_key in history_key:
+                        if key not in col:
+                            col[key] = {}
+                        if h_key not in col[key]:
+                            col[key][h_key] = {'current status': [current_status],'id': [h_key], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
+                        for k in range(len(history[h_key])):
+                            for l in range(len(history[h_key][k])):
+                                col[key][h_key]['x'].append(history[h_key][k][l][0][0])
+                                col[key][h_key]['y'].append(history[h_key][k][l][0][1])
+                                col[key][h_key]['v'].append(history[h_key][k][l][0][2])
+                                col[key][h_key]['theta'].append(history[h_key][k][l][0][3])
         return col
 
     def show_history(self, col):
@@ -138,8 +145,9 @@ class Simulation:
         if not os.path.exists(directory):
             os.makedirs(directory)
         for key in col:
-            encounter = col[key]['id']
-            ax.scatter(col[key]['x'], col[key]['y'], label=encounter, marker='x')
+            for k in col[key]:
+                encounter = col[key][k]['id']
+                ax.scatter(col[key][k]['x'], col[key][k]['y'], label=encounter, marker='x')
             ax.set_title(f'Encounters of {key}')
             ax.legend()
             plt.savefig(f'{directory}/history_{self.save}_{key}_{encounter}.png')

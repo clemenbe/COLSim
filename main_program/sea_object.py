@@ -54,7 +54,7 @@ class SeaObject:
         self.collision_risk = 0
         self.save_graph = False
         self.history = []
-        self.collision_history = []
+        self.collision_history = {}
         self.history_lenght = 1
 
 
@@ -216,7 +216,11 @@ class SeaObject:
                     self.collision_risk = 1
                     other_object.collision_risk = 1
                     self.save_graph = True
-                    self.collision_history = [other_object.mmsi, other_object.history]
+                    # print("other_object.mmsi = ", other_object.mmsi)
+                    # print("collsion history = ", self.collision_history.keys())
+                    if other_object.mmsi not in self.collision_history:
+                        self.collision_history[other_object.mmsi] = []
+                        self.collision_history[other_object.mmsi].append([other_object.history])
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
                         if self.agent:
