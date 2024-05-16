@@ -123,19 +123,20 @@ class Simulation:
                 current_status = all_sea_objects[key][i][1]
                 collision = all_sea_objects[key][i][2]
                 history = all_sea_objects[key][i][3]
-                history_key = history.keys()
-                if float(collision):
-                    for h_key in history_key:
-                        if key not in col:
-                            col[key] = {}
-                        if h_key not in col[key]:
-                            col[key][h_key] = {'current status': [current_status],'id': [h_key], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
-                        for k in range(len(history[h_key])):
-                            for l in range(len(history[h_key][k])):
-                                col[key][h_key]['x'].append(history[h_key][k][l][0][0])
-                                col[key][h_key]['y'].append(history[h_key][k][l][0][1])
-                                col[key][h_key]['v'].append(history[h_key][k][l][0][2])
-                                col[key][h_key]['theta'].append(history[h_key][k][l][0][3])
+                if history is not None:
+                    history_key = history.keys()
+                    if float(collision):
+                        for h_key in history_key:
+                            if key not in col:
+                                col[key] = {}
+                            if h_key not in col[key]:
+                                col[key][h_key] = {'current status': [current_status],'id': [h_key], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
+                            for k in range(len(history[h_key])):
+                                for l in range(len(history[h_key][k])):
+                                    col[key][h_key]['x'].append(history[h_key][k][l][0][0])
+                                    col[key][h_key]['y'].append(history[h_key][k][l][0][1])
+                                    col[key][h_key]['v'].append(history[h_key][k][l][0][2])
+                                    col[key][h_key]['theta'].append(history[h_key][k][l][0][3])
         return col
 
     def show_history(self, col):
