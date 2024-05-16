@@ -11,7 +11,7 @@ import re
 import ast
 from datetime import datetime
 import os
-
+import random
 class Simulation:
     def __init__(self, sea_objects, dt, k):
         self.sea_objects = sea_objects
@@ -116,18 +116,19 @@ class Simulation:
         if key in all_sea_objects:  # Checking if key exists in all_sea_objects
             for i in range(len(all_sea_objects[key])):
                 # name_1 = all_sea_objects[key][i][0]
-                # current_status = all_sea_objects[key][i][1]
+                current_status = all_sea_objects[key][i][1]
                 collision = all_sea_objects[key][i][2]
                 history = all_sea_objects[key][i][3]
                 if float(collision):
                     if key not in col:
-                        col[key] = {'id': [history[0]], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
+                        col[key] = {'current status': [current_status],'id': [history[0]], 'x': [], 'y': [], 'v': [], 'theta': []}  # Initialize col[key] if not exists
                     for k in range(1, len(history)):
                         for l in range(len(history[k])):
                             col[key]['x'].append(history[k][l][0][0])
                             col[key]['y'].append(history[k][l][1][0])
                             col[key]['v'].append(history[k][l][2][0])
                             col[key]['theta'].append(history[k][l][3][0])
+        print("col from use_history", col)
         return col
 
     def show_history(self, col):

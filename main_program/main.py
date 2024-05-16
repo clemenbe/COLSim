@@ -11,9 +11,9 @@ if __name__ == "__main__":
     
     for i in tqdm(range(nb_simulations), desc="Simulations"):
         runner = SimulationRunner()
-        runner.num_steps = 200
+        runner.num_steps = 50
         runner.record_data = True
         runner.visu_figure = False
-        runner.list_sea_objects = runner.random_object_list(random.randint(1, 5))
-        # runner.list_sea_objects = ["Boat", "Island"]
-        runner.run()    
+        # runner.list_sea_objects = runner.random_object_list(random.randint(1, 5))
+        runner.list_sea_objects = ["Boat", "Boat","Boat","Boat"]
+        runner.run()
