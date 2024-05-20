@@ -11,7 +11,8 @@ import re
 import ast
 from datetime import datetime
 import os
-import random
+from matplotlib.animation import FuncAnimation, PillowWriter
+
 class Simulation:
     def __init__(self, sea_objects, dt, k):
         self.sea_objects = sea_objects
@@ -60,6 +61,7 @@ class Simulation:
                 for k in self.sea_objects:
                     col = self.use_history(k, sea_obj)
                     self.show_history(col)
+                    self.show_animated_vectors()
                 break
             else:
                 os.remove(f'{directory}/{self.save}.csv')
@@ -137,6 +139,7 @@ class Simulation:
                                     col[key][h_key]['y'].append(history[h_key][k][l][0][1])
                                     col[key][h_key]['v'].append(history[h_key][k][l][0][2])
                                     col[key][h_key]['theta'].append(history[h_key][k][l][0][3])
+        self.col = col
         return col
 
     def show_history(self, col):
@@ -154,3 +157,53 @@ class Simulation:
             plt.savefig(f'{directory}/history_{self.save}_{key}_{encounter}.png')
         plt.close(fig)
 
+
+
+    def show_animated_vectors(self):
+        if not hasattr(self, 'col') or not self.col:
+            print("No collision data to display.")
+            return
+
+        fig, ax = plt.subplots()
+        ax.set_xlim(-15, 15)
+        ax.set_ylim(-15, 15)
+        directory = 'saves/test_plots_vectors'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Initialize the maximum length for the frames
+        m_len = 0
+        for key in self.col:
+            for k in self.col[key]:
+                m_len = max(m_len, len(self.col[key][k]['x']))
+
+        if m_len == 0:
+            print("No data to animate.")
+            return
+
+        print("max_len =", m_len)
+
+        ani = FuncAnimation(fig, self.update_rules, frames=np.arange(0, m_len), interval=100, fargs=(ax,), init_func=self.init_plot)
+        writer = PillowWriter(fps=20)
+        ani.save(f'{directory}/history_{self.save}.gif', writer=writer)
+        plt.close(fig)
+
+    def init_plot(self):
+        fig, ax = plt.subplots()
+        ax.set_title('Initial Plot')
+        return ax
+
+    def update_rules(self, frame, ax):
+        ax.clear()
+        for key in self.col:
+            for k in self.col[key]:
+                if frame < len(self.col[key][k]['x']):
+                    encounter = self.col[key][k]['id']
+                    ax.quiver(
+                        self.col[key][k]['x'][frame], 
+                        self.col[key][k]['y'][frame], 
+                        self.col[key][k]['v'][frame], 
+                        self.col[key][k]['theta'][frame]
+                    )
+            ax.set_title(f'Encounters of {key}')
+        return ax
