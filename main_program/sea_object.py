@@ -3,15 +3,17 @@ from draw import *
 from potential_fields import *
 from enum import Enum
 
+
 def Jφ0(p):
     """ Jacobian Matrix of φ0 """
     p1, p2 = p.flatten()
     return array([[-3 * p1 ** 2 - p2 ** 2 + 1, -2 * p1 * p2 - 1],
                   [-2 * p1 * p2 + 1, -3 * p2 ** 2 - p2 ** 2 + 1]])
 
+
 def dφ(x, c, D):
     p1, p2, v, θ = x.flatten()
-    z = inv(D) @ array([[p1 - c[0,0]], [p2 - c[1,0]]])
+    z = inv(D) @ array([[p1 - c[0, 0]], [p2 - c[1, 0]]])
     dv = D @ Jφ0(z) @ inv(D) @ array([[cos(θ)], [sin(θ)]])
     return dv.flatten()
 
@@ -21,19 +23,24 @@ def control(x, φ, c, D, k, r):
     x, y, v, θ = x.flatten()
     φ1, φ2 = φ(x, y, c, D, k, r)
     u1 = 0
-    u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
+    u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 -
+                                           φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
+
+
 class Boat_agent(Enum):
 
-    Repulsion=0
-    Left_Lower_Zone=1
-    Left_Lower_Zone_Destination_Right_Lower_Zone=2
-    Right_Lower_Zone_Destination_Left_Lower_Zone=3
-    Right_Lower_zone=4
-    Left_and_Right_Front_Zone=5
-    Right_Front_Zone_Align=6
-    Lower_Zone=7
-    Straight=8
+    Repulsion = 0
+    Left_Lower_Zone = 1
+    Left_Lower_Zone_Destination_Right_Lower_Zone = 2
+    Right_Lower_Zone_Destination_Left_Lower_Zone = 3
+    Right_Lower_zone = 4
+    Left_and_Right_Front_Zone = 5
+    Right_Front_Zone_Align = 6
+    Lower_Zone = 7
+    Straight = 8
+
+
 class SeaObject:
 
     # x, y are positions, v is speed, theta is direction
@@ -45,11 +52,12 @@ class SeaObject:
         self.theta = theta
         self.agent = False
 
-        destination_distance = 20 # the distance from initial position to destination
-        self.phat = array([[self.x + destination_distance * cos(self.theta)], [self.y + destination_distance * sin(self.theta)]])
+        destination_distance = 20  # the distance from initial position to destination
+        self.phat = array([[self.x + destination_distance * cos(self.theta)],
+                          [self.y + destination_distance * sin(self.theta)]])
 
         self.privilege = 0
-        self.r = 2 # collision avoidance radius for the object
+        self.r = 2  # collision avoidance radius for the object
         self.cross_path = False
         self.collision_risk = 0
         self.save_graph = False
@@ -57,20 +65,20 @@ class SeaObject:
         self.collision_history = {}
         self.history_lenght = 10
 
-
     # Update the position of an object based on up controller
+
     def update(self, u, dt):
         x, y, v, theta = self.x, self.y, self.v, self.theta
-        self.x += dt * v * cos(theta) 
-        self.y += dt * v * sin(theta) 
-        self.v = v + dt * u[0][0] 
+        self.x += dt * v * cos(theta)
+        self.y += dt * v * sin(theta)
+        self.v = v + dt * u[0][0]
         self.theta += dt * u[1][0]
         self.update_history(self.history_lenght)
 
     # Return the object's x, y, speed and direction in a state vector
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
-    
+
     # Move the object straight when there is no risk of collision
     # Called by move()
     def move_straight(self):
@@ -81,19 +89,19 @@ class SeaObject:
 
         up = array([[0], [10*arctan(tan(0.5*(thetabar_p - self.theta)))]])
         return up
-    
+
     # Called by move(), when there is risk of collision
     def avoid_collision(self, record_data, obstacle, mmsi_list, rules, table, ax, Ɛ, s, r, k):
 
         px, py, pv, ptheta = self.get_state_vector().flatten()
         qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
-        
+
         scalar_pdt = geo_scalar_prod(qv, pv, qtheta, ptheta)
 
         c = array([[qx],
-                [qy]])
+                   [qy]])
         D = array([[r, 0],
-                [0, r]])
+                   [0, r]])
 
         # Different cases of collision avoidance
         if dist(array([[qx], [qy]]), array([[px], [py]])) < r + Ɛ:
@@ -143,16 +151,20 @@ class SeaObject:
                     φ = φccw
                     rule = 3
 
-                up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                up = control(
+                    array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                 # print('up = ',up)
                 # We display the simulation if record_data=False
                 if not record_data:
                     # Reinitialize the situation in the table
                     for row in arange(len(rules)):
-                        table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                        table[row, mmsi_list.index(
+                            self.mmsi) + 1].set_facecolor('white')
                     # Put in green the current applied rule in the table
-                    table[rule, mmsi_list.index(self.mmsi) + 1].set_facecolor('green')
-                    draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.9, c, D, k, r)
+                    table[rule, mmsi_list.index(
+                        self.mmsi) + 1].set_facecolor('green')
+                    draw_field_around_c_new(
+                        ax, φ, -s, s, -s, s, 0.9, c, D, k, r)
 
             else:
                 # print('------------------Boats in opposite directions------------------')
@@ -162,7 +174,8 @@ class SeaObject:
                     # print('------------------Left front zone------------------')
                     φ = φccw
                     rule = 4
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                    up = control(
+                        array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     # print('up = ', up)
 
                 elif (py > qy - Ɛ) and (px > qx) and (scalar_pdt < abs(qv * pv) * cos(2.5)):
@@ -176,7 +189,8 @@ class SeaObject:
                     # print('------------------Right front zone------------------')
                     φ = φccw
                     rule = 4
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                    up = control(
+                        array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     print('up = ', up)
 
                 else:
@@ -185,9 +199,9 @@ class SeaObject:
                     φ = φrep
                     rule = 1
                     # Boat
-                    up = control(array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
+                    up = control(
+                        array([[px], [py], [pv], [ptheta]]), φ, c, D, k, r)
                     # print('up = ', up)
-
 
         # print('cross_path =', self.cross_path)
 
@@ -195,15 +209,15 @@ class SeaObject:
         if not record_data:
             # Reinitialize the situation in the table
             for row in arange(len(rules)):
-                table[row, mmsi_list.index(self.mmsi) + 1].set_facecolor('white')
+                table[row, mmsi_list.index(
+                    self.mmsi) + 1].set_facecolor('white')
             # Put in green the current applied rule in the table
             table[rule, mmsi_list.index(self.mmsi) + 1].set_facecolor('green')
             draw_field_around_c_new(ax, φ, -s, s, -s, s, 0.9, c, D, k, r)
         return up
 
-
-    
     # Moves the object every iteration
+
     def move(self, record_data, sea_objects, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
 
         in_collision = False
@@ -220,14 +234,16 @@ class SeaObject:
                     # print("collsion history = ", self.collision_history.keys())
                     if other_object.mmsi not in self.collision_history:
                         self.collision_history[other_object.mmsi] = []
-                        self.collision_history[other_object.mmsi].append([other_object.history])
+                        self.collision_history[other_object.mmsi].append(
+                            [other_object.history])
                     # Object with smaller privilege avoids collision
                     if self.privilege <= other_object.privilege:
                         if self.agent:
-                            self.perform_action(Boat_agent, other_object,k)
+                            self.perform_action(Boat_agent, other_object, k)
                             pass
                         else:
-                            up = self.avoid_collision(record_data, other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
+                            up = self.avoid_collision(
+                                record_data, other_object, mmsi_list, rules, table, ax, Ɛ, s, max(self.r, other_object.r), k)
                             in_collision = True
 
         # If there is no need to avoid collision
@@ -235,10 +251,10 @@ class SeaObject:
             self.collision_risk = 0
             other_object.collision_risk = 0
             if self.agent:
-                self.perform_action(Boat_agent, other_object,k)
+                self.perform_action(Boat_agent, other_object, k)
             else:
                 up = self.move_straight()
-            
+
         # Update position
         self.update(up, dt)
 
@@ -251,9 +267,9 @@ class SeaObject:
             r = max(self.r, other.r)
 
         c = array([[qx],
-                [qy]])
+                   [qy]])
         D = array([[r, 0],
-                [0, r]])
+                   [0, r]])
 
         # Repulsion
         if action == 0:
@@ -286,10 +302,10 @@ class SeaObject:
         elif action == 8:
             up = self.move_straight()
         return up
-    
+
     def __str__(self):
         return f"Object {self.mmsi} at position ({self.x}, {self.y}) with speed {self.v} and direction {self.theta}"
-    
+
     def update_history(self, lenght):
         if len(self.history) == lenght:
             self.history.pop(0)

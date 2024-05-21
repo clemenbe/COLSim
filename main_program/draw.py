@@ -65,8 +65,9 @@ def init_table2(data, legend, xmin, xmax, ymin, ymax, text_size=11, length=4, wi
     fig.tight_layout()
     return fig, ax, table
 
-def init_table(rules, legend,fig,ax, text_size=11, length=4, width=2):
-    #fig, ax = plt.subplots()
+
+def init_table(rules, legend, fig, ax, text_size=11, length=4, width=2):
+    # fig, ax = plt.subplots()
     # fig, ax = plt.subplots(figsize=(3, 0.5))
     plt.suptitle('Active rules of the sea', size='x-large')
     table = plt.table(cellText=rules, loc='center')
@@ -106,6 +107,7 @@ def init_table(rules, legend,fig,ax, text_size=11, length=4, width=2):
 
     return table
 
+
 def clear(ax):
     pause(0.001)
     ax.cla()
@@ -120,7 +122,8 @@ def draw_arrow(ax, x, y, θ, L, col='darkblue', w=1):
 def draw_boat_and_vector(ax, x, col='darkblue', r=0.1, w=2):
     """ Draw a boat with his speed vector """
     mx, my, v, θ = list(x[0:4, 0])
-    M = r * array([[-1, 5, 7, 7, 5, -1, -1, -1], [-2, -2, -1, 1, 2, 2, -2, -2]])
+    M = r * array([[-1, 5, 7, 7, 5, -1, -1, -1],
+                  [-2, -2, -1, 1, 2, 2, -2, -2]])
     M = add1(M)
     draw_arrow(ax, mx, my, θ, norm(v), 'red')
     plot2D(ax, tran2H(mx, my) @ rot2H(θ) @ M, col, w)

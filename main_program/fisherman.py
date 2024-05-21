@@ -1,5 +1,6 @@
 from sea_object import *
 
+
 class Fisherman(SeaObject):
 
     def __init__(self, mmsi, x, y, v, theta):
@@ -7,4 +8,3 @@ class Fisherman(SeaObject):
         self.privilege = 100
         self.color = 'yellow'
         self.name = 'Fisherman'
-

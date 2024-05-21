@@ -10,25 +10,22 @@ class Boat(SeaObject):
         self.r = 2
         self.color = 'green'
         self.name = 'Boat'
-    
+
     # Draw circle around boat
     def draw(self, ax, Ɛ):
         # Change the color to visualize the agent
         if self.agent:
-            draw_boat_and_vector(ax, self.get_state_vector(), col='red')           # Display of the boat
+            # Display of the boat
+            draw_boat_and_vector(ax, self.get_state_vector(), col='red')
         else:
             draw_boat_and_vector(ax, self.get_state_vector())
-        draw_circle(ax, self.x, self.y, self.r, 'red')               # DCPA zone to avoid related to the boat
-        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')       # DCPA zone extended for safety : manoeuvring area
-        draw_disk(ax, self.phat, 0.2, 'green')                  # Display of the final destination
+        # DCPA zone to avoid related to the boat
+        draw_circle(ax, self.x, self.y, self.r, 'red')
+        # DCPA zone extended for safety : manoeuvring area
+        draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')
+        # Display of the final destination
+        draw_disk(ax, self.phat, 0.2, 'green')
 
     # Get the color displayed on the rules
     def get_color(self):
         return "green"
-
-    
-
-
-
-                    
-    

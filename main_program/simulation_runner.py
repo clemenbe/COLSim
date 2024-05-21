@@ -9,11 +9,10 @@ from ship import Ship
 import random
 
 
-
 class SimulationRunner:
     def __init__(self):
-        self.s = 15 
-        self.dt = 0.1 
+        self.s = 15
+        self.dt = 0.1
         self.k = 0.5
         self.Ɛ = 2
         self.num_steps = 120
@@ -34,8 +33,6 @@ class SimulationRunner:
         self.list_sea_objects = []
         self.visu_figure = True
 
-
-
     def initialize_sea_objects(self):
         sea_objects = []
         sea_objects.append(Whale(111, -0.5, -3.5, 1.5, 1.5))
@@ -44,14 +41,14 @@ class SimulationRunner:
         sea_objects.append(Ship(444, 10, -4, 1.5, 3))
         sea_objects.append(Ship(444, -10, -4, 1.5, 0.15))
         return sea_objects
-    
+
     def place_random_objects(self, object_type):
-            mmsi = random.randint(100, 999)
-            x = round(random.uniform(-self.s, self.s), 1)
-            y = round(random.uniform(-self.s, self.s), 1)
-            v = random.uniform(0, 3)
-            theta = random.uniform(0, 6)
-            return globals().get(object_type)(mmsi,x, y, v, theta)
+        mmsi = random.randint(100, 999)
+        x = round(random.uniform(-self.s, self.s), 1)
+        y = round(random.uniform(-self.s, self.s), 1)
+        v = random.uniform(0, 3)
+        theta = random.uniform(0, 6)
+        return globals().get(object_type)(mmsi, x, y, v, theta)
 
     def initialize_sea_objects_random(self):
         sea_objects = []
@@ -61,7 +58,7 @@ class SimulationRunner:
                 object = self.check_position(object, sea_objects)
             sea_objects.append(object)
         return sea_objects
-    
+
     def check_position(self, object, sea_objects):
         for i in sea_objects:
             if dist(array([[object.x], [object.y]]), array([[i.x], [i.y]])) < max(object.r, i.r) + self.Ɛ:
@@ -69,13 +66,13 @@ class SimulationRunner:
                 object.y = round(random.uniform(-self.s, self.s), 1)
                 self.check_position(object, sea_objects)
         return object
-    
+
     def random_object_list(self, nb):
         object_list = ["Boat"]
         for i in range(nb):
-            object_list.append(random.choice(["Whale", "Boat", "Ship", "Island"]))
+            object_list.append(random.choice(
+                ["Whale", "Boat", "Ship", "Island"]))
         return object_list
-
 
     def initialize_data(self, sea_object, rules):
         mmsi_list = []
@@ -88,8 +85,6 @@ class SimulationRunner:
             rules[0].append(sea_object[col].mmsi)
             mmsi_list.append(sea_object[col].mmsi)
         return rules, mmsi_list
-
-
 
     def run(self):
         sea_objects = self.initialize_sea_objects_random()
@@ -104,19 +99,20 @@ class SimulationRunner:
             fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
             table = init_table(rules, self.legend, fig_leg, ax_leg)
             if self.record_data:
-                simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
+                simulation.run_with_data(
+                    self.record_data, self.num_steps, mmsi_list, rules, table, ax, self.Ɛ, self.s)
             else:
-                simulation.run(self.record_data, self.num_steps, mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)
+                simulation.run(self.record_data, self.num_steps,
+                               mmsi_list, rules, table, ax, ax_leg, self.Ɛ, self.s)
         else:
             if self.record_data:
-                simulation.run_with_data(self.record_data, self.num_steps, mmsi_list, rules, None, None, self.Ɛ, self.s)
+                simulation.run_with_data(
+                    self.record_data, self.num_steps, mmsi_list, rules, None, None, self.Ɛ, self.s)
             else:
-                simulation.run(self.record_data, self.num_steps, mmsi_list, rules, None, None, None, self.Ɛ, self.s)
-
-
+                simulation.run(self.record_data, self.num_steps,
+                               mmsi_list, rules, None, None, None, self.Ɛ, self.s)
 
     # ------------------------------------------------------------------------------------------------
-
 """ Examples of initial position to test different cases """
 
 ''' Four boats '''
@@ -147,4 +143,3 @@ class SimulationRunner:
 
 # xp = array([[3, 3, 1.5, 4.75]]).T      #x,y,v,θ of the boat
 # xq = array([[0,-2, 0.25, 1.75]]).T    #x,y,v,θ of the obstacle boat
-
