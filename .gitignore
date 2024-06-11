@@ -9,4 +9,4 @@ main_program/__pycache__/
 *.csv
 main_program/plots/
 saves/
-test.py
+test/
