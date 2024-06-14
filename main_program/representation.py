@@ -1,5 +1,6 @@
 import numpy as np
 import plotly.graph_objects as go
+import datetime
 
 
 class Representation:
@@ -122,6 +123,12 @@ class Representation:
                         self.trace_traj2, self.trace_proj1, self.trace_proj2])
         fig.show()
 
+    def record(self, filename):
+        # Create the plot
+        fig = go.Figure(data=[self.trace, self.trace_traj1,
+                        self.trace_traj2, self.trace_proj1, self.trace_proj2])
+        fig.write_html(filename)
+
 
 # Define the trajectories
 # Define the trajectories
@@ -134,5 +141,8 @@ y2 = np.sin(t)
 z2 = t
 
 rep = Representation()
+rep.num_circle_points = 20
 rep.draw_all(x1, y1, z1, x2, y2, z2)
 rep.show()
+rep.record("test/save_3D/" +
+           datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".html")
