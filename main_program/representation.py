@@ -4,8 +4,9 @@ import datetime
 
 
 class Representation:
-    def __init__(self, radius=0.1, num_circle_points=20):
-        self.radius = radius
+    def __init__(self, radius_x=0.1, radius_y=0.05, num_circle_points=20):
+        self.radius_x = radius_x
+        self.radius_y = radius_y
         self.num_circle_points = num_circle_points
         self.tube_x = []
         self.tube_y = []
@@ -17,7 +18,7 @@ class Representation:
         self.trace_proj1 = None
         self.trace_proj2 = None
 
-    def draw_tube(self, x, y, z, radius_x=0.1, radius_y=0.05):
+    def draw_tube(self, x, y, z, headings):
         # Initialize arrays to store the tube coordinates
         tube_x = []
         tube_y = []
@@ -28,14 +29,25 @@ class Representation:
             # Define the angle for the ellipse
             theta = np.linspace(0, 2 * np.pi, self.num_circle_points)
 
-            # Ellipse in the xy-plane
-            ellipse_x = radius_x * np.cos(theta)
-            ellipse_y = radius_y * np.sin(theta)
+            # Ellipse in the xy-plane before rotation
+            ellipse_x = self.radius_x * np.cos(theta)
+            ellipse_y = self.radius_y * np.sin(theta)
+
+            # Compute the rotation matrix based on the heading
+            heading = headings[i]
+            rotation_matrix = np.array([
+                [np.cos(heading), -np.sin(heading)],
+                [np.sin(heading), np.cos(heading)]
+            ])
+
+            # Rotate the ellipse points
+            rotated_points = np.dot(
+                rotation_matrix, np.array([ellipse_x, ellipse_y]))
 
             # Compute the ellipse in 3D by adding the ellipse coordinates to the current point (x, y, z)
             for j in range(self.num_circle_points):
-                point_x = x[i] + ellipse_x[j]
-                point_y = y[i] + ellipse_y[j]
+                point_x = x[i] + rotated_points[0, j]
+                point_y = y[i] + rotated_points[1, j]
                 point_z = z[i]
 
                 tube_x.append(point_x)
@@ -44,14 +56,12 @@ class Representation:
 
         return tube_x, tube_y, tube_z
 
-    def draw_all(self, x1, y1, z1, x2, y2, z2):
+    def draw_all(self, x1, y1, z1, headings1, x2, y2, z2, headings2):
         # Draw the first trajectory
-        tube_x1, tube_y1, tube_z1 = self.draw_tube(
-            x1, y1, z1, radius_x=0.1, radius_y=0.05)
+        tube_x1, tube_y1, tube_z1 = self.draw_tube(x1, y1, z1, headings1)
 
         # Draw the second trajectory
-        tube_x2, tube_y2, tube_z2 = self.draw_tube(
-            x2, y2, z2, radius_x=0.1, radius_y=0.05)
+        tube_x2, tube_y2, tube_z2 = self.draw_tube(x2, y2, z2, headings2)
 
         # Combine the coordinates for both trajectories
         self.tube_x = tube_x1 + tube_x2
@@ -100,17 +110,16 @@ class Representation:
     def show(self):
         # Create the plot
         fig = go.Figure(data=[self.trace, self.trace_traj1,
-                        self.trace_traj2, self.trace_proj1, self.trace_proj2])
+                              self.trace_traj2, self.trace_proj1, self.trace_proj2])
         fig.show()
 
     def record(self, filename):
         # Create the plot
         fig = go.Figure(data=[self.trace, self.trace_traj1,
-                        self.trace_traj2, self.trace_proj1, self.trace_proj2])
+                              self.trace_traj2, self.trace_proj1, self.trace_proj2])
         fig.write_html(filename)
 
 
-# Define the trajectories
 # Define the trajectories
 t = np.linspace(0, 1, 100)
 x1 = t
@@ -120,9 +129,15 @@ x2 = np.cos(t)
 y2 = np.sin(t)
 z2 = t
 
+# Define headings for each point in the trajectories
+# Example headings for the first trajectory
+headings1 = np.linspace(0, np.pi, len(t))
+# Example headings for the second trajectory
+headings2 = np.linspace(0, np.pi/2, len(t))
+
 rep = Representation()
 rep.num_circle_points = 20
-rep.draw_all(x1, y1, z1, x2, y2, z2)
+rep.draw_all(x1, y1, z1, headings1, x2, y2, z2, headings2)
 rep.show()
 rep.record("test/save_3D/" +
            datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".html")
