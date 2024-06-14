@@ -32,37 +32,15 @@ class Representation:
             circle_x = self.radius * np.cos(theta)
             circle_y = self.radius * np.sin(theta)
 
-            # Tangent to the trajectory (use finite differences)
-            if i < len(x) - 1:
-                tangent = np.array(
-                    [x[i + 1] - x[i], y[i + 1] - y[i], z[i + 1] - z[i]])
-            else:
-                tangent = np.array(
-                    [x[i] - x[i - 1], y[i] - y[i - 1], z[i] - z[i - 1]])
-
-            # Normalize the tangent vector
-            tangent /= np.linalg.norm(tangent)
-
-            # Find a vector that is not parallel to the tangent
-            if np.allclose(tangent, [1, 0, 0]):
-                not_parallel = np.array([0, 1, 0])
-            else:
-                not_parallel = np.array([1, 0, 0])
-
-            # Use cross product to get a perpendicular vector
-            normal1 = np.cross(tangent, not_parallel)
-            normal1 /= np.linalg.norm(normal1)
-
-            # Use cross product to get the second perpendicular vector
-            normal2 = np.cross(tangent, normal1)
-
-            # Compute the circle in 3D
+            # Compute the circle in 3D by adding the circle coordinates to the current point (x, y, z)
             for j in range(self.num_circle_points):
-                point = np.array([x[i], y[i], z[i]]) + \
-                    circle_x[j] * normal1 + circle_y[j] * normal2
-                tube_x.append(point[0])
-                tube_y.append(point[1])
-                tube_z.append(point[2])
+                point_x = x[i] + circle_x[j]
+                point_y = y[i] + circle_y[j]
+                point_z = z[i]
+
+                tube_x.append(point_x)
+                tube_y.append(point_y)
+                tube_z.append(point_z)
 
         return tube_x, tube_y, tube_z
 
