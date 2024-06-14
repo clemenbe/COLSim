@@ -17,7 +17,7 @@ class Representation:
         self.trace_proj1 = None
         self.trace_proj2 = None
 
-    def draw_tube(self, x, y, z):
+    def draw_tube(self, x, y, z, radius_x=0.1, radius_y=0.05):
         # Initialize arrays to store the tube coordinates
         tube_x = []
         tube_y = []
@@ -25,17 +25,17 @@ class Representation:
 
         # Generate the tube coordinates
         for i in range(len(x)):
-            # Define the angle for the circle
+            # Define the angle for the ellipse
             theta = np.linspace(0, 2 * np.pi, self.num_circle_points)
 
-            # Circle in the xy-plane
-            circle_x = self.radius * np.cos(theta)
-            circle_y = self.radius * np.sin(theta)
+            # Ellipse in the xy-plane
+            ellipse_x = radius_x * np.cos(theta)
+            ellipse_y = radius_y * np.sin(theta)
 
-            # Compute the circle in 3D by adding the circle coordinates to the current point (x, y, z)
+            # Compute the ellipse in 3D by adding the ellipse coordinates to the current point (x, y, z)
             for j in range(self.num_circle_points):
-                point_x = x[i] + circle_x[j]
-                point_y = y[i] + circle_y[j]
+                point_x = x[i] + ellipse_x[j]
+                point_y = y[i] + ellipse_y[j]
                 point_z = z[i]
 
                 tube_x.append(point_x)
@@ -46,10 +46,12 @@ class Representation:
 
     def draw_all(self, x1, y1, z1, x2, y2, z2):
         # Draw the first trajectory
-        tube_x1, tube_y1, tube_z1 = self.draw_tube(x1, y1, z1)
+        tube_x1, tube_y1, tube_z1 = self.draw_tube(
+            x1, y1, z1, radius_x=0.1, radius_y=0.05)
 
         # Draw the second trajectory
-        tube_x2, tube_y2, tube_z2 = self.draw_tube(x2, y2, z2)
+        tube_x2, tube_y2, tube_z2 = self.draw_tube(
+            x2, y2, z2, radius_x=0.1, radius_y=0.05)
 
         # Combine the coordinates for both trajectories
         self.tube_x = tube_x1 + tube_x2
@@ -64,9 +66,9 @@ class Representation:
             for j in range(self.num_circle_points):
                 next_j = (j + 1) % self.num_circle_points
                 self.faces.append([i * self.num_circle_points + j, (i + 1) *
-                                  self.num_circle_points + j, (i + 1) * self.num_circle_points + next_j])
+                                   self.num_circle_points + j, (i + 1) * self.num_circle_points + next_j])
                 self.faces.append([i * self.num_circle_points + j, (i + 1) *
-                                  self.num_circle_points + next_j, i * self.num_circle_points + next_j])
+                                   self.num_circle_points + next_j, i * self.num_circle_points + next_j])
 
         for i in range(len(x2) - 1):
             for j in range(self.num_circle_points):
