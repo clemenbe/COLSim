@@ -1,6 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
 import random
+import os
 
 
 class Representation:
@@ -95,9 +96,12 @@ class Representation:
         fig.show()
 
     def record(self, filename):
+        directory = 'saves/3D'
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         fig = go.Figure(
             data=[trace for trace in self.traces if trace is not None])
-        fig.write_html(filename)
+        fig.write_html(directory+'/'+filename)
 
 
 # Example usage
