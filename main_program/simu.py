@@ -21,6 +21,7 @@ class Simulation:
         self.dt = dt
         self.k = k
         self.save = datetime.now().strftime("%Y%m%d%H%M%S%f%z")
+        self.render_3D = True
 
     def run(self, record_data, num_steps,  mmsi_list, rules, table, ax, ax_leg, Ɛ, s):
         """Will make the simulation run for a certain number of steps
@@ -85,9 +86,10 @@ class Simulation:
                 with open(f'{directory}/sea_obj_{self.save}.txt', 'w') as file:
                     file.write(str(sea_obj))
                 self.visualize_data(sea_obj)
-                rep = Representation()
-                rep.create_3D_rep(sea_obj)
-                rep.record(f'{self.save}.html')
+                if self.render_3D:
+                    rep = Representation()
+                    rep.create_3D_rep(sea_obj)
+                    rep.record(f'{self.save}.html')
 
                 # for k in self.sea_objects:
                 #     col = self.use_history(k, sea_obj)

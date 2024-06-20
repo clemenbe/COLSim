@@ -94,6 +94,7 @@ class SimulationRunner:
         # sea_objects.append(Boat(444, 0, 0, 0.25, 2))
         rules, mmsi_list = self.initialize_data(sea_objects, self.rules)
         simulation = Simulation(sea_objects, self.dt, self.k)
+        simulation.render_3D = self.render_3D
         if self.visu_figure:
             fig, ax = init_figure(-self.s, self.s, -self.s, self.s)
             fig_leg, ax_leg = init_figure(-self.s, self.s, -self.s, self.s)
@@ -111,6 +112,7 @@ class SimulationRunner:
             else:
                 simulation.run(self.record_data, self.num_steps,
                                mmsi_list, rules, None, None, None, self.Ɛ, self.s)
+
 
     # ------------------------------------------------------------------------------------------------
 """ Examples of initial position to test different cases """
