@@ -5,7 +5,7 @@ import time
 import random
 
 if __name__ == "__main__":
-    nb_simulations = 10
+    nb_simulations = 100
     matplotlib.rcParams['interactive'] = False
     start_time = time.time()
 

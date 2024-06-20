@@ -255,6 +255,8 @@ class SeaObject:
             else:
                 up = self.move_straight()
 
+        if sqrt((self.phat[0]-self.x)**2 + (self.phat[1]-self.y)**2) < 1:
+            up = array([[0], [0]])
         # Update position
         self.update(up, dt)
 
