@@ -1,10 +1,10 @@
 import numpy as np
 import plotly.graph_objects as go
-import datetime
+import random
 
 
 class Representation:
-    def __init__(self, radius_x=0.1, radius_y=0.05, num_circle_points=20):
+    def __init__(self, radius_x=2, radius_y=2, num_circle_points=20):
         self.radius_x = radius_x
         self.radius_y = radius_y
         self.num_circle_points = num_circle_points
@@ -12,39 +12,27 @@ class Representation:
         self.tube_y = []
         self.tube_z = []
         self.faces = []
-        self.trace = None
-        self.trace_traj1 = None
-        self.trace_traj2 = None
-        self.trace_proj1 = None
-        self.trace_proj2 = None
+        self.traces = []
 
     def draw_tube(self, x, y, z, headings):
-        # Initialize arrays to store the tube coordinates
         tube_x = []
         tube_y = []
         tube_z = []
 
-        # Generate the tube coordinates
         for i in range(len(x)):
-            # Define the angle for the ellipse
             theta = np.linspace(0, 2 * np.pi, self.num_circle_points)
-
-            # Ellipse in the xy-plane before rotation
             ellipse_x = self.radius_x * np.cos(theta)
             ellipse_y = self.radius_y * np.sin(theta)
 
-            # Compute the rotation matrix based on the heading
             heading = headings[i]
             rotation_matrix = np.array([
                 [np.cos(heading), -np.sin(heading)],
                 [np.sin(heading), np.cos(heading)]
             ])
-
             # Rotate the ellipse points
             rotated_points = np.dot(
                 rotation_matrix, np.array([ellipse_x, ellipse_y]))
 
-            # Compute the ellipse in 3D by adding the ellipse coordinates to the current point (x, y, z)
             for j in range(self.num_circle_points):
                 point_x = x[i] + rotated_points[0, j]
                 point_y = y[i] + rotated_points[1, j]
@@ -56,88 +44,67 @@ class Representation:
 
         return tube_x, tube_y, tube_z
 
-    def draw_all(self, x1, y1, z1, headings1, x2, y2, z2, headings2):
-        # Draw the first trajectory
-        tube_x1, tube_y1, tube_z1 = self.draw_tube(x1, y1, z1, headings1)
-
-        # Draw the second trajectory
-        tube_x2, tube_y2, tube_z2 = self.draw_tube(x2, y2, z2, headings2)
-
-        # Combine the coordinates for both trajectories
-        self.tube_x = tube_x1 + tube_x2
-        self.tube_y = tube_y1 + tube_y2
-        self.tube_z = tube_z1 + tube_z2
-
-        # Generate the mesh faces
+    def create_3D_rep(self, all_sea_objects):
+        self.tube_x = []
+        self.tube_y = []
+        self.tube_z = []
         self.faces = []
-        num_points_traj1 = len(tube_x1)
-        num_points_traj2 = len(tube_x2)
-        for i in range(len(x1) - 1):
-            for j in range(self.num_circle_points):
-                next_j = (j + 1) % self.num_circle_points
-                self.faces.append([i * self.num_circle_points + j, (i + 1) *
-                                   self.num_circle_points + j, (i + 1) * self.num_circle_points + next_j])
-                self.faces.append([i * self.num_circle_points + j, (i + 1) *
-                                   self.num_circle_points + next_j, i * self.num_circle_points + next_j])
+        self.traces = []
 
-        for i in range(len(x2) - 1):
-            for j in range(self.num_circle_points):
-                next_j = (j + 1) % self.num_circle_points
-                self.faces.append([num_points_traj1 + i * self.num_circle_points + j, num_points_traj1 + (
-                    i + 1) * self.num_circle_points + j, num_points_traj1 + (i + 1) * self.num_circle_points + next_j])
-                self.faces.append([num_points_traj1 + i * self.num_circle_points + j, num_points_traj1 + (
-                    i + 1) * self.num_circle_points + next_j, num_points_traj1 + i * self.num_circle_points + next_j])
+        offset = 0
+        for key, value in all_sea_objects.items():
+            x = [v[1][0][0] for v in value]
+            y = [v[1][1][0] for v in value]
+            theta = [v[1][3][0] for v in value]
+            t = np.linspace(0, len(x), len(x))
 
-        # Flatten the face list
-        i, j, k = np.array(self.faces).T
+            tube_x, tube_y, tube_z = self.draw_tube(x, y, t, theta)
 
-        # Create the mesh trace
-        self.trace = go.Mesh3d(x=self.tube_x, y=self.tube_y, z=self.tube_z,
-                               i=i, j=j, k=k, opacity=0.5, color='lightblue')
+            num_points = len(tube_x)
+            self.tube_x += tube_x
+            self.tube_y += tube_y
+            self.tube_z += tube_z
 
-        # Add the original trajectories for reference
-        self.trace_traj1 = go.Scatter3d(
-            x=x1, y=y1, z=z1, mode='lines', line=dict(color='red', width=3))
-        self.trace_traj2 = go.Scatter3d(
-            x=x2, y=y2, z=z2, mode='lines', line=dict(color='green', width=3))
+            for i in range(len(x) - 1):
+                for j in range(self.num_circle_points):
+                    next_j = (j + 1) % self.num_circle_points
+                    self.faces.append([offset + i * self.num_circle_points + j, offset + (i + 1) *
+                                       self.num_circle_points + j, offset + (i + 1) * self.num_circle_points + next_j])
+                    self.faces.append([offset + i * self.num_circle_points + j, offset + (i + 1) *
+                                       self.num_circle_points + next_j, offset + i * self.num_circle_points + next_j])
 
-        # Add the projection of the two trajectories on the plane XY
-        self.trace_proj1 = go.Scatter3d(x=x1, y=y1, z=np.zeros_like(
-            z1), mode='lines', line=dict(color='red', dash='dash'))
-        self.trace_proj2 = go.Scatter3d(x=x2, y=y2, z=np.zeros_like(
-            z2), mode='lines', line=dict(color='green', dash='dash'))
+            offset += num_points
+            color_list = ['red', 'blue', 'green', 'yellow',
+                          'purple', 'orange', 'pink', 'brown', 'black', 'grey']
+            color_choice = random.choice(color_list)
+            # Add trajectory line
+            self.traces.append(go.Scatter3d(
+                x=x, y=y, z=t, mode='lines', line=dict(color=color_choice), name=f'Trajectory {key}'))
+            self.traces.append(go.Scatter3d(x=x, y=y, z=[
+                               0]*len(t), mode='lines', line=dict(dash='dot', color=color_choice), name=f'Projection {key}'))
+
+        if self.faces:
+            i, j, k = np.array(self.faces).T
+
+            self.traces.append(go.Mesh3d(x=self.tube_x, y=self.tube_y, z=self.tube_z,
+                                         i=i, j=j, k=k, opacity=0.5, color='lightblue'))
 
     def show(self):
-        # Create the plot
-        fig = go.Figure(data=[self.trace, self.trace_traj1,
-                              self.trace_traj2, self.trace_proj1, self.trace_proj2])
+        fig = go.Figure(
+            data=[trace for trace in self.traces if trace is not None])
         fig.show()
 
     def record(self, filename):
-        # Create the plot
-        fig = go.Figure(data=[self.trace, self.trace_traj1,
-                              self.trace_traj2, self.trace_proj1, self.trace_proj2])
+        fig = go.Figure(
+            data=[trace for trace in self.traces if trace is not None])
         fig.write_html(filename)
 
 
-# Define the trajectories
-t = np.linspace(0, 1, 100)
-x1 = t
-y1 = t**2
-z1 = t
-x2 = np.cos(t)
-y2 = np.sin(t)
-z2 = t
+# Example usage
+# all_sea_objects = {'539_Boat': [['Boat', [[-0.85840028], [10.7792047], [1.34171896], [4.26807024]], '0', {}], ['Boat', [[-0.91607312], [10.6580604], [1.34171896], [4.271119]], '0', {}], ['Boat', [[-0.97337634], [10.53674083], [1.34171896], [4.27266484]], '0', {}], ['Boat', [[-1.03049196], [10.41533282], [1.34171896], [4.27344871]], '0', {}], ['Boat', [[-1.08751239], [10.29388008], [1.34171896], [4.27384624]], '0', {}], ['Boat', [[-1.14448453], [10.17240468], [1.34171896], [4.27404787]], '0', {}], ['Boat', [[-1.20143219], [10.0509178], [1.34171896], [4.01285419]], '1', {619: [[[[[3.25620036], [7.83770397], [2.46697896], [2.973593]], [[3.01297567], [7.87895445], [2.46697896], [2.96612544]], [[2.7700658], [7.92202006], [2.46697896], [2.96229519]], [[2.52732267], [7.96601575], [2.46697896], [2.96032994]], [[2.28466646], [8.01048841], [2.46697896], [2.95932126]], [[2.04205524], [8.05520581], [2.46697896], [2.95880336]]]]]}], ['Boat', [[-1.28782034], [9.94825728], [1.34171896], [4.22541554]], '1', {619: [[[[[3.25620036], [7.83770397], [2.46697896], [2.973593]], [[3.01297567], [7.87895445], [2.46697896], [2.96612544]], [[2.7700658], [7.92202006], [2.46697896], [2.96229519]], [[2.52732267], [7.96601575], [2.46697896], [2.96032994]], [[2.28466646], [8.01048841], [2.46697896], [2.95932126]], [[2.04205524], [8.05520581], [2.46697896], [2.95880336]], [[1.7994672], [8.10004885], [2.46697896], [2.98730586]]]]]}], ['Boat', [[-1.35060653], [9.82968243], [1.34171896], [4.43040621]], '1', {619: [[[[[3.25620036], [7.83770397], [2.46697896], [2.973593]], [[3.01297567], [7.87895445], [2.46697896], [2.96612544]], [[2.7700658], [7.92202006], [2.46697896], [2.96229519]], [[2.52732267], [7.96601575], [2.46697896], [2.96032994]], [[2.28466646], [8.01048841], [2.46697896], [2.95932126]], [[2.04205524], [8.05520581], [2.46697896], [2.95880336]], [[1.7994672], [8.10004885], [2.46697896], [2.98730586]], [[1.55569974], [8.13796025], [2.46697896], [3.26935341]]]]]}], ['Boat', [[-1.38794129], [9.70080958], [1.34171896], [4.63354732]], '1', {619: [[[[[3.25620036], [7.83770397], [2.46697896], [2.973593]], [[3.01297567], [7.87895445], [2.46697896], [2.96612544]], [[2.7700658], [7.92202006], [2.46697896], [2.96229519]], [[2.52732267], [7.96601575], [2.46697896], [2.96032994]], [[2.28466646], [8.01048841], [2.46697896], [2.95932126]], [[2.04205524], [8.05520581], [2.46697896], [2.95880336]], [[1.7994672], [8.10004885], [2.46697896], [2.98730586]], [[1.55569974], [8.13796025], [2.46697896], [3.26935341]], [[1.31101251], [8.10652762], [2.46697896], [3.52789666]]]]]}]], '619_Boat': [['Boat', [[3.25620036], [7.83770397], [2.46697896], [2.973593]], '0', {}], ['Boat', [[3.01297567], [7.87895445], [
+#     2.46697896], [2.96612544]], '0', {}], ['Boat', [[2.7700658], [7.92202006], [2.46697896], [2.96229519]], '0', {}], ['Boat', [[2.52732267], [7.96601575], [2.46697896], [2.96032994]], '0', {}], ['Boat', [[2.28466646], [8.01048841], [2.46697896], [2.95932126]], '0', {}], ['Boat', [[2.04205524], [8.05520581], [2.46697896], [2.95880336]], '0', {}], ['Boat', [[1.7994672], [8.10004885], [2.46697896], [2.98730586]], '1', {539: [[[[[-0.85840028], [10.7792047], [1.34171896], [4.26807024]], [[-0.91607312], [10.6580604], [1.34171896], [4.271119]], [[-0.97337634], [10.53674083], [1.34171896], [4.27266484]], [[-1.03049196], [10.41533282], [1.34171896], [4.27344871]], [[-1.08751239], [10.29388008], [1.34171896], [4.27384624]], [[-1.14448453], [10.17240468], [1.34171896], [4.27404787]], [[-1.20143219], [10.0509178], [1.34171896], [4.01285419]]]]]}], ['Boat', [[1.55569974], [8.13796025], [2.46697896], [3.26935341]], '1', {539: [[[[[-0.85840028], [10.7792047], [1.34171896], [4.26807024]], [[-0.91607312], [10.6580604], [1.34171896], [4.271119]], [[-0.97337634], [10.53674083], [1.34171896], [4.27266484]], [[-1.03049196], [10.41533282], [1.34171896], [4.27344871]], [[-1.08751239], [10.29388008], [1.34171896], [4.27384624]], [[-1.14448453], [10.17240468], [1.34171896], [4.27404787]], [[-1.20143219], [10.0509178], [1.34171896], [4.01285419]], [[-1.28782034], [9.94825728], [1.34171896], [4.22541554]]]]]}], ['Boat', [[1.31101251], [8.10652762], [2.46697896], [3.52789666]], '1', {539: [[[[[-0.85840028], [10.7792047], [1.34171896], [4.26807024]], [[-0.91607312], [10.6580604], [1.34171896], [4.271119]], [[-0.97337634], [10.53674083], [1.34171896], [4.27266484]], [[-1.03049196], [10.41533282], [1.34171896], [4.27344871]], [[-1.08751239], [10.29388008], [1.34171896], [4.27384624]], [[-1.14448453], [10.17240468], [1.34171896], [4.27404787]], [[-1.20143219], [10.0509178], [1.34171896], [4.01285419]], [[-1.28782034], [9.94825728], [1.34171896], [4.22541554]], [[-1.35060653], [9.82968243], [1.34171896], [4.43040621]]]]]}], ['Boat', [[1.08249429], [8.0135799], [2.46697896], [3.7607972]], '1', {539: [[[[[-0.85840028], [10.7792047], [1.34171896], [4.26807024]], [[-0.91607312], [10.6580604], [1.34171896], [4.271119]], [[-0.97337634], [10.53674083], [1.34171896], [4.27266484]], [[-1.03049196], [10.41533282], [1.34171896], [4.27344871]], [[-1.08751239], [10.29388008], [1.34171896], [4.27384624]], [[-1.14448453], [10.17240468], [1.34171896], [4.27404787]], [[-1.20143219], [10.0509178], [1.34171896], [4.01285419]], [[-1.28782034], [9.94825728], [1.34171896], [4.22541554]], [[-1.35060653], [9.82968243], [1.34171896], [4.43040621]], [[-1.38794129], [9.70080958], [1.34171896], [4.63354732]]]]]}]]}
 
-# Define headings for each point in the trajectories
-# Example headings for the first trajectory
-headings1 = np.linspace(0, np.pi, len(t))
-# Example headings for the second trajectory
-headings2 = np.linspace(0, np.pi/2, len(t))
 
-rep = Representation()
-rep.num_circle_points = 20
-rep.draw_all(x1, y1, z1, headings1, x2, y2, z2, headings2)
-rep.show()
-rep.record("test/save_3D/" +
-           datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".html")
+# rep = Representation()
+# rep.create_3D_rep(all_sea_objects)
+# rep.show()

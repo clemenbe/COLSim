@@ -12,6 +12,7 @@ import ast
 from datetime import datetime
 import os
 from matplotlib.animation import FuncAnimation, PillowWriter
+from representation import Representation
 
 
 class Simulation:
@@ -80,11 +81,19 @@ class Simulation:
             # if one of the sea object have been in collision, we save the data else we delete the file
             if s.save_graph:
                 sea_obj = self.process_data(f'{directory}/{self.save}.csv')
+                # Save sea_obj in a file
+                with open(f'{directory}/sea_obj_{self.save}.txt', 'w') as file:
+                    file.write(str(sea_obj))
                 self.visualize_data(sea_obj)
-                for k in self.sea_objects:
-                    col = self.use_history(k, sea_obj)
-                    self.show_history(col)
-                    self.show_animated_vectors()
+                # rep = Representation()
+                # rep.create_3D_rep(sea_obj)
+                # rep.record("test/save_3D/" +
+                #    datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".html")
+
+                # for k in self.sea_objects:
+                #     col = self.use_history(k, sea_obj)
+                #     self.show_history(col)
+                #     self.show_animated_vectors()
                 break
             else:
                 os.remove(f'{directory}/{self.save}.csv')
