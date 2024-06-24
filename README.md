@@ -1,8 +1,13 @@
-# USV Simulator
+# Multiagent USV Simulator
 
-## Author
+## Contributors 2023
 - DUBROMEL Marie  <marie.dubromel@ensta-bretagne.org> (Promotion ENSTA Bretagne 2024 - Spécialité Robotique Autonome)]
 - Peter Wu <peterzikangwu@gmail.com>
+
+## Contributors 2024
+- Tiphaine CALVIER-MOISSON
+
+  
 - supervison: Benoit Clement
 
 
