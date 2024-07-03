@@ -6,7 +6,7 @@
 - Peter Wu <peterzikangwu@gmail.com>
 
 **2024**
-- Tiphaine Calvier-Moisson  <tiphaine.calvier-moisson@ensta-bretagne.org> (Promotion ENSTA Bretagne 2025 - Spécialité Robotique Autonome)
+- Tiphaine (ENSTA Bretagne - Spécialité Robotique Autonome)
 
 **Supervison:** 
 Benoit Clement
