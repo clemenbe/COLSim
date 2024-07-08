@@ -15,6 +15,7 @@ if __name__ == "__main__":
         runner.record_data = True
         runner.visu_figure = False
         runner.render_3D = True
-        # runner.list_sea_objects = runner.random_object_list(random.randint(1, 5))
+        # runner.list_sea_objects = runner.random_object_list(
+        # random.randint(5, 5))
         runner.list_sea_objects = ["Boat", "Boat"]
         runner.run()
