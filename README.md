@@ -77,8 +77,8 @@ It includes the following key components:
 - `SeaObject` : The parent class for all sea objects including **Boat**, **Ship**, **Whale**, **Island** etc. It defines each sea object with x, y, v, theta, and defines an *update* and *get_state_vector* function, contains the *move* function that checks the distance with other sea objects and *avoid_collision* based on certain conditions. It also includes a *draw* function so that each child class can draw its own image. For more information on how the main_program version works, see the [README in the main_program directory](./main_program/README.md).
 
 It can be runned in two different ways : 
-- [ ] The simulation with the scene **displayed**
-- [ ] The simulation runned without any display, but with the USV's following information : **MMSI number, x, y, theta, v** saved in a .csv file
+- [ ] The simulation with the scene **displayed** : set `self.record_data` to `False` in `SimulationRunner` initialisation,
+- [ ] The simulation runned without any display, but with the USV's following information : **MMSI number, x, y, theta, v** saved in a .csv file : set `self.record_data` to `True`.
 
 
 ### AIS
@@ -89,7 +89,19 @@ For more information on how the AIS version works, see the [README in the AIS di
 This version is the implementation of a new solution to run a simulation based on AIS data. The implementation is not done yet.
 For more information on how the AIS_new version works, see the [README in the AIS_new directory](./AIS new/README.md).
 
+### Algorithms_program
+This version has been implemented to test different path planning algorithms, in order to compare their efficiency.
 
+For each maneuverable **SeaObject**, it is possible to choose which algorithm it will use.
+Algorithms already implemented are
+- Artificial potential fields: initially present in the simulator.
+- A*: two differents versions selected online. It's a Dijkstra algorithm with heuristics.
+- D* Lite: amelioration of A*.
+- Ant Colony Optimization (ACO) 
+- Particle Swarm Optimization (PSO).
 
+For more information on how the Algorithms_program version works, see the [README in the Algorithms_program](./Algorithms_program/README.md).
+
+#### More
 For a detailed explanation of how the different classes, function and other specific notions interact with one another, please refer to the comments in the source code. The simulator offers the possibility of simulating different sea conditions and object interactions, which makes it a versatile tool for researching and studying marine navigation and collision avoidance systems.
 
