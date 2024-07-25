@@ -11,7 +11,6 @@ class Ship(SeaObject):
         print("Ship created:  mmsi %s, in position (%s, %s), speed v= %s, theta= %s, with the algorithm: %s" % (mmsi, x, y, v, theta, algo))
 
 
-
     #here, how a ship moves
     def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
         """Returns mmsi and state vector, depending on the path planning algorithm"""
@@ -23,7 +22,6 @@ class Ship(SeaObject):
             return self.move_dstarl(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
         if self.algo=="ACO":
             return self.move_aco(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
-            #return self.move_straight_apf()
         if self.algo=="PSO":
             return self.move_pso(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
         else:

@@ -140,19 +140,19 @@ def compare_trajectories(mmsi):
         plt.plot(Lx[-1],Ly[-1],'ro')
         i+=1
 
-    circle = plt.Circle((-9.799849932008907, -1.1775998388026556), 1, color='red', fill=False, label='Goal')
+    circle = plt.Circle((-9.799849932008907, -1.1775998388026556), 1, color='yellow', fill=True, label='Goal')
     plt.gca().add_artist(circle)
     plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
     plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
 
     #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
+    plt.plot(0,2,'ko',label='Island',markersize=15)
+    circle1 = plt.Circle((0,2), 4, color='black', fill=False, label='DCPA zone')
+    circle2 = plt.Circle((0,2), 6, color='grey', fill=False, label='Safety zone')
     plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    plt.plot(0,-6,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,-6), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,-6), 6, color='magenta', fill=False)
+    plt.plot(0,-6,'ko',markersize=15)
+    circle1 = plt.Circle((0,-6), 4, color='black', fill=False)
+    circle2 = plt.Circle((0,-6), 6, color='grey', fill=False)
     plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
     
     plt.axis('equal')
@@ -190,19 +190,19 @@ def compare_trajectories(mmsi):
         plt.plot(Lx[-1],Ly[-1],'ro')
         i+=1
 
-    circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='red', fill=False, label='Goal')
+    circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='yellow', fill=True, label='Goal')
     plt.gca().add_artist(circle)
     plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
     plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
 
     #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
+    plt.plot(0,2,'ko',label='Island',markersize=15)
+    circle1 = plt.Circle((0,2), 4, color='black', fill=False, label='DCPA zone')
+    circle2 = plt.Circle((0,2), 6, color='grey', fill=False, label='Safety zone')
     plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    plt.plot(0,-6,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,-6), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,-6), 6, color='magenta', fill=False)
+    plt.plot(0,-6,'ko',markersize=15)
+    circle1 = plt.Circle((0,-6), 4, color='black', fill=False)
+    circle2 = plt.Circle((0,-6), 6, color='grey', fill=False)
     plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
     
     plt.axis('equal')
@@ -214,7 +214,6 @@ def compare_trajectories(mmsi):
 
     plt.tight_layout(rect=[0.05, 0.05,0.95, 0.95])
     plt.subplots_adjust(wspace=0.2, hspace=0.5)
-
 
 compare_trajectories('444')
 plt.show()

@@ -7,17 +7,15 @@ from island import Island
 from ship import Ship
 import time
 
-
-
 class SimulationRunner:
     def __init__(self):
         self.s = 20 
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
-        self.num_steps = 230          #number of steps of the simulation
-        self.environment = 5          #different environments (description below)
-        self.record_data = False      #set to True to record the data or to False to display the simulation
+        self.num_steps = 250          #number of steps of the simulation
+        self.environment = 3          #different environments (description below)
+        self.record_data = True      #set to True to record the data or to False to display the simulation
         self.rules = [
             ["Rules :"],
             ["Finish OT"],
@@ -48,38 +46,39 @@ class SimulationRunner:
      
         elif self.environment == 1:
             '''Only one ship, has to go straight.'''
-            sea_objects.append(Ship(444, 10,-4, 1.5, 3, "D*Lite"))
+            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "ACO"))
 
         elif self.environment == 2:
             '''One island to slightly contourn.'''
             sea_objects.append(Island(333, 0, 2, 0, 1))
-            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "APF"))
+            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "ACO"))
 
         elif self.environment == 3:
             '''U shape with a potential minimum.'''
             sea_objects.append(Island(333, 0, 2, 0, 1))
             sea_objects.append(Island(332, 0, -9, 0, 1))  #with this 2nd island and APF, the ship is stuck at a minima
-            sea_objects.append(Ship(444, 10, -4, 1.5, 3, "APF"))
+            sea_objects.append(Ship(444, 10, -4, 1.5, 3, "ACO"))
 
         elif self.environment == 4:
             '''Slalom with 2 islands and 1 ship.'''
-            sea_objects.append(Ship(444, 10,-10, 1.5, 2.4, "APF", 30))
+            sea_objects.append(Ship(444, 10,-10, 1.5, 2.4, "A*", 30))
             sea_objects.append(Island(333, -2, 7, 0, 1))
             sea_objects.append(Island(332, 2, -10, 0, 1))
 
         elif self.environment == 5:
             '''Two boats facing each other.'''
-            sea_objects.append(Ship(444, 12, 0, 1.5, pi, "APF",30))
-            sea_objects.append(Ship(555, -12, 0, 1.5, 0, "PSO",30))    #att a a* qui avec 3.14 en face de 0 fait du rentre dedans...
+            sea_objects.append(Ship(444, 12, -3, 1.5, pi, "A*",30))
+            sea_objects.append(Ship(555, -12, -3, 1.5, 0, "APF",30))    #att a a* qui avec 3.14 en face de 0 fait du rentre dedans...
 
         elif self.environment == 6:
             '''A ship overtaking a boat.'''
-                #exactly overtaking
-            #sea_objects.append(Ship(444, -18, 0, 3, 0, "PSO",36))      
-            #sea_objects.append(Ship(555, -7, 0, 1, 0, "PSO",15))
-                #more realistic
-            sea_objects.append(Ship(444, -15, -2, 3, 0.4, "PSO",32))      
-            sea_objects.append(Ship(555, -5, 0, 1, 0, "A*",15))
+            real=False
+            if real==False:     #exactly overtaking
+                sea_objects.append(Ship(444, -18, 0, 3, 0, "PSO",36))      
+                sea_objects.append(Ship(555, -7, 0, 1, 0, "PSO",15))
+            else:               #more realistic overtake
+                sea_objects.append(Ship(444, -15, -2, 3, 0.4, "A*",32))      
+                sea_objects.append(Ship(555, -5, 0, 1, 0, "A*",15))
 
         else:
             '''Not a fixed env, to be changed.'''

@@ -5,7 +5,6 @@ from calcul_tools import *
 from draw import *
 from algo_potential_fields import *
 from algo_astar import *
-from algo_astar2 import *
 from algo_aco import *
 from algo_dstar_lite import *
 from algo_pso import *
@@ -34,6 +33,39 @@ def control(x, φ, c, D, k, r):
     u1 = 0
     u2 = -sawtooth(θ - arctan2(φ2, φ1)) - (φ2 * dφ1 - φ1 * dφ2) / ((φ1 ** 2) + (φ2 ** 2))
     return array([[u1], [u2]])
+
+def path_smoother(path, map):
+    #comment please
+    new_path = [path[0]]
+    for i in range(1, len(path) - 1):
+        if not is_obstacle_between(new_path[-1], path[i + 1], map):
+            continue
+        new_path.append(path[i])
+    new_path.append(path[-1])
+    return new_path
+
+
+def is_obstacle_between(p1, p2, map):
+    x1, y1 = p1
+    x2, y2 = p2
+
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+    sx = 1 if x1 < x2 else -1
+    sy = 1 if y1 < y2 else -1
+    err = dx - dy
+
+    while (x1, y1) != (x2, y2):
+        if map[x1][y1] != 0:
+            return True
+        e2 = err * 2
+        if e2 > -dy:
+            err -= dy
+            x1 += sx
+        if e2 < dx:
+            err += dx
+            y1 += sy
+    return False
 
 
 class SeaObject:
@@ -215,8 +247,8 @@ class SeaObject:
                         up = self.avoid_collision_apf(record_data, other_object, mmsi_list, rules, table, ax, eps, s, max(self.r, other_object.r), k)
                         in_collision = True
 
-        # If there is no need to avoid collision
-        if not in_collision:
+        # If there is no need to avoid collision and far form the destination, move straight
+        if not in_collision and sqrt((self.phat[0]-self.x)**2 + (self.phat[1]-self.y)**2) > 1:
             up = self.move_straight_apf()
 
         #sea_object stops if goal is reached
@@ -277,7 +309,7 @@ class SeaObject:
         else : u2=0.5 * error
 
         up=array([[0], [u2]])
-        # print("upp :", up)
+        #print("upp :", up)
         return up
 
     def create_graph(self,map):
@@ -296,34 +328,27 @@ class SeaObject:
         print("start in coord ",start)
         print("end in coord", end)
           '''   
-        step=2
+        step=1
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
-        #t0=time.time()
-        map0,start,end=self.create_grid(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
+        grid,start,end=self.create_grid(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
         # with algo A*1
-        path = astar(map0, start, end,True)
-        #tf=time.time()-t0
+        path = astar(grid, start, end,True)
         
         # Uncomment and see one path with self.num_steps = 1
-        # print_maze(path,map0,start, end)
-        """
-        t0=time.time()
+        #print_maze(path,grid,start, end)
+        """        
         # with algo A*2     but doesn't work well
-        map=self.create_graph(map0)
+        map=self.create_graph(grid)
         came_from, cost_so_far = a_star_search(map, start, end)
         # Uncomment and see one grid and a path with self.num_steps = 1
         # draw_grid(map, point_to=came_from, start=start, goal=end)
         # draw_grid(map, path=reconstruct_path(came_from, start=start, goal=end))
         path=reconstruct_path(came_from, start=start, goal=end)
-        tf=time.time()-t0
-        #print("tempss", tf)
         """
 
         #print("debug", path[0], path[-1])
         #print("path is ", path)
         if path==None:
-            up=array([[0], [0]])
-            self.update(up, dt)
             return [self.mmsi, self.x,self.y,self.v,self.theta]
 
         if path[0]==path[-1]:
@@ -332,17 +357,18 @@ class SeaObject:
                 self.final=1
                 print("Destination reached for 1 sea_object, mmsi:", self.mmsi, "at final time", time.time())
         else :
-            up=self.go_to(path,s,map0)
-            # Update position
+            path=path_smoother(path,grid)
+            up=self.go_to(path,s,grid)
             self.update(up, dt)
         
         return [self.mmsi, self.x,self.y,self.v,self.theta]
 
-    
+
     def move_aco(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
         step=2
         grid_w,grid_h=int(2*s/step),int(2*s/step)
         Obstacles = []
+        grid=np.zeros((int(2*s/step),int(2*s/step)))
         for row in range(grid_w):
             for col in range(grid_h):
                 for other_object in sea_objects:
@@ -352,6 +378,7 @@ class SeaObject:
                         # When distance is smaller than collision radius
                         if dist(array([[other_object.x], [other_object.y]]), array([[xx], [yy]])) < self.r + eps:
                             Obstacles.append((row,col))
+                            grid[row][col]=1
         
         start=(int(-(round(self.x)+s)*grid_w/(s+s)+grid_w), int((round(self.y)+s)*grid_h/(s+s)))
         end=(int(-(round(self.phat[0][0])+s)*grid_w/(s+s)+grid_w), int((round(self.phat[1][0])+s)*grid_h/(s+s)))
@@ -370,9 +397,14 @@ class SeaObject:
         #print("path2", path2)
         o = aco_pdg.run_ant_colony_noshow(10)  #path sorted by length
         #aco_pdg.plot(o[0][1])
+        #print("pathssss are ", o)
         path=o[0][1]
         #print("path is ", path)
 
+        if path==None:
+            up=array([[0], [0]])
+            self.update(up, dt)
+            return [self.mmsi, self.x,self.y,self.v,self.theta]
 
         if path[0]==path[-1]:
             up=array([[0], [0]])
@@ -380,6 +412,7 @@ class SeaObject:
                 self.final=1
                 print("Destination reached for 1 sea_object, mmsi:", self.mmsi, "at final time", time.time())
         else :
+            path=path_smoother(path,grid)
             next_point = (grid_w-path[1][0])*(s+s)/grid_w-s , path[1][1]*(s+s)/grid_h-s
             thetabar = arctan2(next_point[1]-self.y , next_point[0]-self.x)
             error = 2* arctan(tan(thetabar-self.theta)/2)
@@ -394,7 +427,6 @@ class SeaObject:
         return [self.mmsi, self.x,self.y,self.v,self.theta]
 
     
-
     def init_dstarlite(self, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,grid):
         """
         Returns: lists of obstacles, the start and the end points.
@@ -437,7 +469,7 @@ class SeaObject:
         step=2
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
         
-        map0,ox,oy,start,end=self.init_dstarlite(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
+        grid,ox,oy,start,end=self.init_dstarlite(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
         
         # Lists of obstacles
         dstarlite = DStarLite(ox,oy)
@@ -450,7 +482,7 @@ class SeaObject:
                 self.final=1
                 print("Destination reached for 1 sea_object, mmsi:", self.mmsi, "at final time", time.time())
         else :
-            up=self.go_to(path,s,map0)
+            up=self.go_to(path,s,grid)
             # Update position
             self.update(up, dt)
         
@@ -536,8 +568,8 @@ class SeaObject:
         path=[]
         for i in range(len(paths[best_run].sol[3][0])):
             path.append([paths[best_run].sol[3][0][i],paths[best_run].sol[4][0][i]])
-        # print("the path is",path)
-
+        #print("the path is",path)
+        
         if sqrt((self.phat[0]-self.x)**2 + (self.phat[1]-self.y)**2)<1:
             up=array([[0], [0]])
             if self.final==0:

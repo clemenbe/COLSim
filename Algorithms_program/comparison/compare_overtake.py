@@ -13,9 +13,9 @@ def compare_traj():
     plt.subplots_adjust(hspace=0.3)
 
     L=["Algorithms_program/comparison/simulation_log20240716-115015.csv",
-       "Algorithms_program/comparison/simulation_log20240716-115312.csv",
+       "Algorithms_program/comparison/simulation_log20240725-141518.csv",   #16-115312
        "Algorithms_program/comparison/simulation_log20240716-120052.csv",
-       "Algorithms_program/comparison/simulation_log20240716-120443.csv",
+       "Algorithms_program/comparison/simulation_log20240724-113917.csv",
        "Algorithms_program/comparison/simulation_log20240716-120518.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
@@ -24,6 +24,7 @@ def compare_traj():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -37,6 +38,12 @@ def compare_traj():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         circle = plt.Circle((8, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)
@@ -65,9 +72,9 @@ def compare_traj_real():
     plt.subplots_adjust(hspace=0.3)
 
     L=["Algorithms_program/comparison/simulation_log20240716-122130.csv",
-       "Algorithms_program/comparison/simulation_log20240716-122150.csv",
+       "Algorithms_program/comparison/simulation_log20240725-141604.csv",        #16-122150
        "Algorithms_program/comparison/simulation_log20240716-122937.csv",
-       "Algorithms_program/comparison/simulation_log20240716-122253.csv",
+       "Algorithms_program/comparison/simulation_log20240724-114413.csv",
        "Algorithms_program/comparison/simulation_log20240716-122319.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
@@ -76,6 +83,7 @@ def compare_traj_real():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -89,6 +97,12 @@ def compare_traj_real():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         circle = plt.Circle((10, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)
@@ -113,21 +127,28 @@ def compare_traj_speed():
     '''Show the results of the simulation (trajectories) with 2 boats with APF or PSO overtaking eath others,
     depending on their speed.
     '''
-    plt.figure("Trajectories after simulation 3",figsize=(13,9))
+    plt.figure("Trajectories after simulation 3 speeds",figsize=(13,9))
     plt.suptitle("Trajectories after simulation\n One boat overtaking the other one, with different relative speeds\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
+    
+    L=["Algorithms_program/comparison/simulation_log20240725-143028.csv",
+       "Algorithms_program/comparison/simulation_log20240725-143052.csv",
+       "Algorithms_program/comparison/simulation_log20240725-143038.csv",
+       "Algorithms_program/comparison/simulation_log20240725-143133.csv"]
+    labe=['APF, v=1 and 2','PSO v=1 and 2','APF v=1 and 3','PSO v=1 and 3']
 
+    """#old version with different speeds
     L=["Algorithms_program/comparison/simulation_log20240716-113415.csv",
        "Algorithms_program/comparison/simulation_log20240716-113516.csv",
        "Algorithms_program/comparison/simulation_log20240716-113733.csv",
        "Algorithms_program/comparison/simulation_log20240716-113647.csv"]
-    labe=['APF, v=1 and 2.5','PSO v=1 and 2.5','APF v=1 and 3','PSO v=1 and 3']
-
+    labe=['APF, v=1 and 2.5','PSO v=1 and 2.5','APF v=1 and 3','PSO v=1 and 3']"""
     j=221
     for i in range(len(L)):
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -141,14 +162,20 @@ def compare_traj_speed():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
-        circle = plt.Circle((15, 0), 1, color='yellow', fill=True, label='Goal')
+        circle = plt.Circle((18, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)
         circle1 = plt.Circle((8, 0), 1, color='yellow', fill=True)
         plt.gca().add_artist(circle1)
 
         plt.plot(Lx,Ly,label='Ship 1')
-        plt.plot(Lx1,Ly1,label='Ship 2')
+        plt.plot(Lx1,Ly1,label='Ship 2, v=1')
         plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
         plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
         plt.plot(Lx1[0],Ly1[0],'ko')
@@ -186,6 +213,7 @@ def compare_matrice():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -199,6 +227,12 @@ def compare_matrice():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         circle = plt.Circle((10, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)

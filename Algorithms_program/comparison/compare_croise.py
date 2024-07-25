@@ -14,7 +14,7 @@ def compare_traj():
     L=["Algorithms_program/comparison/simulation_log20240705-103556.csv",
        "Algorithms_program/comparison/simulation_log20240711-134509.csv",
        "Algorithms_program/comparison/simulation_log20240711-121528.csv",
-       "Algorithms_program/comparison/simulation_log20240705-105832.csv",
+       "Algorithms_program/comparison/simulation_log20240724-115453.csv",
        "Algorithms_program/comparison/simulation_log20240705-110032.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
@@ -23,6 +23,7 @@ def compare_traj():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -36,6 +37,12 @@ def compare_traj():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         circle = plt.Circle((-18, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)
@@ -74,6 +81,7 @@ def compare_traj2():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0    
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -87,6 +95,13 @@ def compare_traj2():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2')
@@ -126,6 +141,7 @@ def compare_matrices():
         plt.subplot(j)
         plt.title(labe[i])
 
+        collis=0
         Lx,Ly = [],[]
         Lx1,Ly1 = [],[]
         with open(L[i], 'r') as file:
@@ -139,6 +155,12 @@ def compare_matrices():
                     _, x, y, _, _ = row
                     Lx1.append(float(x))
                     Ly1.append(float(y))
+                if Lx!=[] and Ly!=[] and Lx1!=[] and Ly1!=[] and  np.sqrt((Lx[-1]-Lx1[-1])**2 + (Ly[-1]-Ly1[-1])**2) < 4:
+                    plt.plot(Lx[-1],Ly[-1],'yx')
+                    plt.plot(Lx1[-1],Ly1[-1],'yx')
+                    if collis==0:
+                        plt.plot(Lx[-1],Ly[-1],'yx',label='Collision')
+                    collis=1
 
         circle = plt.Circle((-18, 0), 1, color='yellow', fill=True, label='Goal')
         plt.gca().add_artist(circle)

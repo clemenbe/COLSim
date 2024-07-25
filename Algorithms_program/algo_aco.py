@@ -130,7 +130,13 @@ class ACO_PDG():
                     if not (j, k) in self.obstacles:
                         tmp_grids.append((j, k))
             tmp_grids.remove(grid)
-            tmp_grids.remove(path[i-1])
+            #print("tmp_grids", tmp_grids)
+            #print("path", path)
+            #tmp_grids.remove(path[i-1])
+            # Remove the previous path point from tmp_grids if present (helps in handling the scenario where your goal temporarily becomes an obstacle)
+            tmp_grids = [g for g in tmp_grids if g != path[i-1]]
+            """By incorporating this line, your path optimization logic becomes more robust to temporary obstacles, 
+            allowing your boat to still move towards its goal even if the goal temporarily becomes an obstacle."""
             
             for tmp_grid in tmp_grids:
                 if tmp_grid in path[i:]:

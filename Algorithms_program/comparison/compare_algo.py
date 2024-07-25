@@ -255,11 +255,11 @@ def trajectory_2_comparison():
     plt.subplots_adjust(hspace=0.3)
 
     plt.subplot(121)
-    plt.title("Environment 1")
+    plt.title("Environment 2")
     L=["Algorithms_program/comparison/simulation_log20240618-113916.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114038.csv",
+       "Algorithms_program/comparison/simulation_log20240724-153903.csv",   #old: 0618-114038
        "Algorithms_program/comparison/simulation_log20240618-114338.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114427.csv",
+       "Algorithms_program/comparison/simulation_log20240725-165347.csv",   #old: 618-114427 and 25-155028 (before smooothing)
        "Algorithms_program/comparison/simulation_log20240618-114521.csv",]
     labe=['APF','A*','D*Lite','ACO','PSO']
 
@@ -299,9 +299,9 @@ def trajectory_2_comparison():
     plt.subplot(122)
     plt.title("Environment 3")
     L=["Algorithms_program/comparison/simulation_log20240618-142813.csv",
-       "Algorithms_program/comparison/simulation_log20240618-143119.csv",
+       "Algorithms_program/comparison/simulation_log20240725-155134.csv",      #0618-143119
        "Algorithms_program/comparison/simulation_log20240618-143244.csv",
-       "Algorithms_program/comparison/simulation_log20240618-143413.csv",
+       "Algorithms_program/comparison/simulation_log20240725-155314.csv",      #0618-143413
        "Algorithms_program/comparison/simulation_log20240618-143527.csv"]
 
     i=0
@@ -472,10 +472,10 @@ def calculate_dist(name,mmsi):
     perc=diff/line*100
     return distance,line,diff,perc
 
-#print(calculate_dist("Algorithms_program/comparison/simulation_log20240705-103556.csv",'444'))
+print(calculate_dist("Algorithms_program/comparison/simulation_log20240724-153903.csv",'444'))
 #print(calculate_dist("Algorithms_program/comparison/simulation_log20240705-103556.csv",'555'))
 
-plt.show()
+#plt.show()
 
 ''' With 1 boat and 1 island   , theta=3      
 initialisation      iteration,time
