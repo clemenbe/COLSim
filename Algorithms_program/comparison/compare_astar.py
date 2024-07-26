@@ -2,11 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-"""Comparison of A* algorithm."""
-
-def trajectoires(mmsi):
-    '''Show the trajectories of the boat for different theta values with A*.
-    '''
+def traj_no_smooth(mmsi):
+    """Show the trajectories of the boat for different starting theta values with A* without smoothing.
+    """
     L=["Algorithms_program/comparison/simulation_log20240527-162342.csv",
        "Algorithms_program/comparison/simulation_log20240528-100915.csv",
        "Algorithms_program/comparison/simulation_log20240528-095710.csv",
@@ -21,6 +19,8 @@ def trajectoires(mmsi):
     
     i=0
     plt.figure("A* trajectories theta",figsize=(10,8))
+    plt.title("Differents A* trajectories without smoothing\n Distance to goal = 20, step = 0.5 if not precised")
+    #or why an algorithm with a grid is not the best idea. \n \ \nNot all trajectories are straight. 
     for name in L:
         Lx,Ly = [],[]
         
@@ -39,22 +39,19 @@ def trajectoires(mmsi):
         plt.plot([Lx[0],Lx[-1]],[Ly[0],Ly[-1]],'grey',linestyle='dashed')
         plt.plot(Lx,Ly,label=labe[i])
         plt.plot(Lx[-1],Ly[-1],'ro')
-        #plt.plot(Lx[0]+20*np.cos(np.pi*7/8),Ly[0]+20*np.sin(np.pi*7/8),'ro')
         i+=1
     plt.plot(Lx[0],Ly[0],'ro',label='Final positions ≈ goal')
     plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Differents A* trajectories, or why an algorithm with a grid is not the best idea. \n \
-              \nNot all trajectories are straight. \n Distance to goal = 20, step = 0.5 if not precised")
     plt.legend(facecolor='beige')
 
-trajectoires('444')
+traj_no_smooth('444')
     
 def differenciation(mmsi):
-    '''Running 6 times A* with the same parameters, to see if the algorithm always choose the same path : it does.
-    '''
+    """Running 6 times A* (no smoothing) with the same parameters, to see if the algorithm always choose the same path : it does.
+    """
     L=["Algorithms_program/comparison/simulation_log20240527-163043.csv",
        "Algorithms_program/comparison/simulation_log20240527-163722.csv",
        "Algorithms_program/comparison/simulation_log20240528-140726.csv",
@@ -65,6 +62,8 @@ def differenciation(mmsi):
     labe=[0,1,2,3,4,5,6,7]
     i=0
     plt.figure("A* trajectories",figsize=(9,8))
+    plt.title("Differents A* trajectories , for theta=pi*7/8 \n Distance to goal = 20, step = 0.5 if not precised \n \n \
+              We observe the algorithm always choose the same path.")
     for name in L:
         Lx,Ly = [],[]
         
@@ -83,21 +82,22 @@ def differenciation(mmsi):
         plt.plot(Lx,Ly,label=labe[i])
         i+=1
 
-    plt.plot(Lx[0]+20*np.cos(np.pi*7/8),Ly[0]+20*np.sin(np.pi*7/8),'go',label='Goal')
+    #plt.plot(Lx[0]+20*np.cos(np.pi*7/8),Ly[0]+20*np.sin(np.pi*7/8),'go',label='Goal')
+    circle = plt.Circle((-8.477590650225736, 3.6536686473017976), 1, color='yellow', fill=True, label='Goal')
+    plt.gca().add_artist(circle)
     plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
     plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Differents A* trajectories , for theta=pi*7/8 \n Distance to goal = 20, step = 0.5 if not precised \n \n \
-              We observe the algorithm always choose the same path.")
+    plt.xlim(-10,10)
     plt.legend(facecolor='beige')
 
 differenciation('444')
 
 def smoother(mmsi):
-    '''Show the results of the simulation (trajectories) with 2 versions of A*: with and without smoother.
-    '''
+    """Show the results of the simulation (trajectories) with 2 versions of A*: with and without smoother.
+    """
     plt.figure("Trajectories after simu ",figsize=(17,8))
     plt.suptitle("Trajectories after simulation with 2 versions of A*: with and without smoother")
     plt.subplots_adjust(hspace=0.3)
@@ -180,8 +180,8 @@ def smoother(mmsi):
 smoother('444')
 
 def croise():
-    '''Show the results of the simulation (trajectories) with A* smooth and not with the boats facing exactly each others, and almost face to face.
-    '''
+    """Show the results of the simulation (trajectories) with A* smooth and no, with the boats facing exactly each others, and almost face to face.
+    """
     plt.figure("Trajectories after simulation 2",figsize=(16,8))
     plt.suptitle("Trajectories after simulation with A* smooth and not\n Two boats facing exactly each others, and almost face to face\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)

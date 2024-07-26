@@ -13,9 +13,9 @@ class SimulationRunner:
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
-        self.num_steps = 250          #number of steps of the simulation
-        self.environment = 3          #different environments (description below)
-        self.record_data = True      #set to True to record the data or to False to display the simulation
+        self.num_steps = 280          #number of steps of the simulation
+        self.environment = 5          #different environments (description below)
+        self.record_data = False      #set to True to record the data or to False to display the simulation
         self.rules = [
             ["Rules :"],
             ["Finish OT"],
@@ -67,8 +67,8 @@ class SimulationRunner:
 
         elif self.environment == 5:
             '''Two boats facing each other.'''
-            sea_objects.append(Ship(444, 12, -3, 1.5, pi, "A*",30))
-            sea_objects.append(Ship(555, -12, -3, 1.5, 0, "APF",30))    #att a a* qui avec 3.14 en face de 0 fait du rentre dedans...
+            sea_objects.append(Ship(444, 12, 0, 1.5, pi, "A*",30))
+            sea_objects.append(Ship(555, -12, 0, 1.5, 0, "PSO",30)) 
 
         elif self.environment == 6:
             '''A ship overtaking a boat.'''

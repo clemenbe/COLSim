@@ -2,12 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-'''Comparison of differents algorithms for an overtaking.'''
-
-
 def compare_traj():
-    '''Show the results of the simulation (trajectories) with differents algorithms for an exact overtaking.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms for an exact overtaking.
+    """
     plt.figure("Trajectories after simulation",figsize=(16,8))
     plt.suptitle("Trajectories after simulation with differents algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
@@ -65,8 +62,8 @@ def compare_traj():
         j+=1
 
 def compare_traj_real():
-    '''Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking.
+    """
     plt.figure("Trajectories after simulation 2 (more realistic)",figsize=(16,8))
     plt.suptitle("Trajectories after simulation with differents algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
@@ -124,9 +121,8 @@ def compare_traj_real():
         j+=1
 
 def compare_traj_speed():
-    '''Show the results of the simulation (trajectories) with 2 boats with APF or PSO overtaking eath others,
-    depending on their speed.
-    '''
+    """Show the results of the simulation (trajectories) with 2 boats with APF or PSO overtaking eath others,depending on their (relative) speed.
+    """
     plt.figure("Trajectories after simulation 3 speeds",figsize=(13,9))
     plt.suptitle("Trajectories after simulation\n One boat overtaking the other one, with different relative speeds\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
@@ -137,12 +133,13 @@ def compare_traj_speed():
        "Algorithms_program/comparison/simulation_log20240725-143133.csv"]
     labe=['APF, v=1 and 2','PSO v=1 and 2','APF v=1 and 3','PSO v=1 and 3']
 
-    """#old version with different speeds
+    '''#old version with different speeds
     L=["Algorithms_program/comparison/simulation_log20240716-113415.csv",
        "Algorithms_program/comparison/simulation_log20240716-113516.csv",
        "Algorithms_program/comparison/simulation_log20240716-113733.csv",
        "Algorithms_program/comparison/simulation_log20240716-113647.csv"]
-    labe=['APF, v=1 and 2.5','PSO v=1 and 2.5','APF v=1 and 3','PSO v=1 and 3']"""
+    labe=['APF, v=1 and 2.5','PSO v=1 and 2.5','APF v=1 and 3','PSO v=1 and 3']'''
+
     j=221
     for i in range(len(L)):
         plt.subplot(j)
@@ -189,8 +186,8 @@ def compare_traj_speed():
 
 
 def compare_matrice():
-    '''Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking in a matrice.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking in an algorithm matrice.
+    """
     plt.figure("Trajectories after simulation matrice",figsize=(16,10))
     plt.suptitle("Trajectories after simulation with differents algorithms\n Blue boat (at 3*v) overtaking orange boat (at v)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)

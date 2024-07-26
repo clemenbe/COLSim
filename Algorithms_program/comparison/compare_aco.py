@@ -2,11 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-"""Comparison of ACO algorithm."""
 
 def smoother(mmsi):
-    '''Show the results of the simulation (trajectories) with 2 versions of ACO: with and without smoother.
-    '''
+    """Show the results of the simulation (trajectories) with 2 versions of ACO: with and without smoother."""
     plt.figure("Trajectories after simu ",figsize=(17,8))
     plt.suptitle("Trajectories after simulation with 2 versions of ACO: with and without smoother")
     plt.subplots_adjust(hspace=0.3)

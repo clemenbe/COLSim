@@ -20,6 +20,7 @@ def Jφ0(p):
                   [-2 * p1 * p2 + 1, -3 * p2 ** 2 - p2 ** 2 + 1]])
 
 def dφ(x, c, D):
+    """ Gradient of the potential field. """
     p1, p2, v, θ = x.flatten()
     z = inv(D) @ array([[p1 - c[0,0]], [p2 - c[1,0]]])
     dv = D @ Jφ0(z) @ inv(D) @ array([[cos(θ)], [sin(θ)]])
@@ -27,6 +28,11 @@ def dφ(x, c, D):
 
 
 def control(x, φ, c, D, k, r):
+    """Control law for the ship.
+
+    Returns:
+        Control vector.
+    """
     dφ1, dφ2 = dφ(x, c, D)
     x, y, v, θ = x.flatten()
     φ1, φ2 = φ(x, y, c, D, k, r)
@@ -35,6 +41,15 @@ def control(x, φ, c, D, k, r):
     return array([[u1], [u2]])
 
 def path_smoother(path, map):
+    """Smoothes the path by removing unnecessary points. 
+
+    Args:
+        path: List of points in the path.
+        map: Map of the environment, with 0 for free space and 1 for obstacles.
+
+    Returns:
+        new_path: List of points in the smoothed path: points connected by a straight line without obstacles.
+    """
     #comment please
     new_path = [path[0]]
     for i in range(1, len(path) - 1):
@@ -46,6 +61,16 @@ def path_smoother(path, map):
 
 
 def is_obstacle_between(p1, p2, map):
+    """Checks if there is an obstacle between two points connected by a straight line.
+
+    Args:
+        p1: Start point.    
+        p2: End point.
+        map: Map of the environment, with 0 for free space and 1 for obstacles.
+
+    Returns:
+        True if there is an obstacle between the two points, False otherwise.
+    """
     x1, y1 = p1
     x2, y2 = p2
 
@@ -100,6 +125,8 @@ class SeaObject:
     def get_state_vector(self):
         return np.vstack((self.x, self.y, self.v, self.theta))
     
+    # Algorithms for moving the object
+
     # Move the object straight when there is no risk of collision
     # Called by move()
     def move_straight_apf(self):
@@ -114,7 +141,6 @@ class SeaObject:
     
     # Called by move(), when there is risk of collision
     def avoid_collision_apf(self, record_data, obstacle, mmsi_list, rules, table, ax, eps, s, r, k):
-
         px, py, pv, ptheta = self.get_state_vector().flatten()
         qx, qy, qv, qtheta = obstacle.get_state_vector().flatten()
         
@@ -232,8 +258,8 @@ class SeaObject:
         return up
 
    
-    # Moves the object every iteration
     def move_apf(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
+        """ Move the object with APF."""
         in_collision = False
 
         # Check risks of collision with every other object
@@ -264,8 +290,8 @@ class SeaObject:
     
 
     def create_grid(self, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,grid):
-        """
-        Create a grid with 0 (available) and 1 (non available) cases.
+        """Create a grid with 0 (available) and 1 (non available) cells.
+        
         Returns: the grid, the start and the end points.
         """
         grid_w,grid_h=len(grid[0]),len(grid)
@@ -297,6 +323,11 @@ class SeaObject:
         return grid,start,end
 
     def go_to(self,path,s,grid):
+        """ Find control vector to go to the next point in the path, from grid to real world.
+
+        Returns:
+            up: Control vector.
+        """
         grid_w, grid_h = len(grid[0]), len(grid)
         next_point = (grid_w-path[1][0])*(s+s)/grid_w-s , path[1][1]*(s+s)/grid_h-s
         # print(next_point)
@@ -311,41 +342,17 @@ class SeaObject:
         up=array([[0], [u2]])
         #print("upp :", up)
         return up
-
-    def create_graph(self,map):
-        w=len(map[0])
-        graph = GridWithWeights(w,w)
-        for row in range(w):
-            for col in range(w):
-                if map[row][col]==1:
-                    graph.walls.append((row,col))
-        return graph
             
     def move_astar(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
-        '''
-        start=(round(self.x),round(self.y))
-        end=(round(self.phat[0][0]),round(self.phat[1][0]))
-        print("start in coord ",start)
-        print("end in coord", end)
-          '''   
+        """ Move the object with A* algorithm."""
         step=1
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
         grid,start,end=self.create_grid(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
-        # with algo A*1
+
         path = astar(grid, start, end,True)
-        
         # Uncomment and see one path with self.num_steps = 1
         #print_maze(path,grid,start, end)
-        """        
-        # with algo A*2     but doesn't work well
-        map=self.create_graph(grid)
-        came_from, cost_so_far = a_star_search(map, start, end)
-        # Uncomment and see one grid and a path with self.num_steps = 1
-        # draw_grid(map, point_to=came_from, start=start, goal=end)
-        # draw_grid(map, path=reconstruct_path(came_from, start=start, goal=end))
-        path=reconstruct_path(came_from, start=start, goal=end)
-        """
-
+        
         #print("debug", path[0], path[-1])
         #print("path is ", path)
         if path==None:
@@ -365,6 +372,7 @@ class SeaObject:
 
 
     def move_aco(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
+        """ Move the object with ACO algorithm."""
         step=2
         grid_w,grid_h=int(2*s/step),int(2*s/step)
         Obstacles = []
@@ -428,8 +436,9 @@ class SeaObject:
 
     
     def init_dstarlite(self, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,grid):
-        """
-        Returns: lists of obstacles, the start and the end points.
+        """ Initialize the D* Lite algorithm.
+
+        Returns: the grid, lists of obstacles, the start and the end points.
         """
         grid_w,grid_h=len(grid[0]),len(grid)
         ox,oy = [],[]
@@ -466,6 +475,7 @@ class SeaObject:
         return grid,ox,oy,start,end
 
     def move_dstarl(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
+        """ Move the object with D* Lite algorithm."""
         step=2
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
         
@@ -490,6 +500,7 @@ class SeaObject:
     
 
     def move_pso(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
+        """ Move the object with PSO algorithm."""
         # Define start, goal, and limits
         start = (self.x,self.y)
         goal = (self.phat[0][0],self.phat[1][0])

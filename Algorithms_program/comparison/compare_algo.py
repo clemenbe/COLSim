@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import csv
 
-"""Global comparison of the different algorithms used in the project."""
+#Global comparison of the different algorithms used in the project.
 
 def show_figure_1_step():
-    """Show figure of algo comparison at initialisation.
+    """Show figure of algo comparison at initialisation.    OLD
     """
     plt.figure("Algorithm comparison at initialisation", figsize=(8, 6))
     names = ['A Star','A Star 2','D Star Lite'] # nom des barres
@@ -27,7 +27,7 @@ def show_figure_1_step():
 
 
 def show_figure():
-    """Show figure of algo comparison after the boat reach the goal.
+    """Show figure of algo comparison (distance and time) after the boat reach the goal.
     """
     plt.figure("Algorithm comparison after simulation",figsize=(12, 6))
     names = ['APF', 'A Star','A Star 2','D Star Lite','PSO'] # nom des barres
@@ -248,8 +248,8 @@ def trajectory_4_comparison():
 
 
 def trajectory_2_comparison():
-    '''Show the results of the simulation (trajectories) with differents algorithms in differents environments.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms in differents environments: 2 and 3.
+    """
     plt.figure("Trajectories after simulation ",figsize=(17.2,8))
     plt.suptitle("Trajectories after simulation with differents algorithms in differents environments\n \n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
@@ -378,8 +378,7 @@ def graph_2_comparison():
 
 
 def radar_chart():
-    ''' Show a radar chart comparing differents algorithms.
-    '''
+    """ Show a radar chart comparing differents algorithms (arbitrary).   """
     names = ['APF', 'A*','D*Lite','ACO','PSO']
     df = pd.DataFrame({
     'name': ['APF','A*','D*Lite','ACO','PSO'],#'APF','A*','D*Lite','ACO','PSO'
@@ -435,6 +434,7 @@ plt.show()
 
 def calculate_dist(name,mmsi):
     """Calculate the length of a path taken by a sea object.
+    
     Input:  - relative path of .csv file
             - mmsi number of relevant object (in str = with ' ')
             
@@ -476,66 +476,3 @@ print(calculate_dist("Algorithms_program/comparison/simulation_log20240724-15390
 #print(calculate_dist("Algorithms_program/comparison/simulation_log20240705-103556.csv",'555'))
 
 #plt.show()
-
-''' With 1 boat and 1 island   , theta=3      
-initialisation      iteration,time
-Astar 13 0.0026552677154541016
-Astar2 17 0.0002155303955078125
-DstarLite 10 0.12704062461853027
-
-distance,line (=20 normally),diff,perc
-
-APF             simulation_log20240522-114552
-(20.24999999999999, 18.968245775820222, 1.2817542241797675, 6.7573682844919905)
-
-step=2
-A star          simulation_log20240522-102352
-(19.949999999999992, 19.11304240665988, 0.836957593340113, 4.378986743881643)
-D star Lite     simulation_log20240522-110321
-(17.400000000000013, 17.38506085083981, 0.014939149160202447, 0.08593095697724171)
-        !!!! D Star Lite stops far from the objective and don't turn here!!!!
-A star2         simulation_log20240522-110948
-(19.349999999999994, 17.598982898872414, 1.7510171011275801, 9.949535783910385)
-
-step=1
-A star          simulation_log20240522-134252
-(20.249999999999982, 18.961582928689996, 1.2884170713099863, 6.794881398643861)
-
-A star2         simulation_log20240522-134331
-(22.349999999999973, 19.990767814796914, 2.3592321852030587, 11.801608657856477)
-step=1.5
-D star Lite     simulation_log20240522-134550
-(22.34999999999997, 17.894826967248925, 4.455173032751045, 24.89642979451488)
-C'est plus long bizarrement, pas intuitif.........
-
-PSO2            simulation_log20240531-154719           par contre très lent par rapport aux autres
-(19.35000000000001, 19.036280738793455, 0.313719261206554, 1.6480071160499075)
-                simulation_log20240603-110622
-(19.35000000000001, 19.036280738793455, 0.313719261206554, 1.6480071160499075)
-1717382229.167159-1717382209.7967823= 19.37037682533264  s sans simulation
-
-Time :
-step=1
-A star          simulation_log20240603-121116
-1717382639.4593952-1717382629.1981592 = 10.26123595237732 s with simulation display
-1717382996.529182-1717382995.1545522 = 1.3746297359466553 s sans simulation
-'''
-
-'''With only one ship, A*
-theta=2.7           simulation_log20240527-161325
-(20.99999999999999, 19.46541724959256, 1.5345827504074308, 7.883636557749883)
-step=0.5
-theta=3.1415        simulation_log20240527-161602
-(19.5, 19.46406038838405, 0.035939611615951605, 0.18464601372383738)
-theta=pi            simulation_log20240527-162141
-(19.35000000000001, 19.350000000000023, -1.4210854715202004e-14, -7.344110963928675e-14)
-theta=pi/2          simulation_log20240527-162342
-(19.349999999999994, 19.350000000000023, -2.842170943040401e-14, -1.468822192785735e-13)
-theta=pi*3/4        simulation_log20240527-162901
-(19.04999999999999, 19.049999999999994, -3.552713678800501e-15, -1.8649415636748043e-14)
-theta=pi*7/8        simulation_log20240527-163043
-(20.699999999999978, 19.28268746529596, 1.417312534704017, 7.350181541109489)
-1716793846.119433-1716793845.553932=    0.5655009746551514  s sans simulation
-1716793944.3318512-1716793936.5539548=  7.777896404266357   s avec simulation
-'''
-

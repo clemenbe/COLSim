@@ -2,12 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-'''For PSO : path length depending on population size/number of iteration/number of runs (no that allows to choose with the same parameters!!! 
----> but can be used for average, with f.e run 15 times.)? and average running time'''
 
 def compare_pso():
-    '''Compare the path length and the time to reach the goal depending on the number of iterations and population for PSO.
-    Plot the results.'''
+    """Plot 2 figures that compare the path length and the time to reach the goal depending on the number of iterations and population for PSO.
+    """
     plt.figure("PSO",figsize=(17.5,8))
     plt.suptitle("Duration of simulation and path length to reach the goal depending on the number of iterations and population size", fontsize=16)
     plt.subplots_adjust(wspace=0.4, hspace=0.5)
@@ -61,9 +59,8 @@ def compare_pso():
     plt.title("Environment 3, number of iterations = 50, number of runs = 2, number of waypoints = 3")
     
 def compare_pso2():
-    '''Compare the path length and the time to reach the goal depending on the number of iterations and population for PSO.
-    Plot the results on the same plot.'''
-
+    """Plot 1 figure that compare the path length and the time to reach the goal depending on the number of iterations and population for PSO.
+    """
     plt.figure("PSO 2",figsize=(10,8))
     plt.suptitle("Computation time and path length to reach the goal depending on the number of iterations and population size\n \
                  Environment 3, number of runs = 2, number of waypoints = 3")
@@ -106,8 +103,11 @@ compare_pso2()
 
 
 def compare_trajectories(mmsi):
-    '''Show the trajectories of the boat for different numbers of iterations and particles with PSO.
-    '''
+    """Show the trajectories of one boat for different numbers of iterations and particles with PSO in environment 3.
+
+    Parameters:
+        mmsi (str): the mmsi of the boat
+    """
     plt.figure("PSO trajectories",figsize=(17.5,8))
 
     plt.subplot(121)

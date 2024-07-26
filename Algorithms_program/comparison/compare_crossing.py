@@ -2,19 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-'''Comparison of differents algorithms for a crossing.'''
-
 def compare_traj():
-    '''Show the results of the simulation (trajectories) with differents algorithms for a crossing.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms for a face to face crossing.
+    """
     plt.figure("Trajectories after simulation",figsize=(16,8))
     plt.suptitle("Trajectories after simulation with differents algorithms\n Two boats facing exactly each others\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
     L=["Algorithms_program/comparison/simulation_log20240705-103556.csv",
-       "Algorithms_program/comparison/simulation_log20240711-134509.csv",
+       "Algorithms_program/comparison/simulation_log20240724-170710.csv",   #old: 11-134509
        "Algorithms_program/comparison/simulation_log20240711-121528.csv",
-       "Algorithms_program/comparison/simulation_log20240724-115453.csv",
+       "Algorithms_program/comparison/simulation_log20240726-153407.csv",        #old: 24-115453
        "Algorithms_program/comparison/simulation_log20240705-110032.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
@@ -64,10 +62,10 @@ def compare_traj():
         j+=1
 
 def compare_traj2():
-    '''Show the results of the simulation (trajectories) with A* and D*Lite with the boats facing exactly each others, and almost face to face.
-    '''
+    """Show the results of the simulation (trajectories) with old A* and D*Lite with the boats facing exactly each others, and almost face to face.
+    """
     plt.figure("Trajectories after simulation 2",figsize=(16,8))
-    plt.suptitle("Trajectories after simulation with A* and D*Lite\n Two boats facing exactly each others, and almost face to face\n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with old A* and D*Lite\n Two boats facing exactly each others, and almost face to face\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
     L=["Algorithms_program/comparison/simulation_log20240711-134509.csv",
@@ -117,20 +115,20 @@ def compare_traj2():
         j+=1
 
 def compare_matrices():
-    '''Show the results of the simulation (trajectories) with differents algorithms for a crossing in a matrice.
-    '''
+    """Show the results of the simulation (trajectories) with differents algorithms for a crossing in an alogorithm matrice.
+    """
     plt.figure("Trajectories after crossing matrice",figsize=(16,10))
-    plt.suptitle("Trajectories after simulation with differents algorithms\n Two boats facing exactly each others\n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with differents algorithms\n Two boats facing exactly each others - bleu go left (pi), orange go right\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
     L=["Algorithms_program/comparison/simulation_log20240705-103556.csv",
-       "Algorithms_program/comparison/simulation_log20240719-153419.csv",
+       "Algorithms_program/comparison/simulation_log20240726-153708.csv",    #old 19-153419
        "Algorithms_program/comparison/simulation_log20240719-153438.csv",
-       "Algorithms_program/comparison/simulation_log20240719-153521.csv",
-       "Algorithms_program/comparison/simulation_log20240711-134509.csv",
-       "Algorithms_program/comparison/simulation_log20240719-153548.csv",
+       "Algorithms_program/comparison/simulation_log20240726-154207.csv",    #old: 19-153521
+       "Algorithms_program/comparison/simulation_log20240724-170710.csv",    #old: 11-134509
+       "Algorithms_program/comparison/simulation_log20240726-154611.csv",        #old: 19-153548
        "Algorithms_program/comparison/simulation_log20240719-153616.csv",
-       "Algorithms_program/comparison/simulation_log20240719-153642.csv",
+       "Algorithms_program/comparison/simulation_log20240726-154714.csv",      #old :19-153642
        "Algorithms_program/comparison/simulation_log20240705-110032.csv"]
     labe=['blue-APF   orange-APF','blue-APF   orange-A*','blue-APF   orange-PSO',
           'blue-A*    orange-APF','blue-A*    orange-A*','blue-A*    orange-PSO',
@@ -182,7 +180,7 @@ def compare_matrices():
         j+=1
 
 compare_traj()
-compare_traj2()
+#compare_traj2()
 compare_matrices()
 
 plt.show()
