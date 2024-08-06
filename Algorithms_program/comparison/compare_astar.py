@@ -5,21 +5,21 @@ import csv
 def traj_no_smooth(mmsi):
     """Show the trajectories of the boat for different starting theta values with A* without smoothing.
     """
-    L=["Algorithms_program/comparison/simulation_log20240527-162342.csv",
-       "Algorithms_program/comparison/simulation_log20240528-100915.csv",
-       "Algorithms_program/comparison/simulation_log20240528-095710.csv",
-       "Algorithms_program/comparison/simulation_log20240528-095515.csv",
-       "Algorithms_program/comparison/simulation_log20240528-101205.csv",
-       "Algorithms_program/comparison/simulation_log20240527-162901.csv",
-       "Algorithms_program/comparison/simulation_log20240527-163043.csv",
-       "Algorithms_program/comparison/simulation_log20240528-095342.csv",
-       "Algorithms_program/comparison/simulation_log20240527-162141.csv",]
+    L=["Algorithms_program/comparison/data/simulation_log20240527-162342.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-100915.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-095710.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-095515.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-101205.csv",
+       "Algorithms_program/comparison/data/simulation_log20240527-162901.csv",
+       "Algorithms_program/comparison/data/simulation_log20240527-163043.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-095342.csv",
+       "Algorithms_program/comparison/data/simulation_log20240527-162141.csv",]
     labe=['theta = pi*4/8','theta = pi*4.5/8  stp=0.2','theta = pi*4.5/8','theta = pi*5/8','theta = pi*5/8     stp=0.2',
           'theta = pi*6/8','theta = pi*7/8','theta = pi*7.5/8','theta = pi*8/8']
     
     i=0
     plt.figure("A* trajectories theta",figsize=(10,8))
-    plt.title("Differents A* trajectories without smoothing\n Distance to goal = 20, step = 0.5 if not precised")
+    plt.title("Different A* trajectories without smoothing\n \nDistance to goal = 20, step = 0.5 if not precised")
     #or why an algorithm with a grid is not the best idea. \n \ \nNot all trajectories are straight. 
     for name in L:
         Lx,Ly = [],[]
@@ -38,10 +38,10 @@ def traj_no_smooth(mmsi):
             plt.plot([Lx[0],Lx[-1]],[Ly[0],Ly[-1]],'grey',linestyle='dashed',label="Straight line to final position")
         plt.plot([Lx[0],Lx[-1]],[Ly[0],Ly[-1]],'grey',linestyle='dashed')
         plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
+        plt.plot(Lx[-1],Ly[-1],'ko')
         i+=1
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions ≈ goal')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
+    plt.plot(Lx[0],Ly[0],'ko',label='Final positions ≈ goal')
+    plt.plot(Lx[0],Ly[0],'ro',label='Initial position')
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
@@ -52,17 +52,17 @@ traj_no_smooth('444')
 def differenciation(mmsi):
     """Running 6 times A* (no smoothing) with the same parameters, to see if the algorithm always choose the same path : it does.
     """
-    L=["Algorithms_program/comparison/simulation_log20240527-163043.csv",
-       "Algorithms_program/comparison/simulation_log20240527-163722.csv",
-       "Algorithms_program/comparison/simulation_log20240528-140726.csv",
-       "Algorithms_program/comparison/simulation_log20240528-140728.csv",
-       "Algorithms_program/comparison/simulation_log20240528-140730.csv",
-       "Algorithms_program/comparison/simulation_log20240528-140732.csv",
-       "Algorithms_program/comparison/simulation_log20240528-140734.csv"]   #"Algorithms_program/comparison/simulation_log20240724-123334.csv" #with smooth
+    L=["Algorithms_program/comparison/data/simulation_log20240527-163043.csv",
+       "Algorithms_program/comparison/data/simulation_log20240527-163722.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-140726.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-140728.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-140730.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-140732.csv",
+       "Algorithms_program/comparison/data/simulation_log20240528-140734.csv"]   #"Algorithms_program/comparison/data/simulation_log20240724-123334.csv" #with smooth
     labe=[0,1,2,3,4,5,6,7]
     i=0
     plt.figure("A* trajectories",figsize=(9,8))
-    plt.title("Differents A* trajectories , for theta=pi*7/8 \n Distance to goal = 20, step = 0.5 if not precised \n \n \
+    plt.title("Different A* trajectories , for theta=pi*7/8 \n Distance to goal = 20, step = 0.5 if not precised \n \n \
               We observe the algorithm always choose the same path.")
     for name in L:
         Lx,Ly = [],[]
@@ -78,15 +78,15 @@ def differenciation(mmsi):
                     Lx.append(float(x))
                     Ly.append(float(y))
         plt.plot([Lx[0],Lx[-1]],[Ly[0],Ly[-1]],'grey',linestyle='dashed')
-        plt.plot(Lx[-1],Ly[-1],'ro')
+        #plt.plot(Lx[-1],Ly[-1],'ko')
         plt.plot(Lx,Ly,label=labe[i])
         i+=1
 
     #plt.plot(Lx[0]+20*np.cos(np.pi*7/8),Ly[0]+20*np.sin(np.pi*7/8),'go',label='Goal')
     circle = plt.Circle((-8.477590650225736, 3.6536686473017976), 1, color='yellow', fill=True, label='Goal')
     plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
+    #plt.plot(Lx[0],Ly[0],'ko',label='Final positions')
+    plt.plot(Lx[0],Ly[0],'ro',label='Initial position')
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
@@ -104,8 +104,8 @@ def smoother(mmsi):
 
     plt.subplot(121)
     plt.title("Environment 1 - go straight")
-    L=["Algorithms_program/comparison/simulation_log20240724-155418.csv",
-       "Algorithms_program/comparison/simulation_log20240724-155453.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240724-155418.csv",
+       "Algorithms_program/comparison/data/simulation_log20240724-155453.csv"]
     labe=['A* simple','A* with smoother']
     
     i=0
@@ -132,7 +132,7 @@ def smoother(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.xlim(-15,15)
+    plt.xlim(-12,12)
     plt.legend(facecolor='beige', edgecolor='black',ncol=3, loc='lower left')
 
 
@@ -140,9 +140,16 @@ def smoother(mmsi):
     plt.title("Environment 2 - contourn island")
     '''A* simple:          1.901608943939209 s, (25.349999999999937, 19.381721230925052, 5.968278769074885, 30.793337175606624)
     A* with smoother: 1.9401857995986938 s, (22.799999999999955, 19.768084465282794, 3.031915534717161, 15.33742705339957)'''
-    L=["Algorithms_program/comparison/simulation_log20240724-153842.csv",
-       "Algorithms_program/comparison/simulation_log20240724-153903.csv"]
-    labe=['A* simple','A* with smoother']
+    L=["Algorithms_program/comparison/data/simulation_log20240724-153842.csv",  # 25.349999999999937 m in 1.901608943939209 s
+       #"Algorithms_program/comparison/data/simulation_log20240731-155854.csv",  # 25.349999999999937 m in 1.854446888923645 s
+       "Algorithms_program/comparison/data/simulation_log20240724-153903.csv",  # 22.799999999999955 m in 1.9401857995986938 s
+       #"Algorithms_program/comparison/data/simulation_log20240731-145648.csv"  # 22.799999999999955 m in 0.8419600000000001 s
+    ]
+    labe=['A* simple stp=1',
+          #'A* simple stp=2',
+          'A* with smoother stp=1',
+          #'A* with smoother stp=2'
+          ]
 
     i=0
     for name in L:
@@ -174,7 +181,7 @@ def smoother(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.xlim(-15,15)
+    plt.xlim(-12,12)
     plt.legend(facecolor='beige', edgecolor='black',ncol=3, loc='lower left')
 
 smoother('444')
@@ -186,10 +193,10 @@ def croise():
     plt.suptitle("Trajectories after simulation with A* smooth and not\n Two boats facing exactly each others, and almost face to face\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/simulation_log20240711-134509.csv",
-       "Algorithms_program/comparison/simulation_log20240711-120815.csv",
-       "Algorithms_program/comparison/simulation_log20240724-170710.csv",
-       "Algorithms_program/comparison/simulation_log20240724-170748.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240711-134509.csv",
+       "Algorithms_program/comparison/data/simulation_log20240711-120815.csv",
+       "Algorithms_program/comparison/data/simulation_log20240724-170710.csv",
+       "Algorithms_program/comparison/data/simulation_log20240724-170748.csv"]
     labe=['A* theta boat 1 at ini=pi','A* =3.14','A* smooth =pi','A* smooth =3.14']
 
     j=221
@@ -221,14 +228,14 @@ def croise():
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2')
-        plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
-        plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
-        plt.plot(Lx1[0],Ly1[0],'ko')
-        plt.plot(Lx1[-1],Ly1[-1],'ro')
+        plt.plot(Lx[0],Ly[0],'ro',label='Initial positions')
+        #plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
+        plt.plot(Lx1[0],Ly1[0],'ro')
+        #plt.plot(Lx1[-1],Ly1[-1],'ro')
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")
-        plt.legend(facecolor='beige', edgecolor='black',ncol=2, loc='lower left')
+        plt.legend(facecolor='beige', edgecolor='black',ncol=4, loc='lower left')
 
         j+=1
 

@@ -20,6 +20,7 @@ class Simulation:
             for sea_objects in self.sea_objects:
                 sea_objects.move(record_data, self.sea_objects, mmsi_list, rules, table, ax, Ɛ, s, self.k, self.dt)
                 sea_objects.draw(ax, Ɛ)
+                #ax.plot(sea_objects.x, sea_objects.y, 'o')
 
             ax.set_xlim(-s, s)
             ax.set_ylim(-s, s)

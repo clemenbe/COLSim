@@ -111,14 +111,14 @@ def compare_trajectories(mmsi):
     plt.figure("PSO trajectories",figsize=(17.5,8))
 
     plt.subplot(121)
-    L=["Algorithms_program/comparison/simulation_log20240612-163057.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162138.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162228.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162330.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162444.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162553.csv",
-       "Algorithms_program/comparison/simulation_log20240612-162719.csv",
-       "Algorithms_program/comparison/simulation_log20240612-161919.csv",]
+    L=["Algorithms_program/comparison/data/simulation_log20240612-163057.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162138.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162228.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162330.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162444.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162553.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-162719.csv",
+       "Algorithms_program/comparison/data/simulation_log20240612-161919.csv",]
     labe=['nb_it = 15','nb_it = 20','nb_it = 30','nb_it = 40',
           'nb_it = 50','nb_it = 100','nb_it = 150','nb_it = 200']
     
@@ -137,13 +137,13 @@ def compare_trajectories(mmsi):
                     Lx.append(float(x))
                     Ly.append(float(y))
         plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
+        #plt.plot(Lx[-1],Ly[-1],'ro')
         i+=1
 
     circle = plt.Circle((-9.799849932008907, -1.1775998388026556), 1, color='yellow', fill=True, label='Goal')
     plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
+    #plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
+    plt.plot(Lx[0],Ly[0],'ro',label='Initial position')
 
     #ajout obstacles
     plt.plot(0,2,'ko',label='Island',markersize=15)
@@ -158,17 +158,17 @@ def compare_trajectories(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Differents PSO trajectories, depending on the number of iterations \n \n \
+    plt.title("Different PSO trajectories, depending on the number of iterations \n \n \
               Environment 3, population size = 200, number of runs = 2, number of waypoints = 3")
     plt.legend(facecolor='beige', edgecolor='black',loc='upper right')
 
     plt.subplot(122)    
-    L=["Algorithms_program/comparison/simulation_log20240614-094944.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095045.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095138.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095226.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095439.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095538.csv",]
+    L=["Algorithms_program/comparison/data/simulation_log20240614-094944.csv",
+       "Algorithms_program/comparison/data/simulation_log20240614-095045.csv",
+       "Algorithms_program/comparison/data/simulation_log20240614-095138.csv",
+       "Algorithms_program/comparison/data/simulation_log20240614-095226.csv",
+       "Algorithms_program/comparison/data/simulation_log20240614-095439.csv",
+       "Algorithms_program/comparison/data/simulation_log20240614-095538.csv",]
     labe=['nb_part = 15','nb_part = 20','nb_part = 50',
           'nb_part = 100','nb_part = 150','nb_part = 200',]
     
@@ -187,13 +187,13 @@ def compare_trajectories(mmsi):
                     Lx.append(float(x))
                     Ly.append(float(y))
         plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
+        #plt.plot(Lx[-1],Ly[-1],'ro')
         i+=1
 
     circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='yellow', fill=True, label='Goal')
     plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
+    #plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
+    plt.plot(Lx[0],Ly[0],'ro',label='Initial position')
 
     #ajout obstacles
     plt.plot(0,2,'ko',label='Island',markersize=15)
@@ -208,7 +208,7 @@ def compare_trajectories(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Differents PSO trajectories, depending on the number of particles \n \n \
+    plt.title("Different PSO trajectories, depending on the number of particles \n \n \
               Environment 3, number of iterations = 50, number of runs = 2, number of waypoints = 3")
     plt.legend(facecolor='beige', edgecolor='black',loc='upper right')
 

@@ -3,17 +3,17 @@ import matplotlib.pyplot as plt
 import csv
 
 def compare_traj():
-    """Show the results of the simulation (trajectories) with differents algorithms for an exact overtaking.
+    """Show the results of the simulation (trajectories) with different algorithms for an exact overtaking.
     """
     plt.figure("Trajectories after simulation",figsize=(16,8))
-    plt.suptitle("Trajectories after simulation with differents algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with different algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/simulation_log20240716-115015.csv",
-       "Algorithms_program/comparison/simulation_log20240725-141518.csv",   #16-115312
-       "Algorithms_program/comparison/simulation_log20240716-120052.csv",
-       "Algorithms_program/comparison/simulation_log20240724-113917.csv",
-       "Algorithms_program/comparison/simulation_log20240716-120518.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240716-115015.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-141518.csv",   #16-115312
+       "Algorithms_program/comparison/data/simulation_log20240716-120052.csv",
+       "Algorithms_program/comparison/data/simulation_log20240724-113917.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-120518.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
     j=231
@@ -49,10 +49,10 @@ def compare_traj():
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2')
-        plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
-        plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
-        plt.plot(Lx1[0],Ly1[0],'ko')
-        plt.plot(Lx1[-1],Ly1[-1],'ro')
+        plt.plot(Lx[0],Ly[0],'ro',label='Initial positions')
+        #plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
+        plt.plot(Lx1[0],Ly1[0],'ro')
+        #plt.plot(Lx1[-1],Ly1[-1],'ro')
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")
@@ -62,17 +62,17 @@ def compare_traj():
         j+=1
 
 def compare_traj_real():
-    """Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking.
+    """Show the results of the simulation (trajectories) with different algorithms for a more realistic overtaking.
     """
     plt.figure("Trajectories after simulation 2 (more realistic)",figsize=(16,8))
-    plt.suptitle("Trajectories after simulation with differents algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with different algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/simulation_log20240716-122130.csv",
-       "Algorithms_program/comparison/simulation_log20240725-141604.csv",        #16-122150
-       "Algorithms_program/comparison/simulation_log20240716-122937.csv",
-       "Algorithms_program/comparison/simulation_log20240724-114413.csv",
-       "Algorithms_program/comparison/simulation_log20240716-122319.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240716-122130.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-141604.csv",        #16-122150
+       "Algorithms_program/comparison/data/simulation_log20240716-122937.csv",
+       "Algorithms_program/comparison/data/simulation_log20240724-114413.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-122319.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
     j=231
@@ -108,10 +108,10 @@ def compare_traj_real():
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2')
-        plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
-        plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
-        plt.plot(Lx1[0],Ly1[0],'ko')
-        plt.plot(Lx1[-1],Ly1[-1],'ro')
+        plt.plot(Lx[0],Ly[0],'ro',label='Initial positions')
+        #plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
+        plt.plot(Lx1[0],Ly1[0],'ro')
+        #plt.plot(Lx1[-1],Ly1[-1],'ro')
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")
@@ -127,17 +127,17 @@ def compare_traj_speed():
     plt.suptitle("Trajectories after simulation\n One boat overtaking the other one, with different relative speeds\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
     
-    L=["Algorithms_program/comparison/simulation_log20240725-143028.csv",
-       "Algorithms_program/comparison/simulation_log20240725-143052.csv",
-       "Algorithms_program/comparison/simulation_log20240725-143038.csv",
-       "Algorithms_program/comparison/simulation_log20240725-143133.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240725-143028.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-143052.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-143038.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-143133.csv"]
     labe=['APF, v=1 and 2','PSO v=1 and 2','APF v=1 and 3','PSO v=1 and 3']
 
     '''#old version with different speeds
-    L=["Algorithms_program/comparison/simulation_log20240716-113415.csv",
-       "Algorithms_program/comparison/simulation_log20240716-113516.csv",
-       "Algorithms_program/comparison/simulation_log20240716-113733.csv",
-       "Algorithms_program/comparison/simulation_log20240716-113647.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240716-113415.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-113516.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-113733.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-113647.csv"]
     labe=['APF, v=1 and 2.5','PSO v=1 and 2.5','APF v=1 and 3','PSO v=1 and 3']'''
 
     j=221
@@ -173,10 +173,10 @@ def compare_traj_speed():
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2, v=1')
-        plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
-        plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
-        plt.plot(Lx1[0],Ly1[0],'ko')
-        plt.plot(Lx1[-1],Ly1[-1],'ro')
+        plt.plot(Lx[0],Ly[0],'ro',label='Initial positions')
+        #plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
+        plt.plot(Lx1[0],Ly1[0],'ro')
+        #plt.plot(Lx1[-1],Ly1[-1],'ro')
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")
@@ -186,21 +186,21 @@ def compare_traj_speed():
 
 
 def compare_matrice():
-    """Show the results of the simulation (trajectories) with differents algorithms for a more realistic overtaking in an algorithm matrice.
+    """Show the results of the simulation (trajectories) with different algorithms for a more realistic overtaking in an algorithm matrice.
     """
     plt.figure("Trajectories after simulation matrice",figsize=(16,10))
-    plt.suptitle("Trajectories after simulation with differents algorithms\n Blue boat (at 3*v) overtaking orange boat (at v)\n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with different algorithms\n Blue boat (at 3*v) overtaking orange boat (at v)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/simulation_log20240716-122130.csv",
-       "Algorithms_program/comparison/simulation_log20240719-150856.csv",
-       "Algorithms_program/comparison/simulation_log20240719-150927.csv",
-       "Algorithms_program/comparison/simulation_log20240719-151001.csv",
-       "Algorithms_program/comparison/simulation_log20240716-122150.csv",
-       "Algorithms_program/comparison/simulation_log20240719-151018.csv",
-       "Algorithms_program/comparison/simulation_log20240719-151051.csv",
-       "Algorithms_program/comparison/simulation_log20240719-151116.csv",
-       "Algorithms_program/comparison/simulation_log20240716-122319.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240716-122130.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-150856.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-150927.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-151001.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-122150.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-151018.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-151051.csv",
+       "Algorithms_program/comparison/data/simulation_log20240719-151116.csv",
+       "Algorithms_program/comparison/data/simulation_log20240716-122319.csv"]
     labe=['blue-APF   orange-APF','blue-APF   orange-A*','blue-APF   orange-PSO',
           'blue-A*    orange-APF','blue-A*    orange-A*','blue-A*    orange-PSO',
           'blue-PSO   orange-APF','blue-PSO   orange-A*','blue-PSO   orange-PSO']
@@ -238,10 +238,10 @@ def compare_matrice():
 
         plt.plot(Lx,Ly,label='Ship 1')
         plt.plot(Lx1,Ly1,label='Ship 2')
-        plt.plot(Lx[0],Ly[0],'ko',label='Initial positions')
-        plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
-        plt.plot(Lx1[0],Ly1[0],'ko')
-        plt.plot(Lx1[-1],Ly1[-1],'ro')
+        plt.plot(Lx[0],Ly[0],'ro',label='Initial positions')
+        #plt.plot(Lx[-1],Ly[-1],'ro',label='Final positions')
+        plt.plot(Lx1[0],Ly1[0],'ro')
+        #plt.plot(Lx1[-1],Ly1[-1],'ro')
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")

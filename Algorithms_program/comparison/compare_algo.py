@@ -6,261 +6,20 @@ import csv
 
 #Global comparison of the different algorithms used in the project.
 
-def show_figure_1_step():
-    """Show figure of algo comparison at initialisation.    OLD
-    """
-    plt.figure("Algorithm comparison at initialisation", figsize=(8, 6))
-    names = ['A Star','A Star 2','D Star Lite'] # nom des barres
-
-    '''plt.subplot(121)
-    plt.title("Number of trials to find a path \n at initialisation")
-    iteration_nb = [13, 17, 10]
-    rect=plt.bar(names, iteration_nb, color='red')
-    plt.bar_label(rect)
-    
-    plt.subplot(122)'''
-    plt.title("Time used (s) to find a path \n at initialisation")
-    iteration_time = [0.0026552677154541016, 0.0002155303955078125, 0.12704062461853027]
-    rect=plt.bar(names, iteration_time) 
-    for i, val in enumerate(iteration_time):
-        plt.text(i, val, str(round(val, 4)), ha='center', va='bottom')
-
-
-def show_figure():
-    """Show figure of algo comparison (distance and time) after the boat reach the goal.
-    """
-    plt.figure("Algorithm comparison after simulation",figsize=(12, 6))
-    names = ['APF', 'A Star','A Star 2','D Star Lite','PSO'] # nom des barres
-
-    percent = [6.7573682844919905, 4.378986743881643, 9.949535783910385, 0.08593095697724171, 1.6480071160499075]
-    percent_step1=[6.7573682844919905, 6.794881398643861, 11.801608657856477, 24.89642979451488, 1.6480071160499075]
-    time =[0,1.3746297359466553,0,0,19.37037682533264]
-    
-    plt.subplot(121)
-    #We are using % of detour because all the paths stop at a slightly difference distance from the objective.
-    plt.title("Percentage of detour in the path taken \n compared to a straight line")
-    plt.bar(names, percent, width=0.3, color='pink',label ='Step=2')
-    x = [i + 0.3 for i in range(len(names))]  # Displacement for the second set of bars
-    plt.bar(x, percent_step1, width=0.3, color='magenta',label='Step=1')
-
-    # Ajouter les étiquettes des barres avec les valeurs approximatives
-    for i, val in enumerate(percent):
-        plt.text(i, val, str(round(val, 2)), ha='center', va='bottom')
-    for i, val in enumerate(percent_step1):
-        plt.text(i+0.3, val, str(round(val, 2)), ha='center', va='bottom')
-
-    plt.subplot(122)
-    plt.title("Duration of simulation (s) to reach the goal, without display")
-    rect=plt.bar(names, time) 
-    for i, val in enumerate(time):
-        plt.text(i, val, str(round(val, 4)), ha='center', va='bottom')
-
-    plt.legend()
-
-def trajectory_4_comparison():
-    '''Show the results of the simulation with differents algorithms in differents environments.
-    Not finished
-    '''
-    plt.figure("Trajectories after simulation ",figsize=(12,9))
-    plt.suptitle("Trajectories after simulation with differents algorithms in differents environments\n \n \n \n")
-    plt.subplots_adjust(hspace=0.3)
-
-    plt.subplot(221)
-    plt.title("Environment 1")
-    L=["Algorithms_program/comparison/simulation_log20240618-113916.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114038.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114338.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114427.csv",
-       "Algorithms_program/comparison/simulation_log20240618-114521.csv",]
-    labe=['APF','A*','D*Lite','ACO','PSO']
-
-    i=0
-    for name in L:
-        Lx,Ly = [],[]
-        with open(name, 'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                # Check object number and append coordinates accordingly
-                if row[0] == '444':
-                    # Extract object number and coordinates
-                    _, x, y, _, _ = row
-                    Lx.append(float(x))
-                    Ly.append(float(y))
-        plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
-        i+=1
-
-    circle = plt.Circle((-8.477590650225736, 3.6536686473017976), 1, color='red', fill=False, label='Goal')
-    plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
-
-    #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    
-    plt.axis('equal')
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.legend(facecolor='beige', edgecolor='black',ncol=5, bbox_to_anchor=(0.8, 1.2))
-
-
-    plt.subplot(222)
-    plt.title("Environment 2 - to do")
-    L=["Algorithms_program/comparison/simulation_log20240614-095045.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095138.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095226.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095439.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095538.csv",]
-    labe=['APF','A*','D*Lite','ACO','PSO']
-    
-    i=0
-    for name in L:
-        Lx,Ly = [],[]
-        with open(name, 'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                # Check object number and append coordinates accordingly
-                if row[0] == '444':
-                    # Extract object number and coordinates
-                    _, x, y, _, _ = row
-                    Lx.append(float(x))
-                    Ly.append(float(y))
-        plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
-        i+=1
-
-    circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='red', fill=False, label='Goal')
-    plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
-
-    #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    plt.plot(0,-6,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,-6), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,-6), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    
-    plt.axis('equal')
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-
-    plt.subplot(223)
-    plt.title("Environment 3")
-    L=["Algorithms_program/comparison/simulation_log20240614-094944.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095045.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095138.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095226.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095439.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095538.csv",]
-    labe=['nb_part = 15','nb_part = 20','nb_part = 50',
-          'nb_part = 100','nb_part = 150','nb_part = 200',]
-    
-    i=0
-    for name in L:
-        Lx,Ly = [],[]
-        with open(name, 'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                # Check object number and append coordinates accordingly
-                if row[0] == '444':
-                    # Extract object number and coordinates
-                    _, x, y, _, _ = row
-                    Lx.append(float(x))
-                    Ly.append(float(y))
-        plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
-        i+=1
-
-    circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='red', fill=False, label='Goal')
-    plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
-
-    #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    plt.plot(0,-6,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,-6), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,-6), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    
-    plt.axis('equal')
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-
-    plt.subplot(224)
-    plt.title("Environment 4 - to do")
-    L=["Algorithms_program/comparison/simulation_log20240614-094944.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095045.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095138.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095226.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095439.csv",
-       "Algorithms_program/comparison/simulation_log20240614-095538.csv",]
-    labe=['nb_part = 15','nb_part = 20','nb_part = 50',
-          'nb_part = 100','nb_part = 150','nb_part = 200',]
-    
-    i=0
-    for name in L:
-        Lx,Ly = [],[]
-        with open(name, 'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                # Check object number and append coordinates accordingly
-                if row[0] == '444':
-                    # Extract object number and coordinates
-                    _, x, y, _, _ = row
-                    Lx.append(float(x))
-                    Ly.append(float(y))
-        plt.plot(Lx,Ly,label=labe[i])
-        plt.plot(Lx[-1],Ly[-1],'ro')
-        i+=1
-
-    circle = plt.Circle((-8.84444681337316, 2.699763003118102), 1, color='red', fill=False, label='Goal')
-    plt.gca().add_artist(circle)
-    plt.plot(Lx[0],Ly[0],'ro',label='Final positions')
-    plt.plot(Lx[0],Ly[0],'ko',label='Initial position')
-
-    #ajout obstacles
-    plt.plot(0,2,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,2), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,2), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    plt.plot(0,-6,'go',label='Island',markersize=15)
-    circle1 = plt.Circle((0,-6), 4, color='red', fill=False)
-    circle2 = plt.Circle((0,-6), 6, color='magenta', fill=False)
-    plt.gca().add_artist(circle1),plt.gca().add_artist(circle2)
-    
-    plt.axis('equal')
-    plt.xlabel("x")
-    plt.ylabel("y")
-
-
-
 def trajectory_2_comparison():
-    """Show the results of the simulation (trajectories) with differents algorithms in differents environments: 2 and 3.
+    """Show the results of the simulation (trajectories) with different algorithms in different environments: 2 and 3.
     """
     plt.figure("Trajectories after simulation ",figsize=(17.2,8))
-    plt.suptitle("Trajectories after simulation with differents algorithms in differents environments\n \n \n \n",fontsize=16)
+    plt.suptitle("Trajectories after simulation with different algorithms in different environments\n \n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
     plt.subplot(121)
     plt.title("Environment 2")
-    L=["Algorithms_program/comparison/simulation_log20240618-113916.csv",
-       "Algorithms_program/comparison/simulation_log20240724-153903.csv",   #old: 0618-114038
-       "Algorithms_program/comparison/simulation_log20240618-114338.csv",
-       "Algorithms_program/comparison/simulation_log20240725-165347.csv",   #old: 618-114427 and 25-155028 (before smooothing)
-       "Algorithms_program/comparison/simulation_log20240618-114521.csv",]
+    L=["Algorithms_program/comparison/data/simulation_log20240618-113916.csv",      #new worse 0805-162920
+       "Algorithms_program/comparison/data/simulation_log20240724-153903.csv",   #old: 0618-114038
+       "Algorithms_program/comparison/data/simulation_log20240618-114338.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-165347.csv",   #old: 618-114427 and 25-155028 (before smooothing)
+       "Algorithms_program/comparison/data/simulation_log20240618-114521.csv",]
     labe=['APF','A*','D*Lite','ACO','PSO']
 
     i=0
@@ -275,7 +34,7 @@ def trajectory_2_comparison():
                     _, x, y, _, _ = row
                     Lx.append(float(x))
                     Ly.append(float(y))
-        plt.plot(Lx,Ly,label=labe[i])
+        plt.plot(Lx,Ly,label=labe[i],linewidth=1.5)
         #plt.plot(Lx[-1],Ly[-1],'ro')
         i+=1
 
@@ -294,15 +53,15 @@ def trajectory_2_comparison():
     plt.xlabel("x")
     plt.ylabel("y")
     plt.legend(facecolor='beige', edgecolor='black',ncol=5, loc='lower left')
-
+    plt.xlim(-11,11)
 
     plt.subplot(122)
     plt.title("Environment 3")
-    L=["Algorithms_program/comparison/simulation_log20240618-142813.csv",
-       "Algorithms_program/comparison/simulation_log20240725-155134.csv",      #0618-143119
-       "Algorithms_program/comparison/simulation_log20240618-143244.csv",
-       "Algorithms_program/comparison/simulation_log20240725-155314.csv",      #0618-143413
-       "Algorithms_program/comparison/simulation_log20240618-143527.csv"]
+    L=["Algorithms_program/comparison/data/simulation_log20240618-142813.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-155134.csv",      #0618-143119
+       "Algorithms_program/comparison/data/simulation_log20240618-143244.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-165723.csv",      #0618-143413 and 0725-155314
+       "Algorithms_program/comparison/data/simulation_log20240618-143527.csv"]
 
     i=0
     for name in L:
@@ -338,9 +97,11 @@ def trajectory_2_comparison():
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.xlim(-12,12)
+    plt.ylim(-13,11)
 
 def graph_2_comparison():
-    """ Show a graph comparing differents algorithms in differents environments.
+    """ Show a graph comparing different algorithms in different environments.
     """
     plt.figure("Algorithms comparison after simulation",figsize=(14, 6))
     names = ['APF', 'A*','D*Lite \n /!\ stop far \nfrom the goal','ACO','PSO'] # nom des barres
@@ -376,9 +137,109 @@ def graph_2_comparison():
     for i, val in enumerate(dist_env3):
         plt.text(i+0.3, val, str(round(val, 2)), ha='center', va='bottom')
 
+def compare_time_dist():
+    '''Compare the different algorithms in terms of simulation time and distance traveled'''
+    plt.figure("Algorithms comparison dist time",figsize=(17,8))
+    plt.suptitle("Comparison of simulation times and distances traveled for different algorithms")
+
+    ax=plt.subplot(121)
+    categories = ['Environment 2', 'Environment 3']
+    APF = [0.52, 0.46]
+    Ast = [1.94, 4.26]
+    ds = [0, 0]
+    ACO = [15.54, 28.74]
+    PSO = [6.86, 11.73]
+
+    x = np.arange(len(categories)) 
+    width = 0.15  
+    bar1 = ax.bar(x - 2*width, APF, width, label='APF')
+    bar2 = ax.bar(x - width, Ast, width, label='A*')
+    bar3 = ax.bar(x , ds, width, label='D*Lite')
+    bar4 = ax.bar(x + width, ACO, width, label='ACO')
+    bar5 = ax.bar(x + 2*width, PSO, width, label='PSO')
+
+    #ax.set_xlabel('Environments')
+    ax.set_ylabel('Simulation time to reach the goal (s)')   
+    ax.set_title('Comparison of simulation times for different algorithms')
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.legend(facecolor='beige', edgecolor='black')
+
+    ax=plt.subplot(122)
+    categories = ['Environment 2', 'Environment 3']
+    APF = [24.45, 37.35]
+    Ast = [22.80, 32.55]
+    ds = [0, 0]
+    ACO = [22.80, 33.30]
+    PSO = [21.90, 31.80]
+
+    x = np.arange(len(categories)) 
+    width_b = 0.15 
+    width = 0.15
+    bar1 = ax.bar(x - 2*width_b, APF, width, label='APF')
+    bar2 = ax.bar(x - width_b, Ast, width, label='A*')
+    bar3 = ax.bar(x , ds, width, label='D*Lite')
+    bar4 = ax.bar(x + width_b, ACO, width, label='ACO')
+    bar5 = ax.bar(x + 2*width_b, PSO, width, label='PSO')
+
+    #ax.set_xlabel('Environments')
+    ax.set_ylabel('Distance traveled to reach the goal')
+    ax.set_title('Comparison of distances traveled for different algorithms')
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.legend(facecolor='beige', edgecolor='black')
+
+
+def compare_time_dist_bis():
+    '''Compare the different algorithms in terms of simulation time and distance traveled'''
+    plt.figure("Algorithms comparison",figsize=(17,8))
+    plt.suptitle("Comparison of simulation times and distances traveled for different algorithms")
+
+    ax=plt.subplot(121)
+    categories = ['Environment 2', 'Environment 3']
+    APF = [0.52, 0.46]
+    Ast = [1.94, 4.26]
+    ACO = [15.54, 28.74]
+    PSO = [6.86, 11.73]
+
+    x = np.arange(len(categories)) 
+    width = 0.15  
+    bar1 = ax.bar(x - width*1.5, APF, width, label='APF')
+    bar2 = ax.bar(x - width*0.5, Ast, width, label='A*')
+    bar4 = ax.bar(x + width*0.5, ACO, width, label='ACO')
+    bar5 = ax.bar(x + width*1.5, PSO, width, label='PSO')
+
+    #ax.set_xlabel('Environments')
+    ax.set_ylabel('Simulation time to reach the goal (s)')   
+    ax.set_title('Simulation times for different algorithms')
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.legend(facecolor='beige', edgecolor='black')
+
+    ax=plt.subplot(122)
+    categories = ['Environment 2', 'Environment 3']
+    APF = [24.45, 37.35]
+    Ast = [22.80, 32.55]
+    ACO = [22.80, 33.30]
+    PSO = [21.90, 31.80]
+
+    x = np.arange(len(categories)) 
+    width_b = 0.15 
+    width = 0.15
+    bar1 = ax.bar(x - width*1.5, APF, width, label='APF')
+    bar2 = ax.bar(x - width*0.5, Ast, width, label='A*')
+    bar4 = ax.bar(x + width*0.5, ACO, width, label='ACO')
+    bar5 = ax.bar(x + width*1.5, PSO, width, label='PSO')
+
+    #ax.set_xlabel('Environments')
+    ax.set_ylabel('Distance to reach the goal')
+    ax.set_title('Distances traveled for different algorithms')
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.legend(facecolor='beige', edgecolor='black')
 
 def radar_chart():
-    """ Show a radar chart comparing differents algorithms (arbitrary).   """
+    """ Show a radar chart comparing different algorithms (arbitrary).   """
     names = ['APF', 'A*','D*Lite','ACO','PSO']
     df = pd.DataFrame({
     'name': ['APF','A*','D*Lite','ACO','PSO'],#'APF','A*','D*Lite','ACO','PSO'
@@ -422,57 +283,9 @@ def radar_chart():
 
     plt.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
 
-show_figure_1_step()
-show_figure()
-##trajectory_4_comparison() #not finished
 trajectory_2_comparison()
 graph_2_comparison()
+compare_time_dist()
+compare_time_dist_bis()
 radar_chart()
 plt.show()
-
-
-
-def calculate_dist(name,mmsi):
-    """Calculate the length of a path taken by a sea object.
-    
-    Input:  - relative path of .csv file
-            - mmsi number of relevant object (in str = with ' ')
-            
-    Output: - length of the path
-            - distance of the straight line from the first to last point saved
-            - difference of the first two output
-            - percentage of the distance added
-            
-    Ex:     print(calculate_dist("Algorithms_program/comparison/simulation_log20240522-134550.csv",'444'))
-            (22.34999999999997, 17.894826967248925, 4.455173032751045, 24.89642979451488)
-    """
-    Lx,Ly = [],[]
-    
-    with open(name, 'r') as file:
-        csv_reader = csv.reader(file)
-        
-        for row in csv_reader:
-            # Check object number and append coordinates accordingly
-            if row[0] == mmsi:
-                # Extract object number and coordinates
-                _, x, y, _, _ = row
-                Lx.append(float(x))
-                Ly.append(float(y))
-
-    plt.axis('equal')
-    plt.plot(Lx,Ly)
-    
-
-    distance=0
-    for i in range(len(Lx)-1):
-        distance += np.sqrt((Lx[i+1]-Lx[i])**2 + (Ly[i+1]-Ly[i])**2)
-
-    line=np.sqrt((Lx[-1]-Lx[0])**2 + (Ly[-1]-Ly[0])**2)
-    diff=distance-line
-    perc=diff/line*100
-    return distance,line,diff,perc
-
-print(calculate_dist("Algorithms_program/comparison/simulation_log20240724-153903.csv",'444'))
-#print(calculate_dist("Algorithms_program/comparison/simulation_log20240705-103556.csv",'555'))
-
-#plt.show()

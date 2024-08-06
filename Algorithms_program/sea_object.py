@@ -334,18 +334,19 @@ class SeaObject:
         thetabar = arctan2(next_point[1]-self.y , next_point[0]-self.x)
         # print("theta des ", thetabar, "et theta ", self.theta)
         error = 2* arctan(tan(thetabar-self.theta)/2)
+        # Normalisation de l'angle d'erreur
+        #error = arctan2(np.sin(thetabar - self.theta), np.cos(thetabar - self.theta))
         #print("error", error)
         if error> np.pi/4: u2=1
         if error< -np.pi/4: u2=-1
         else : u2=0.5 * error
-
+        
         up=array([[0], [u2]])
-        #print("upp :", up)
         return up
             
     def move_astar(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
         """ Move the object with A* algorithm."""
-        step=1
+        step=2
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
         grid,start,end=self.create_grid(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
 
@@ -476,7 +477,7 @@ class SeaObject:
 
     def move_dstarl(self, record_data, sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt):
         """ Move the object with D* Lite algorithm."""
-        step=2
+        step=1.8
         empty_grid=np.zeros((int(2*s/step),int(2*s/step)))  #with a square grid as shown
         
         grid,ox,oy,start,end=self.init_dstarlite(sea_objects, mmsi_list, rules, table, ax, eps, s, k, dt,empty_grid)
@@ -485,15 +486,16 @@ class SeaObject:
         dstarlite = DStarLite(ox,oy)
         #print(Node(x=end[0], y=end[1]))
         path=dstarlite.dstarl(Node(x=start[0], y=start[1]), Node(x=end[0], y=end[1]))
-        
-        if path[1]==path[-1]:
+        #print("path is ", path)
+        if path[0]==path[-1]:
             up=array([[0], [0]])
             if self.final==0:
                 self.final=1
                 print("Destination reached for 1 sea_object, mmsi:", self.mmsi, "at final time", time.time())
         else :
+            #path=path_smoother(path,grid)
+            #print("path is ", path)
             up=self.go_to(path,s,grid)
-            # Update position
             self.update(up, dt)
         
         return [self.mmsi, self.x,self.y,self.v,self.theta]

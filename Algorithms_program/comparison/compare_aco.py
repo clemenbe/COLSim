@@ -11,8 +11,8 @@ def smoother(mmsi):
 
     plt.subplot(131)
     plt.title("Environment 1 - go straight")
-    L=["Algorithms_program/comparison/simulation_log20240725-160116.csv",   
-       "Algorithms_program/comparison/simulation_log20240725-165642.csv"]  
+    L=["Algorithms_program/comparison/data/simulation_log20240725-160116.csv",   
+       "Algorithms_program/comparison/data/simulation_log20240725-165642.csv"]  
     labe=['ACO simple','ACO with smoother']
     
     i=0
@@ -39,14 +39,14 @@ def smoother(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.xlim(-15,15)
+    plt.xlim(-12,12)
     plt.legend(facecolor='beige', edgecolor='black',ncol=2, loc='lower left')
 
 
     plt.subplot(132)
     plt.title("Environment 2 - contourn island")
-    L=["Algorithms_program/comparison/simulation_log20240725-155028.csv",
-       "Algorithms_program/comparison/simulation_log20240725-165347.csv"]   
+    L=["Algorithms_program/comparison/data/simulation_log20240725-155028.csv",
+       "Algorithms_program/comparison/data/simulation_log20240725-165347.csv"]   
     labe=['ACO simple','ACO with smoother']
 
     i=0
@@ -79,13 +79,13 @@ def smoother(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.xlim(-15,15)
+    plt.xlim(-12,12)
 
 
     plt.subplot(133)
     plt.title("Environment 3")
-    L=["Algorithms_program/comparison/simulation_log20240725-155314.csv",   
-       "Algorithms_program/comparison/simulation_log20240725-165723.csv"]   #change
+    L=["Algorithms_program/comparison/data/simulation_log20240725-155314.csv",   
+       "Algorithms_program/comparison/data/simulation_log20240725-165723.csv"]   
 
     i=0
     for name in L:
@@ -121,6 +121,7 @@ def smoother(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
+    plt.xlim(-12,12)
 
 smoother('444')
 

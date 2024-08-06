@@ -13,8 +13,8 @@ class SimulationRunner:
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
-        self.num_steps = 280          #number of steps of the simulation
-        self.environment = 5          #different environments (description below)
+        self.num_steps = 250         #number of steps of the simulation
+        self.environment = 4          #different environments (description below)
         self.record_data = False      #set to True to record the data or to False to display the simulation
         self.rules = [
             ["Rules :"],
@@ -46,18 +46,18 @@ class SimulationRunner:
      
         elif self.environment == 1:
             '''Only one ship, has to go straight.'''
-            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "ACO"))
+            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "D*Lite"))
 
         elif self.environment == 2:
             '''One island to slightly contourn.'''
             sea_objects.append(Island(333, 0, 2, 0, 1))
-            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "ACO"))
+            sea_objects.append(Ship(444, 10,-4, 1.5, pi*7/8, "D*Lite"))
 
         elif self.environment == 3:
-            '''U shape with a potential minimum.'''
+            '''U shape with a potential minimum.'''     # with APF, the ship is stuck at a minima
             sea_objects.append(Island(333, 0, 2, 0, 1))
-            sea_objects.append(Island(332, 0, -9, 0, 1))  #with this 2nd island and APF, the ship is stuck at a minima
-            sea_objects.append(Ship(444, 10, -4, 1.5, 3, "ACO"))
+            sea_objects.append(Island(332, 0, -6, 0, 1))  
+            sea_objects.append(Ship(444, 10, -4, 1.5, 3, "APF"))
 
         elif self.environment == 4:
             '''Slalom with 2 islands and 1 ship.'''
