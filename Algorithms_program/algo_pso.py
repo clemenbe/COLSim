@@ -412,6 +412,7 @@ def centroid(V):
 
 
 def path_penalty(obs, Px, Py):
+    
     """
     Returns a penalty value if any point of the path violates any of the
     obstacles. To speed up the calculation the algorithms have been designed

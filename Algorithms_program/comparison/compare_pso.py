@@ -158,6 +158,7 @@ def compare_trajectories(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
+    #plt.xlim(-11,13)
     plt.title("Different PSO trajectories, depending on the number of iterations \n \n \
               Environment 3, population size = 200, number of runs = 2, number of waypoints = 3")
     plt.legend(facecolor='beige', edgecolor='black',loc='upper right')
@@ -208,6 +209,7 @@ def compare_trajectories(mmsi):
     plt.axis('equal')
     plt.xlabel("x")
     plt.ylabel("y")
+    #plt.xlim(-11,13)
     plt.title("Different PSO trajectories, depending on the number of particles \n \n \
               Environment 3, number of iterations = 50, number of runs = 2, number of waypoints = 3")
     plt.legend(facecolor='beige', edgecolor='black',loc='upper right')
@@ -216,4 +218,7 @@ def compare_trajectories(mmsi):
     plt.subplots_adjust(wspace=0.2, hspace=0.5)
 
 compare_trajectories('444')
+
 plt.show()
+
+

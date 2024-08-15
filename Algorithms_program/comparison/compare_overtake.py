@@ -68,10 +68,10 @@ def compare_traj_real():
     plt.suptitle("Trajectories after simulation with different algorithms\n One boat overtaking another boat (3 times slower)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/data/simulation_log20240716-122130.csv",
+    L=["Algorithms_program/comparison/data/simulation_log20240814-151950.csv",  #0716-122130
        "Algorithms_program/comparison/data/simulation_log20240725-141604.csv",        #16-122150
        "Algorithms_program/comparison/data/simulation_log20240716-122937.csv",
-       "Algorithms_program/comparison/data/simulation_log20240724-114413.csv",
+       "Algorithms_program/comparison/data/simulation_log20240814-154830.csv",  
        "Algorithms_program/comparison/data/simulation_log20240716-122319.csv"]
     labe=['APF','A*','D* Lite','ACO','PSO']
 
@@ -185,14 +185,14 @@ def compare_traj_speed():
         j+=1
 
 
-def compare_matrice():
-    """Show the results of the simulation (trajectories) with different algorithms for a more realistic overtaking in an algorithm matrice.
+def compare_matrix():
+    """Show the results of the simulation (trajectories) with different algorithms for a more realistic overtaking in an algorithm matrix.
     """
-    plt.figure("Trajectories after simulation matrice",figsize=(16,10))
+    plt.figure("Trajectories after simulation matrix",figsize=(15,8))
     plt.suptitle("Trajectories after simulation with different algorithms\n Blue boat (at 3*v) overtaking orange boat (at v)\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
-    L=["Algorithms_program/comparison/data/simulation_log20240716-122130.csv",
+    L=["Algorithms_program/comparison/data/simulation_log20240814-151950.csv",
        "Algorithms_program/comparison/data/simulation_log20240719-150856.csv",
        "Algorithms_program/comparison/data/simulation_log20240719-150927.csv",
        "Algorithms_program/comparison/data/simulation_log20240719-151001.csv",
@@ -245,7 +245,7 @@ def compare_matrice():
         plt.axis('equal')
         plt.xlabel("x")
         plt.ylabel("y")
-        plt.xlim(-20,20)
+        plt.xlim(-18,20)
         #plt.legend(facecolor='beige', edgecolor='black',ncol=2, loc='lower left')
 
         j+=1
@@ -254,7 +254,7 @@ def compare_matrice():
 compare_traj()
 compare_traj_real()
 compare_traj_speed()
-compare_matrice()
+compare_matrix()
 
 plt.show()
 

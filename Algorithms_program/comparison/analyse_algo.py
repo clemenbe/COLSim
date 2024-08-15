@@ -44,5 +44,5 @@ def calculate_dist(name,mmsi):
     perc=diff/line*100
     return distance,line,diff,perc
 
-print(calculate_dist("Algorithms_program/comparison/data/simulation_log20240725-165723.csv",'444'))
+print(calculate_dist("Algorithms_program/comparison/data/simulation_log20240724-155453.csv",'444'))
 #print(calculate_dist("Algorithms_program/comparison/data/simulation_log20240705-103556.csv",'555'))

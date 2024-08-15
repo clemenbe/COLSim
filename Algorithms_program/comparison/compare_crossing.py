@@ -114,10 +114,10 @@ def compare_traj2():
 
         j+=1
 
-def compare_matrices():
-    """Show the results of the simulation (trajectories) with different algorithms for a crossing in an alogorithm matrice.
+def compare_matrixs():
+    """Show the results of the simulation (trajectories) with different algorithms for a crossing in an alogorithm matrix.
     """
-    plt.figure("Trajectories after crossing matrice",figsize=(16,10))
+    plt.figure("Trajectories after crossing matrix",figsize=(16,10))
     plt.suptitle("Trajectories after simulation with different algorithms\n Two boats facing exactly each others - bleu go left (pi), orange go right\n \n \n",fontsize=16)
     plt.subplots_adjust(hspace=0.3)
 
@@ -181,6 +181,6 @@ def compare_matrices():
 
 compare_traj()
 #compare_traj2()
-compare_matrices()
+compare_matrixs()
 
 plt.show()
