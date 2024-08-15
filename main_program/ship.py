@@ -1,16 +1,32 @@
 from draw import *
 from sea_object import *
 
+
 class Ship(SeaObject):
 
-    def __init__(self, mmsi, x, y, v, theta):
-        super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
+    def __init__(self, mmsi, x, y, v, theta, algo, destination_distance=20):
+        super().__init__(mmsi, x, y, v, theta, algo, destination_distance)  # call the superclass's constructor
         self.privilege = 30
         self.r = 4
+        print("Ship created:  mmsi %s, in position (%s, %s), speed v= %s, theta= %s, with the algorithm: %s" % (mmsi, x, y, v, theta, algo))
 
-    # Get the color displayed on the rules
-    def get_color(self):
-        return "red"
+
+    #here, how a ship moves
+    def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
+        """Returns mmsi and state vector, depending on the path planning algorithm"""
+        if self.algo=="APF":
+            return self.move_apf(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+        if self.algo=="A*":
+            return self.move_astar(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+        if self.algo=="D*Lite":
+            return self.move_dstarl(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+        if self.algo=="ACO":
+            return self.move_aco(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+        if self.algo=="PSO":
+            return self.move_pso(record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt)
+        else:
+            print('Not a valid algorithm, algorithms available are: "APF", "A*", "D*Lite", "ACO" and "PSO".')
+
 
     def draw(self, ax, Ɛ, col1='royalblue', col2='steelblue', col3='slategray', r1=0.3, w=1):
         """ Draw of the ship """
@@ -42,7 +58,15 @@ class Ship(SeaObject):
         M4_transformed = tran2H(self.x, self.y) @ rot2H(self.theta) @ M4
         ax.plot(M4_transformed[0], M4_transformed[1], color='black', linewidth=w, zorder=1)
         ax.add_patch(Polygon(M4_transformed[:2].T, facecolor=col2, edgecolor=None, zorder=0))
+        
         """ Display of the zones """
         draw_circle(ax, self.x, self.y, self.r, 'red')                           # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')                   # DCPA zone extended for safety : manoeuvring area
-        draw_disk(ax, self.phat, 0.2, 'green')                              # Display of the final destination
+        draw_disk(ax, self.phat, 1, 'yellow')                              # Display of the final destination
+
+
+    """
+    # Get the color displayed on the rules
+    def get_color(self):
+        return "red
+    """

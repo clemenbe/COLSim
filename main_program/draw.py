@@ -18,7 +18,7 @@ from matplotlib.patches import Ellipse, Rectangle, Circle, Wedge, Polygon, Arc
 from matplotlib.collections import PatchCollection
 
 
-def init_figure(xmin, xmax, ymin, ymax, width=10, height=10):
+def init_figure(xmin, xmax, ymin, ymax,width=10, height=10):
     # fig = figure(figsize=(width, height))
     # ax = fig.add_subplot(111, aspect='equal')
     fig, ax = plt.subplots()
@@ -32,60 +32,15 @@ def init_figure(xmin, xmax, ymin, ymax, width=10, height=10):
     return fig, ax
 
 
-def init_table2(data, legend, xmin, xmax, ymin, ymax, text_size=11, length=4, width=2):
-    fig, ax = plt.subplots()
-    plt.suptitle('Active rules of the sea', size='x-large')
-    table = plt.table(cellText=data, loc='center')
-    legend_table = plt.table(cellText=legend, loc='bottom')
-
-    table.auto_set_font_size(False)
-    table.set_fontsize(text_size)
-
-    # Colouring of specific boxes
-    cell_colors = []
-    for row in range(len(data)):
-        current_row = []
-        for col in range(len(data[row])):
-            if (row, col) == (0, 0):  # condition to color the box
-                current_row.append('lightgray')
-            else:
-                current_row.append('white')
-        cell_colors.append(current_row)
-
-    for row in range(len(data)):
-        for col in range(len(data[row])):
-            table[row, col].set_facecolor(cell_colors[row][col])
-
-    ax.xmin = xmin
-    ax.xmax = xmax
-    ax.ymin = ymin
-    ax.ymax = ymax
-    clear(ax)
-    ax.axis('off')
-    fig.tight_layout()
-    return fig, ax, table
-
 def init_table(rules, legend,fig,ax, text_size=11, length=4, width=2):
-    #fig, ax = plt.subplots()
-    # fig, ax = plt.subplots(figsize=(3, 0.5))
-    plt.suptitle('Active rules of the sea', size='x-large')
+    plt.suptitle('Welcome to the COLREG simulation!', size='x-large', color='blue')
+    plt.title('Active rules of the sea', size='x-large')
     table = plt.table(cellText=rules, loc='center')
     legend_table = plt.table(cellText=legend, loc='bottom')
 
-    # # Modification du style de la première colonne
-    # first_column_cells = [table.get_celld()[row, 0] for row in range(len(data))]
-    # for cell in first_column_cells:
-    #     cell.set_width(length * 1.2)  # Double la largeur de la première colonne
-
     table.auto_set_font_size(False)
     table.set_fontsize(text_size)
-    # table.scale(length, width)
-    # table.scale(0.3, 0.3)
-    # ax.xmin = xmin
-    # ax.xmax = xmax
-    # ax.ymin = ymin
-    # ax.ymax = ymax
-    # Colouring of specific boxes
+
     cell_colors = []
     for row in range(len(rules)):
         current_row = []
@@ -102,7 +57,6 @@ def init_table(rules, legend,fig,ax, text_size=11, length=4, width=2):
 
     ax.axis('off')
     fig.tight_layout()
-    # plt.subplots_adjust(left=0.7, top=0.3)
 
     return table
 
@@ -152,7 +106,6 @@ def draw_circle(ax, center_x, center_y, radius, color):
 
 
 def draw_disk(ax, c, r, col, alph=0.7, w=1):
-    # draw_disk(ax,array([[1],[2]]),0.5,"blue")
     e = Ellipse(xy=c, width=2 * r, height=2 * r, angle=0, linewidth=w)
     ax.add_artist(e)
     e.set_clip_box(ax.bbox)

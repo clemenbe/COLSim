@@ -10,9 +10,9 @@ This directory contains the most up-to-date and comprehensive version of the USV
 
 ## SimulationRunner
 
-In `SimulationRunner`, several key constants are initialized, such as `s`, `dt`, `k`, `num_steps`. A separate `RuleApplicationWindow` is also initialized to display the rules of collision avoidance at sea. 
+In `SimulationRunner`, several key constants are initialized, such as `s`, `dt`, `k`, `num_steps`. A separate `RuleApplicationWindow` is also initialized to display the rules of collision avoidance at sea. A pre-defined environment can also be choosen.
 
-A function called `initialize_sea_objects()` creates various sea objects (`Boat`, `Ship`, `Whale`, `Island` etc.). These objects are initialized with parameters such as `x`, `y`, `v`, and `theta`, then added to the `sea_objects` vector. 
+A function called `initialize_sea_objects()` creates various sea objects (`Boat`, `Ship`, `Whale`, `Island` etc.). These objects are initialized with parameters such as `x`, `y`, `v`, `theta`, `algo`, and `destination_distance` then added to the `sea_objects` vector. 
 
 The `run()` function then takes this `sea_objects` vector and the `RuleApplicationWindow`, and passes them to the `Simulation`.
 
@@ -35,3 +35,28 @@ Whether an object moves straight or avoids collision, both actions return a cont
 In this manner, each sea object is responsible for its own actions, deciding whether to avoid collision or not, based on the rules defined in its methods. The object does not care about the reactions of others, ensuring each object makes decisions autonomously.
 
 For a detailed explanation of how these classes function and interact with one another, please refer to the comments in the source code. 
+
+
+# Different algorithms
+
+For each maneuverable **SeaObject**, an algorithm must be chosen at initialization. 
+Available algorithms are "APF", "A*", "D*Lite", "ACO" and "PSO".
+The algorithms are coded in their own file and implemented for the simulator in the [sea_object.py](./sea_object.py) file.
+
+Algorithms already implemented are
+- Artificial potential fields [here](./algo_potential_fields.py): initially present in the simulator,
+- A* [here](./algo_astar.py): a popular grid-based algorithm that uses heuristics (amelioration of Dijkstra algorithm),
+- D* Lite [here](./algo_dstar_lite.py): an improvement of A* that dynamically replans the path,
+- Ant Colony Optimization [here](./algo_aco.py): a probabilistic technique inspired by the pheromone-based communication of real ants,
+- Particle Swarm Optimization [here](./algo_pso.py): an exploratory algorithm that iteratively tries to improve a candidate solution.
+
+## Algorithm comparison
+
+The comparison folder contains file to compare the performace and efficiency of the algorithms.
+
+The [compare_algo.py](./compare_algo.py) file compare the algorithms based on multiple factors.
+
+Another function calculate the length of a path taken by a sea object to reach it's goal and compare them.  
+To use it, first run the simulator with `self.record_data` set to True (in [simulation_runner.py](./simulation_runner.py)) then use the function `calculate_dist()` to compute the length of the path.
+
+The different "compare" file like [compare_pso.py](./compare_pso.py) compare the results of specifics algorithms.

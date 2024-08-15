@@ -26,7 +26,6 @@ def plot2D(ax, M, col='black', w=1):
 def tran2H(x, y):
     return array([[1, 0, x], [0, 1, y], [0, 0, 1]])
 
-
 def rot2H(a):
     return array([[cos(a), -sin(a), 0], [sin(a), cos(a), 0], [0, 0, 1]])
 
@@ -37,10 +36,8 @@ def arrow2H(L):
 def sawtooth(x):
     return (x + pi) % (2 * pi) - pi  # or equivalently   2*arctan(tan(x/2))
 
-
 def geo_scalar_prod(u,v, θu, θv):
     return u*v*cos(θu-θv)
-
 
 def dist(a,b):
     xa, ya = a[0:2].flatten()
