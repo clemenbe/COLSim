@@ -4,10 +4,18 @@ from draw import *
 
 class Island(SeaObject):
 
-    def __init__(self, mmsi, x, y, v, theta):
-        super().__init__(mmsi, x, y, v, theta)  # call the superclass's constructor
+    def __init__(self, mmsi, x, y, v, theta, algo="APF", destination_distance=0):
+        super().__init__(mmsi, x, y, v, theta, algo, destination_distance=0)  # call the superclass's constructor
         self.privilege = 1000
         self.r = 4
+        print("Island created:  mmsi %s, in position (%s, %s)" % (mmsi, x, y))
+
+
+        # An island never moves
+    def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
+        """Returns mmsi and same state vector"""
+        return [self.mmsi, self.x,self.y,self.v,self.theta]
+
 
     def draw(self, ax, Ɛ, col1='darkkhaki', col2='limegreen', r1=0.3, r2=0.15, w=2):
         """ Display of the island """
@@ -30,7 +38,3 @@ class Island(SeaObject):
         """ Display of the zones """
         draw_circle(ax, self.x, self.y, self.r, 'red')                  # DCPA zone to avoid related to the boat
         draw_circle(ax, self.x, self.y, self.r + Ɛ, 'magenta')          # DCPA zone extended for safety : manoeuvring area
-
-    # An island never moves
-    def move(self, record_data, boats, mmsi_list, rules, table, ax, Ɛ, s, k, dt):
-        return [self.mmsi, self.get_state_vector()]
