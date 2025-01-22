@@ -7,6 +7,7 @@
 
 **2024**
 - Tiphaine (ENSTA Bretagne - Spécialité Robotique Autonome)
+- Dilip Krishnan (Flinders University - Bachelor of Robotic Engineering and Bachelor of Computer Science)
 
 **Supervison:** 
 Benoit Clement

@@ -1,4 +1,4 @@
-from sea_object import *
+from sea_objects.sea_object import *
 from calcul_tools import *
 from draw import *
 

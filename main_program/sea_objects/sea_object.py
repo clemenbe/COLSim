@@ -3,12 +3,11 @@ Retrieved from https://github.com/smkalami/path-planning
 """
 from calcul_tools import *
 from draw import *
-from algo_potential_fields import *
-from algo_astar import *
-from algo_aco import *
-from algo_dstar_lite import *
-from algo_pso import *
-
+from path_planning_algorithms.algo_dstar_lite import *
+from path_planning_algorithms.algo_potential_fields import *
+from path_planning_algorithms.algo_aco import *
+from path_planning_algorithms.algo_astar import *
+from path_planning_algorithms.algo_pso import *
 import numpy as np
 import time
 

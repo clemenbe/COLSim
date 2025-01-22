@@ -1,5 +1,5 @@
 from draw import *
-from sea_object import *
+from sea_objects.sea_object import *
 
 
 class Ship(SeaObject):

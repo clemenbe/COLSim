@@ -1,10 +1,10 @@
 from calcul_tools import *
 from draw import *
 from simu import Simulation
-from boat import Boat
-from whale import Whale
-from island import Island
-from ship import Ship
+from sea_objects.boat import Boat
+from sea_objects.whale import Whale
+from sea_objects.island import Island
+from sea_objects.ship import Ship
 import time
 
 class SimulationRunner:
@@ -13,8 +13,8 @@ class SimulationRunner:
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
-        self.num_steps = 250         #number of steps of the simulation
-        self.environment = 2          #different environments (description below)
+        self.num_steps = 500         #number of steps of the simulation
+        self.environment = 0          #different environments (description below)
         self.record_data = False      #set to True to record the data or to False to display the simulation
         self.rules = [
             ["Rules :"],

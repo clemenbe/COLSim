@@ -1,8 +1,7 @@
 from calcul_tools import *
 import time
 from draw import *
-from boat import Boat
-from algo_potential_fields import *
+from path_planning_algorithms.algo_potential_fields import *
 import csv
 
 
@@ -16,7 +15,6 @@ class Simulation:
         """Run the program with display, do not save the data."""
         for _ in range(num_steps):
             clear(ax)
-
             for sea_objects in self.sea_objects:
                 sea_objects.move(record_data, self.sea_objects, mmsi_list, rules, table, ax, Ɛ, s, self.k, self.dt)
                 sea_objects.draw(ax, Ɛ)

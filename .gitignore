@@ -3,3 +3,6 @@ AIS/ais_database.db
 AIS/nari_dynamic.csv
 AIS/nari_static.csv
 *.csv
+main_program/__pycache__/*
+main_program/path_planning_algorithms/__pycache__/*
+main_program/sea_objects/__pycache__/*
