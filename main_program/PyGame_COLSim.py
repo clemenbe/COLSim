@@ -145,7 +145,6 @@ def calculate_paths(agents):
         path = agent.move_and_replan(start)
         agent_paths.update({agent: path})
         path_list.append(path)
-        searched = agent.searched_nodes()
 
 def midpoint_displacement(start, end, roughness, vertical_displacement, num_of_iterations):
     """Generate a fractal line using midpoint displacement algorithm."""
@@ -415,12 +414,13 @@ def main():
                         if (agent.collision_risk(position)):
                             print("Collision risk")
                             collision_risk = True
-                            agent.apply_colreg_rules(position, future_position)
-                            agent.detect_edge_changes(position)
-                            path = agent.move_and_replan(position)
-                            agent_paths.update({agent: path})
-                            path_list.append(path)
-                            reset_counter = True
+                            # UNCOMMENT WHEN DEVELOPING - CRASHES PROGRAM CURRENTLY
+                            # agent.apply_colreg_rules(position, future_position)
+                            # agent.detect_edge_changes(position)
+                            # path = agent.move_and_replan(position)
+                            # agent_paths.update({agent: path})
+                            # path_list.append(path)
+                            # reset_counter = True
                     except IndexError as e: # if path ends, continue running program
                         continue
 
