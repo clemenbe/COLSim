@@ -8,13 +8,13 @@ from sea_objects.ship import Ship
 import time
 
 class SimulationRunner:
-    def __init__(self):
+    def __init__(self, run_environment=0, record_data=False):
         self.s = 20 
         self.dt = 0.1 
         self.k = 0.5
         self.Ɛ = 2
         self.num_steps = 500         #number of steps of the simulation
-        self.environment = 0          #different environments (description below)
+        self.environment = 1       #different environments (description below)
         self.record_data = False      #set to True to record the data or to False to display the simulation
         self.rules = [
             ["Rules :"],
@@ -67,8 +67,8 @@ class SimulationRunner:
 
         elif self.environment == 5:
             '''Two boats facing each other.'''
-            sea_objects.append(Ship(444, 12, 0, 1.5, pi, "PSO",30))
-            sea_objects.append(Ship(555, -12, 0, 1.5, 0, "PSO",30)) 
+            sea_objects.append(Ship(444, 12, 0, 1.5, pi, "A*",30))
+            sea_objects.append(Ship(555, -12, 0, 1.5, 0, "A*",30)) 
 
         elif self.environment == 6:
             '''A ship overtaking a boat.'''

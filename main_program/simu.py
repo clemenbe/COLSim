@@ -1,6 +1,6 @@
 from calcul_tools import *
 import time
-from draw import *
+# from draw import *
 from path_planning_algorithms.algo_potential_fields import *
 import csv
 

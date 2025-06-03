@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 
-show_animation = False
-pause_time = 0.001
+show_animation = True
+pause_time = 0.1
 p_create_random_obstacle = 0
 
 
@@ -39,7 +39,6 @@ def compare_coordinates(node1: Node, node2: Node):
 
 
 class DStarLite:
-
     # Please adjust the heuristic function (h) if you change the list of
     # possible motions
     motions = [
